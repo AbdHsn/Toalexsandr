@@ -1,6 +1,9 @@
+#parse("include/init_var.vm")
+
+$env.setLanguage('C#')
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
-using DataModel.Models.ViewModels;
+using DataLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
@@ -9,40 +12,40 @@ namespace NINETRAX.Controllers.DbManagement
 {
     [Route("api/d/[controller]")]
     [ApiController]
-    public class TbDirectoryNamesController: Controller
+    public class ${entity.name}sController: Controller
     {
 
         #region Variables
 		private readonly IWebHostEnvironment _heSrv;
 		private readonly EntityContext _context;
-		private readonly IRawQueryRepo<TbDirectoryName> _TbDirectoryNameContext;
-		private readonly IRawQueryRepo<TbDirectoryNamesView> _getTbDirectoryNamesView;
+		private readonly IRawQueryRepo<${entity.name}> _${entity.name}Context;
+		private readonly IRawQueryRepo<${entity.name}sView> _get${entity.name}sView;
 		private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
 		private readonly IRawQueryRepo<Object> _getAllByLike;
 		#endregion
 
 		#region Constructor
-		public TbDirectoryNamesController(
+		public ${entity.name}sController(
 			IWebHostEnvironment heSrv,
 			EntityContext context,
-			IRawQueryRepo<TbDirectoryName> TbDirectoryNameContext,
-			IRawQueryRepo<TbDirectoryNamesView> getTbDirectoryNamesView,
+			IRawQueryRepo<${entity.name}> ${entity.name}Context,
+			IRawQueryRepo<${entity.name}sView> get${entity.name}sView,
 			IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-			_TbDirectoryNameContext = TbDirectoryNameContext;
-			_heSrv = heSrv;
-			_context = context;
-			_getTbDirectoryNamesView = getTbDirectoryNamesView;
-			_getTotalRecordCountGLB = getTotalRecordCountGLB;
-			_getAllByLike = getAllByLike;
+		_${entity.name}Context = ${entity.name}Context;
+		_heSrv = heSrv;
+		_context = context;
+		_get${entity.name}sView = get${entity.name}sView;
+		_getTotalRecordCountGLB = getTotalRecordCountGLB;
+		_getAllByLike = getAllByLike;
 		}
 		#endregion
 
-		#region GetTbDirectoryNameView
-		[HttpPost("GetTbDirectoryNamesView")]
-		public async Task<ActionResult<DatatableResponseGLB>> GetTbDirectoryNamesView(DatatableGLB datatableGLB)
+		#region Get${entity.name}View
+		[HttpPost("Get${entity.name}sView")]
+		public async Task<ActionResult<DatatableResponseGLB>> Get${entity.name}sView(DatatableGLB datatableGLB)
         {
 			DatatableResponseGLB response = new DatatableResponseGLB();
 			try
@@ -102,9 +105,9 @@ namespace NINETRAX.Controllers.DbManagement
 				#endregion where-condition gathering code
 		
 				#region database query code 
-				var dataGrid = await _getTbDirectoryNamesView.GetAllByWhere(new GetAllByWhereGLB()
+				var dataGrid = await _get${entity.name}sView.GetAllByWhere(new GetAllByWhereGLB()
 				{
-					TableOrViewName = "TbDirectoryNamesView",
+					TableOrViewName = "${entity.name}sView",
 					SortColumn = sortInformation,
 					WhereConditions = whereConditionStatement,
 					LimitStart = datatableGLB.start,
@@ -113,7 +116,7 @@ namespace NINETRAX.Controllers.DbManagement
 		
 				var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
 				{
-					TableOrViewName = "TbDirectoryNamesView",
+					TableOrViewName = "${entity.name}sView",
 					WhereConditions = whereConditionStatement
 				});
 	
@@ -133,9 +136,9 @@ namespace NINETRAX.Controllers.DbManagement
 	}
 	#endregion
 
-		#region GetTbDirectoryNameAutoCompletion
-		[HttpGet("GetTbDirectoryNameAutoCompletion")]
-		public async Task<ActionResult<IEnumerable<object>>> GetTbDirectoryNameAutoCompleteSuggestion(string column, string value)
+		#region Get${entity.name}AutoCompletion
+		[HttpGet("Get${entity.name}AutoCompletion")]
+		public async Task<ActionResult<IEnumerable<object>>> Get${entity.name}AutoCompleteSuggestion(string column, string value)
 		{
 			#region Call Repository Function
 			if (!string.IsNullOrEmpty(column) && !string.IsNullOrEmpty(value))
@@ -150,7 +153,7 @@ namespace NINETRAX.Controllers.DbManagement
 					ColumnName = column,
 					ColumnValue = value,
 					NumberOfReturnRow = 10,
-					TableOrViewName = "TbDirectoryNamesView"
+					TableOrViewName = "${entity.name}sView"
 				});
 		
 				#endregion database query code
@@ -161,13 +164,13 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region GetTbDirectoryNames
+		#region Get${entity.name}s
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TbDirectoryName>>> GetTbDirectoryNames()
+		public async Task<ActionResult<IEnumerable<${entity.name}>>> Get${entity.name}s()
 		{
 			try
 			{
-				return await _context.TbDirectoryNames.ToListAsync();
+				return await _context.${entity.name}s.ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -176,21 +179,21 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TbDirectoryNameById
+		#region ${entity.name}ById
 		[HttpGet("{id}")]
-		public async Task<ActionResult<TbDirectoryName>> GetTbDirectoryName(int id)
+		public async Task<ActionResult<${entity.name}>> Get${entity.name}(int id)
 		{
-			var objTbDirectoryName = new TbDirectoryName();
+			var obj${entity.name} = new ${entity.name}();
 			try
 			{
-				objTbDirectoryName = await _context.TbDirectoryNames.Where(d => d.Id == id).FirstOrDefaultAsync();
+				obj${entity.name} = await _context.${entity.name}s.Where(d => d.Id == id).FirstOrDefaultAsync();
 		
-				if (objTbDirectoryName == null)
+				if (obj${entity.name} == null)
 				{
 					return StatusCode(404, "Data not found.");
 				}
 		
-				return objTbDirectoryName;
+				return obj${entity.name};
 			}
 			catch (Exception ex)
 			{
@@ -199,17 +202,17 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TbDirectoryNameUpdate 
+		#region ${entity.name}Update 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTbDirectoryName(int id, TbDirectoryName objTbDirectoryName)
+		public async Task<IActionResult> Put${entity.name}(int id, ${entity.name} obj${entity.name})
 		{
 		
-			if (id != objTbDirectoryName.Id)
+			if (id != obj${entity.name}.Id)
 			{
 				return StatusCode(404, "Data not found.");
 			}
 		
-			_context.Entry(objTbDirectoryName).State = EntityState.Modified;
+			_context.Entry(obj${entity.name}).State = EntityState.Modified;
 		
 			try
 			{
@@ -220,20 +223,20 @@ namespace NINETRAX.Controllers.DbManagement
 			{
 				return StatusCode(500, "API response failed.");
 			}
-			return StatusCode(200, objTbDirectoryName);
+			return StatusCode(200, obj${entity.name});
 		}
 		
 		#endregion
 
-		#region TbDirectoryNameCreate
+		#region ${entity.name}Create
 		[HttpPost]
-		public async Task<ActionResult<TbDirectoryName>> CreateTbDirectoryName (TbDirectoryName objTbDirectoryName)
+		public async Task<ActionResult<${entity.name}>> Create${entity.name} (${entity.name} obj${entity.name})
 		{
-			_context.TbDirectoryNames.Add(objTbDirectoryName);
+			_context.${entity.name}s.Add(obj${entity.name});
 			try
 			{
 				await _context.SaveChangesAsync();
-				return StatusCode(200, objTbDirectoryName);
+				return StatusCode(200, obj${entity.name});
 			}
 			catch (Exception ex)
 			{
@@ -243,17 +246,17 @@ namespace NINETRAX.Controllers.DbManagement
 		
 		#endregion
 
-		#region TbDirectoryNameDelete
+		#region ${entity.name}Delete
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTbDirectoryName(int id)
+		public async Task<IActionResult> Delete${entity.name}(int id)
 		{
-			var objTbDirectoryName = await _context.TbDirectoryNames.FindAsync(id);
-			if (objTbDirectoryName == null)
+			var obj${entity.name} = await _context.${entity.name}s.FindAsync(id);
+			if (obj${entity.name} == null)
 			{
 				return StatusCode(404, "Data not found");
 			}
 		
-			_context.TbDirectoryNames.Remove(objTbDirectoryName);
+			_context.${entity.name}s.Remove(obj${entity.name});
 			await _context.SaveChangesAsync();
 		
 			return StatusCode(200, true);
