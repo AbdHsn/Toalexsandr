@@ -10,12 +10,12 @@ namespace DataLayer.Models.GlobalModels
         public int LimitStart { get; set; }
         public dynamic LimitEnd { get; set; }
 
-        public GetAllByWhereGLB()
-        {
-            if (LimitEnd is string)
-            {
-                this.LimitEnd = 0;
-            }
-        }
+        //public GetAllByWhereGLB()
+        //{
+        //    if (LimitEnd is string)
+        //    {
+        //        this.LimitEnd = 0;
+        //    }
+        //}
     }
 }

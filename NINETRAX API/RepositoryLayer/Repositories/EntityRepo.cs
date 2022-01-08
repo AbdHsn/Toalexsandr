@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace RepositoryLayer
@@ -71,7 +68,7 @@ namespace RepositoryLayer
 
         public IQueryable<T> GetAllByRawSql(string sqlQuery)
         {
-            return _context.Set<T>().FromSqlRaw(sqlQuery);
+            return null;//_context.Set<T>().FromSqlRaw("");
         }
         #endregion "Get Methods Implementation using RawSQL"
     }

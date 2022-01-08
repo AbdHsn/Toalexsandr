@@ -1,6 +1,6 @@
 ﻿using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
-using DataModel.Models.ViewModels;
+using DataLayer.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryLayer
@@ -23,6 +23,12 @@ namespace RepositoryLayer
             //{
             //    entity.HasNoKey();
             //});
+
+            modelBuilder.Entity<TbDirectoryNamesView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
 
             modelBuilder.Entity<TotalRecordCountGLB>(entity =>
             {
@@ -943,21 +949,23 @@ namespace RepositoryLayer
             {
                 entity.ToTable("tb_DirectoryNames");
 
+                //entity.HasKey();
+
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
                     .HasColumnName("ID");
 
-                entity.Property(e => e.BaseOfOperation)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                //entity.Property(e => e.BaseOfOperation)
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false);
 
-                entity.Property(e => e.PersonName)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                //entity.Property(e => e.PersonName)
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false);
 
-                entity.Property(e => e.PersonTitle)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                //entity.Property(e => e.PersonTitle)
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false);
             });
 
 

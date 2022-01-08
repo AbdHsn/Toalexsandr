@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DataLayer.Models.EntityModels
+namespace DataLayer.Models.ViewModels
 {
-    public partial class TbDirectoryName
+    public class TbDirectoryNamesView
     {
         public int Id { get; set; }
         public string? PersonName { get; set; }

@@ -1,8 +1,7 @@
- 
-
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
-using DataModel.Models.ViewModels;
+using DataLayer.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;

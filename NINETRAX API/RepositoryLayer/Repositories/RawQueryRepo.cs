@@ -1,11 +1,5 @@
 ﻿using DataLayer.Models.GlobalModels;
-using DataModel.Models.GlobalModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
@@ -24,7 +18,7 @@ namespace RepositoryLayer
         #endregion "Constructors"
 
         #region "Get Methods Implementation"
-        public async Task<IQueryable<T>> GetAllByWhere(GetAllByWhereGLB getAllByWhereGLB)
+        public async Task<List<T>> GetAllByWhere(GetAllByWhereGLB getAllByWhereGLB)
         {
             string sql = default(string);
             if (string.IsNullOrEmpty(getAllByWhereGLB.WhereConditions))
@@ -40,10 +34,11 @@ namespace RepositoryLayer
                       getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
             }
 
-            return _context.Set<T>().FromSqlRaw(sql).AsNoTracking();
+            var returnData = await _context.Set<T>().FromSqlRaw(sql).AsNoTracking().ToListAsync();
+            return returnData;
         }
         
-        public async Task<IQueryable<T>> ExportAllByWhere(ExportAllByWhereGLB exportAllByWhereGLB)
+        public async Task<List<T>> ExportAllByWhere(ExportAllByWhereGLB exportAllByWhereGLB)
         {
             string sql = default(string);
             if (string.IsNullOrEmpty(exportAllByWhereGLB.WhereConditions))
@@ -57,7 +52,7 @@ namespace RepositoryLayer
                       exportAllByWhereGLB.TableOrViewName, exportAllByWhereGLB.WhereConditions, exportAllByWhereGLB.SortColumn);
             }
 
-            return _context.Set<T>().FromSqlRaw(sql).AsNoTracking();
+            return await _context.Set<T>().FromSqlRaw(sql).AsNoTracking().ToListAsync();
         }
 
         public async Task<T> CountAllByWhere(CountAllByWhereGLB countAllByWhereGLB )
