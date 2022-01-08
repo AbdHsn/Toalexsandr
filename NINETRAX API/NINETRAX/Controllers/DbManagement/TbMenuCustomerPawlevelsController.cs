@@ -11,40 +11,40 @@ namespace NINETRAX.Controllers.DbManagement
 {
     [Route("api/d/[controller]")]
     [ApiController]
-    public class TblVersionServersController: Controller
+    public class TbMenuCustomerPawlevelsController: Controller
     {
 
         #region Variables
 		private readonly IWebHostEnvironment _heSrv;
 		private readonly EntityContext _context;
-		private readonly IRawQueryRepo<TblVersionServer> _TblVersionServerContext;
-		private readonly IRawQueryRepo<TblVersionServersView> _getTblVersionServersView;
+		private readonly IRawQueryRepo<TbMenuCustomerPawlevel> _TbMenuCustomerPawlevelContext;
+		private readonly IRawQueryRepo<TbMenuCustomerPawlevelsView> _getTbMenuCustomerPawlevelsView;
 		private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
 		private readonly IRawQueryRepo<Object> _getAllByLike;
 		#endregion
 
 		#region Constructor
-		public TblVersionServersController(
+		public TbMenuCustomerPawlevelsController(
 			IWebHostEnvironment heSrv,
 			EntityContext context,
-			IRawQueryRepo<TblVersionServer> TblVersionServerContext,
-			IRawQueryRepo<TblVersionServersView> getTblVersionServersView,
+			IRawQueryRepo<TbMenuCustomerPawlevel> TbMenuCustomerPawlevelContext,
+			IRawQueryRepo<TbMenuCustomerPawlevelsView> getTbMenuCustomerPawlevelsView,
 			IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-			_TblVersionServerContext = TblVersionServerContext;
+			_TbMenuCustomerPawlevelContext = TbMenuCustomerPawlevelContext;
 			_heSrv = heSrv;
 			_context = context;
-			_getTblVersionServersView = getTblVersionServersView;
+			_getTbMenuCustomerPawlevelsView = getTbMenuCustomerPawlevelsView;
 			_getTotalRecordCountGLB = getTotalRecordCountGLB;
 			_getAllByLike = getAllByLike;
 		}
 		#endregion
 
-		#region GetTblVersionServerView
-		[HttpPost("GetTblVersionServersView")]
-		public async Task<ActionResult<DatatableResponseGLB>> GetTblVersionServersView(DatatableGLB datatableGLB)
+		#region GetTbMenuCustomerPawlevelView
+		[HttpPost("GetTbMenuCustomerPawlevelsView")]
+		public async Task<ActionResult<DatatableResponseGLB>> GetTbMenuCustomerPawlevelsView(DatatableGLB datatableGLB)
         {
 			DatatableResponseGLB response = new DatatableResponseGLB();
 			try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
 				#endregion where-condition gathering code
 		
 				#region database query code 
-				var dataGrid = await _getTblVersionServersView.GetAllByWhere(new GetAllByWhereGLB()
+				var dataGrid = await _getTbMenuCustomerPawlevelsView.GetAllByWhere(new GetAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbMenuCustomerPawlevelsView",
 					SortColumn = sortInformation,
 					WhereConditions = whereConditionStatement,
 					LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 		
 				var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbMenuCustomerPawlevelsView",
 					WhereConditions = whereConditionStatement
 				});
 	
@@ -135,9 +135,9 @@ namespace NINETRAX.Controllers.DbManagement
 	}
 	#endregion
 
-		#region GetTblVersionServerAutoCompletion
-		[HttpGet("GetTblVersionServerAutoCompletion")]
-		public async Task<ActionResult<IEnumerable<object>>> GetTblVersionServerAutoCompleteSuggestion(string column, string value)
+		#region GetTbMenuCustomerPawlevelAutoCompletion
+		[HttpGet("GetTbMenuCustomerPawlevelAutoCompletion")]
+		public async Task<ActionResult<IEnumerable<object>>> GetTbMenuCustomerPawlevelAutoCompleteSuggestion(string column, string value)
 		{
 			#region Call Repository Function
 			if (!string.IsNullOrEmpty(column) && !string.IsNullOrEmpty(value))
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
 					ColumnName = column,
 					ColumnValue = value,
 					NumberOfReturnRow = 10,
-					TableOrViewName = "TblVersionServersView"
+					TableOrViewName = "TbMenuCustomerPawlevelsView"
 				});
 		
 				#endregion database query code
@@ -163,13 +163,13 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region GetTblVersionServers
+		#region GetTbMenuCustomerPawlevels
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TblVersionServer>>> GetTblVersionServers()
+		public async Task<ActionResult<IEnumerable<TbMenuCustomerPawlevel>>> GetTbMenuCustomerPawlevels()
 		{
 			try
 			{
-				return await _context.TblVersionServers.ToListAsync();
+				return await _context.TbMenuCustomerPawlevels.ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -178,21 +178,21 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerById
+		#region TbMenuCustomerPawlevelById
 		[HttpGet("{id}")]
-		public async Task<ActionResult<TblVersionServer>> GetTblVersionServer(int id)
+		public async Task<ActionResult<TbMenuCustomerPawlevel>> GetTbMenuCustomerPawlevel(int id)
 		{
-			var objTblVersionServer = new TblVersionServer();
+			var objTbMenuCustomerPawlevel = new TbMenuCustomerPawlevel();
 			try
 			{
-				objTblVersionServer = await _context.TblVersionServers.Where(d => d.Id == id).FirstOrDefaultAsync();
+				objTbMenuCustomerPawlevel = await _context.TbMenuCustomerPawlevels.Where(d => d.Id == id).FirstOrDefaultAsync();
 		
-				if (objTblVersionServer == null)
+				if (objTbMenuCustomerPawlevel == null)
 				{
 					return StatusCode(404, "Data not found.");
 				}
 		
-				return objTblVersionServer;
+				return objTbMenuCustomerPawlevel;
 			}
 			catch (Exception ex)
 			{
@@ -201,17 +201,17 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerUpdate 
+		#region TbMenuCustomerPawlevelUpdate 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTblVersionServer(int id, TblVersionServer objTblVersionServer)
+		public async Task<IActionResult> PutTbMenuCustomerPawlevel(int id, TbMenuCustomerPawlevel objTbMenuCustomerPawlevel)
 		{
 		
-			if (id != objTblVersionServer.Id)
+			if (id != objTbMenuCustomerPawlevel.Id)
 			{
 				return StatusCode(404, "Data not found.");
 			}
 		
-			_context.Entry(objTblVersionServer).State = EntityState.Modified;
+			_context.Entry(objTbMenuCustomerPawlevel).State = EntityState.Modified;
 		
 			try
 			{
@@ -222,20 +222,20 @@ namespace NINETRAX.Controllers.DbManagement
 			{
 				return StatusCode(500, "API response failed.");
 			}
-			return StatusCode(200, objTblVersionServer);
+			return StatusCode(200, objTbMenuCustomerPawlevel);
 		}
 		
 		#endregion
 
-		#region TblVersionServerCreate
+		#region TbMenuCustomerPawlevelCreate
 		[HttpPost]
-		public async Task<ActionResult<TblVersionServer>> CreateTblVersionServer (TblVersionServer objTblVersionServer)
+		public async Task<ActionResult<TbMenuCustomerPawlevel>> CreateTbMenuCustomerPawlevel (TbMenuCustomerPawlevel objTbMenuCustomerPawlevel)
 		{
-			_context.TblVersionServers.Add(objTblVersionServer);
+			_context.TbMenuCustomerPawlevels.Add(objTbMenuCustomerPawlevel);
 			try
 			{
 				await _context.SaveChangesAsync();
-				return StatusCode(200, objTblVersionServer);
+				return StatusCode(200, objTbMenuCustomerPawlevel);
 			}
 			catch (Exception ex)
 			{
@@ -245,17 +245,17 @@ namespace NINETRAX.Controllers.DbManagement
 		
 		#endregion
 
-		#region TblVersionServerDelete
+		#region TbMenuCustomerPawlevelDelete
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTblVersionServer(int id)
+		public async Task<IActionResult> DeleteTbMenuCustomerPawlevel(int id)
 		{
-			var objTblVersionServer = await _context.TblVersionServers.FindAsync(id);
-			if (objTblVersionServer == null)
+			var objTbMenuCustomerPawlevel = await _context.TbMenuCustomerPawlevels.FindAsync(id);
+			if (objTbMenuCustomerPawlevel == null)
 			{
 				return StatusCode(404, "Data not found");
 			}
 		
-			_context.TblVersionServers.Remove(objTblVersionServer);
+			_context.TbMenuCustomerPawlevels.Remove(objTbMenuCustomerPawlevel);
 			await _context.SaveChangesAsync();
 		
 			return StatusCode(200, true);

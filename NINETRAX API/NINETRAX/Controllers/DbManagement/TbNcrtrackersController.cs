@@ -11,40 +11,40 @@ namespace NINETRAX.Controllers.DbManagement
 {
     [Route("api/d/[controller]")]
     [ApiController]
-    public class TblVersionServersController: Controller
+    public class TbNcrtrackersController: Controller
     {
 
         #region Variables
 		private readonly IWebHostEnvironment _heSrv;
 		private readonly EntityContext _context;
-		private readonly IRawQueryRepo<TblVersionServer> _TblVersionServerContext;
-		private readonly IRawQueryRepo<TblVersionServersView> _getTblVersionServersView;
+		private readonly IRawQueryRepo<TbNcrtracker> _TbNcrtrackerContext;
+		private readonly IRawQueryRepo<TbNcrtrackersView> _getTbNcrtrackersView;
 		private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
 		private readonly IRawQueryRepo<Object> _getAllByLike;
 		#endregion
 
 		#region Constructor
-		public TblVersionServersController(
+		public TbNcrtrackersController(
 			IWebHostEnvironment heSrv,
 			EntityContext context,
-			IRawQueryRepo<TblVersionServer> TblVersionServerContext,
-			IRawQueryRepo<TblVersionServersView> getTblVersionServersView,
+			IRawQueryRepo<TbNcrtracker> TbNcrtrackerContext,
+			IRawQueryRepo<TbNcrtrackersView> getTbNcrtrackersView,
 			IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-			_TblVersionServerContext = TblVersionServerContext;
+			_TbNcrtrackerContext = TbNcrtrackerContext;
 			_heSrv = heSrv;
 			_context = context;
-			_getTblVersionServersView = getTblVersionServersView;
+			_getTbNcrtrackersView = getTbNcrtrackersView;
 			_getTotalRecordCountGLB = getTotalRecordCountGLB;
 			_getAllByLike = getAllByLike;
 		}
 		#endregion
 
-		#region GetTblVersionServerView
-		[HttpPost("GetTblVersionServersView")]
-		public async Task<ActionResult<DatatableResponseGLB>> GetTblVersionServersView(DatatableGLB datatableGLB)
+		#region GetTbNcrtrackerView
+		[HttpPost("GetTbNcrtrackersView")]
+		public async Task<ActionResult<DatatableResponseGLB>> GetTbNcrtrackersView(DatatableGLB datatableGLB)
         {
 			DatatableResponseGLB response = new DatatableResponseGLB();
 			try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
 				#endregion where-condition gathering code
 		
 				#region database query code 
-				var dataGrid = await _getTblVersionServersView.GetAllByWhere(new GetAllByWhereGLB()
+				var dataGrid = await _getTbNcrtrackersView.GetAllByWhere(new GetAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbNcrtrackersView",
 					SortColumn = sortInformation,
 					WhereConditions = whereConditionStatement,
 					LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 		
 				var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbNcrtrackersView",
 					WhereConditions = whereConditionStatement
 				});
 	
@@ -135,9 +135,9 @@ namespace NINETRAX.Controllers.DbManagement
 	}
 	#endregion
 
-		#region GetTblVersionServerAutoCompletion
-		[HttpGet("GetTblVersionServerAutoCompletion")]
-		public async Task<ActionResult<IEnumerable<object>>> GetTblVersionServerAutoCompleteSuggestion(string column, string value)
+		#region GetTbNcrtrackerAutoCompletion
+		[HttpGet("GetTbNcrtrackerAutoCompletion")]
+		public async Task<ActionResult<IEnumerable<object>>> GetTbNcrtrackerAutoCompleteSuggestion(string column, string value)
 		{
 			#region Call Repository Function
 			if (!string.IsNullOrEmpty(column) && !string.IsNullOrEmpty(value))
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
 					ColumnName = column,
 					ColumnValue = value,
 					NumberOfReturnRow = 10,
-					TableOrViewName = "TblVersionServersView"
+					TableOrViewName = "TbNcrtrackersView"
 				});
 		
 				#endregion database query code
@@ -163,13 +163,13 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region GetTblVersionServers
+		#region GetTbNcrtrackers
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TblVersionServer>>> GetTblVersionServers()
+		public async Task<ActionResult<IEnumerable<TbNcrtracker>>> GetTbNcrtrackers()
 		{
 			try
 			{
-				return await _context.TblVersionServers.ToListAsync();
+				return await _context.TbNcrtrackers.ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -178,21 +178,21 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerById
+		#region TbNcrtrackerById
 		[HttpGet("{id}")]
-		public async Task<ActionResult<TblVersionServer>> GetTblVersionServer(int id)
+		public async Task<ActionResult<TbNcrtracker>> GetTbNcrtracker(int id)
 		{
-			var objTblVersionServer = new TblVersionServer();
+			var objTbNcrtracker = new TbNcrtracker();
 			try
 			{
-				objTblVersionServer = await _context.TblVersionServers.Where(d => d.Id == id).FirstOrDefaultAsync();
+				objTbNcrtracker = await _context.TbNcrtrackers.Where(d => d.Id == id).FirstOrDefaultAsync();
 		
-				if (objTblVersionServer == null)
+				if (objTbNcrtracker == null)
 				{
 					return StatusCode(404, "Data not found.");
 				}
 		
-				return objTblVersionServer;
+				return objTbNcrtracker;
 			}
 			catch (Exception ex)
 			{
@@ -201,17 +201,17 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerUpdate 
+		#region TbNcrtrackerUpdate 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTblVersionServer(int id, TblVersionServer objTblVersionServer)
+		public async Task<IActionResult> PutTbNcrtracker(int id, TbNcrtracker objTbNcrtracker)
 		{
 		
-			if (id != objTblVersionServer.Id)
+			if (id != objTbNcrtracker.Id)
 			{
 				return StatusCode(404, "Data not found.");
 			}
 		
-			_context.Entry(objTblVersionServer).State = EntityState.Modified;
+			_context.Entry(objTbNcrtracker).State = EntityState.Modified;
 		
 			try
 			{
@@ -222,20 +222,20 @@ namespace NINETRAX.Controllers.DbManagement
 			{
 				return StatusCode(500, "API response failed.");
 			}
-			return StatusCode(200, objTblVersionServer);
+			return StatusCode(200, objTbNcrtracker);
 		}
 		
 		#endregion
 
-		#region TblVersionServerCreate
+		#region TbNcrtrackerCreate
 		[HttpPost]
-		public async Task<ActionResult<TblVersionServer>> CreateTblVersionServer (TblVersionServer objTblVersionServer)
+		public async Task<ActionResult<TbNcrtracker>> CreateTbNcrtracker (TbNcrtracker objTbNcrtracker)
 		{
-			_context.TblVersionServers.Add(objTblVersionServer);
+			_context.TbNcrtrackers.Add(objTbNcrtracker);
 			try
 			{
 				await _context.SaveChangesAsync();
-				return StatusCode(200, objTblVersionServer);
+				return StatusCode(200, objTbNcrtracker);
 			}
 			catch (Exception ex)
 			{
@@ -245,17 +245,17 @@ namespace NINETRAX.Controllers.DbManagement
 		
 		#endregion
 
-		#region TblVersionServerDelete
+		#region TbNcrtrackerDelete
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTblVersionServer(int id)
+		public async Task<IActionResult> DeleteTbNcrtracker(int id)
 		{
-			var objTblVersionServer = await _context.TblVersionServers.FindAsync(id);
-			if (objTblVersionServer == null)
+			var objTbNcrtracker = await _context.TbNcrtrackers.FindAsync(id);
+			if (objTbNcrtracker == null)
 			{
 				return StatusCode(404, "Data not found");
 			}
 		
-			_context.TblVersionServers.Remove(objTblVersionServer);
+			_context.TbNcrtrackers.Remove(objTbNcrtracker);
 			await _context.SaveChangesAsync();
 		
 			return StatusCode(200, true);

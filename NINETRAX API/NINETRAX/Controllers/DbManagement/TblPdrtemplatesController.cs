@@ -11,40 +11,40 @@ namespace NINETRAX.Controllers.DbManagement
 {
     [Route("api/d/[controller]")]
     [ApiController]
-    public class TblVersionServersController: Controller
+    public class TblPdrtemplatesController: Controller
     {
 
         #region Variables
 		private readonly IWebHostEnvironment _heSrv;
 		private readonly EntityContext _context;
-		private readonly IRawQueryRepo<TblVersionServer> _TblVersionServerContext;
-		private readonly IRawQueryRepo<TblVersionServersView> _getTblVersionServersView;
+		private readonly IRawQueryRepo<TblPdrtemplate> _TblPdrtemplateContext;
+		private readonly IRawQueryRepo<TblPdrtemplatesView> _getTblPdrtemplatesView;
 		private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
 		private readonly IRawQueryRepo<Object> _getAllByLike;
 		#endregion
 
 		#region Constructor
-		public TblVersionServersController(
+		public TblPdrtemplatesController(
 			IWebHostEnvironment heSrv,
 			EntityContext context,
-			IRawQueryRepo<TblVersionServer> TblVersionServerContext,
-			IRawQueryRepo<TblVersionServersView> getTblVersionServersView,
+			IRawQueryRepo<TblPdrtemplate> TblPdrtemplateContext,
+			IRawQueryRepo<TblPdrtemplatesView> getTblPdrtemplatesView,
 			IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-			_TblVersionServerContext = TblVersionServerContext;
+			_TblPdrtemplateContext = TblPdrtemplateContext;
 			_heSrv = heSrv;
 			_context = context;
-			_getTblVersionServersView = getTblVersionServersView;
+			_getTblPdrtemplatesView = getTblPdrtemplatesView;
 			_getTotalRecordCountGLB = getTotalRecordCountGLB;
 			_getAllByLike = getAllByLike;
 		}
 		#endregion
 
-		#region GetTblVersionServerView
-		[HttpPost("GetTblVersionServersView")]
-		public async Task<ActionResult<DatatableResponseGLB>> GetTblVersionServersView(DatatableGLB datatableGLB)
+		#region GetTblPdrtemplateView
+		[HttpPost("GetTblPdrtemplatesView")]
+		public async Task<ActionResult<DatatableResponseGLB>> GetTblPdrtemplatesView(DatatableGLB datatableGLB)
         {
 			DatatableResponseGLB response = new DatatableResponseGLB();
 			try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
 				#endregion where-condition gathering code
 		
 				#region database query code 
-				var dataGrid = await _getTblVersionServersView.GetAllByWhere(new GetAllByWhereGLB()
+				var dataGrid = await _getTblPdrtemplatesView.GetAllByWhere(new GetAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TblPdrtemplatesView",
 					SortColumn = sortInformation,
 					WhereConditions = whereConditionStatement,
 					LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 		
 				var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TblPdrtemplatesView",
 					WhereConditions = whereConditionStatement
 				});
 	
@@ -135,9 +135,9 @@ namespace NINETRAX.Controllers.DbManagement
 	}
 	#endregion
 
-		#region GetTblVersionServerAutoCompletion
-		[HttpGet("GetTblVersionServerAutoCompletion")]
-		public async Task<ActionResult<IEnumerable<object>>> GetTblVersionServerAutoCompleteSuggestion(string column, string value)
+		#region GetTblPdrtemplateAutoCompletion
+		[HttpGet("GetTblPdrtemplateAutoCompletion")]
+		public async Task<ActionResult<IEnumerable<object>>> GetTblPdrtemplateAutoCompleteSuggestion(string column, string value)
 		{
 			#region Call Repository Function
 			if (!string.IsNullOrEmpty(column) && !string.IsNullOrEmpty(value))
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
 					ColumnName = column,
 					ColumnValue = value,
 					NumberOfReturnRow = 10,
-					TableOrViewName = "TblVersionServersView"
+					TableOrViewName = "TblPdrtemplatesView"
 				});
 		
 				#endregion database query code
@@ -163,13 +163,13 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region GetTblVersionServers
+		#region GetTblPdrtemplates
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TblVersionServer>>> GetTblVersionServers()
+		public async Task<ActionResult<IEnumerable<TblPdrtemplate>>> GetTblPdrtemplates()
 		{
 			try
 			{
-				return await _context.TblVersionServers.ToListAsync();
+				return await _context.TblPdrtemplates.ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -178,21 +178,21 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerById
+		#region TblPdrtemplateById
 		[HttpGet("{id}")]
-		public async Task<ActionResult<TblVersionServer>> GetTblVersionServer(int id)
+		public async Task<ActionResult<TblPdrtemplate>> GetTblPdrtemplate(int id)
 		{
-			var objTblVersionServer = new TblVersionServer();
+			var objTblPdrtemplate = new TblPdrtemplate();
 			try
 			{
-				objTblVersionServer = await _context.TblVersionServers.Where(d => d.Id == id).FirstOrDefaultAsync();
+				objTblPdrtemplate = await _context.TblPdrtemplates.Where(d => d.Id == id).FirstOrDefaultAsync();
 		
-				if (objTblVersionServer == null)
+				if (objTblPdrtemplate == null)
 				{
 					return StatusCode(404, "Data not found.");
 				}
 		
-				return objTblVersionServer;
+				return objTblPdrtemplate;
 			}
 			catch (Exception ex)
 			{
@@ -201,17 +201,17 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerUpdate 
+		#region TblPdrtemplateUpdate 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTblVersionServer(int id, TblVersionServer objTblVersionServer)
+		public async Task<IActionResult> PutTblPdrtemplate(int id, TblPdrtemplate objTblPdrtemplate)
 		{
 		
-			if (id != objTblVersionServer.Id)
+			if (id != objTblPdrtemplate.Id)
 			{
 				return StatusCode(404, "Data not found.");
 			}
 		
-			_context.Entry(objTblVersionServer).State = EntityState.Modified;
+			_context.Entry(objTblPdrtemplate).State = EntityState.Modified;
 		
 			try
 			{
@@ -222,20 +222,20 @@ namespace NINETRAX.Controllers.DbManagement
 			{
 				return StatusCode(500, "API response failed.");
 			}
-			return StatusCode(200, objTblVersionServer);
+			return StatusCode(200, objTblPdrtemplate);
 		}
 		
 		#endregion
 
-		#region TblVersionServerCreate
+		#region TblPdrtemplateCreate
 		[HttpPost]
-		public async Task<ActionResult<TblVersionServer>> CreateTblVersionServer (TblVersionServer objTblVersionServer)
+		public async Task<ActionResult<TblPdrtemplate>> CreateTblPdrtemplate (TblPdrtemplate objTblPdrtemplate)
 		{
-			_context.TblVersionServers.Add(objTblVersionServer);
+			_context.TblPdrtemplates.Add(objTblPdrtemplate);
 			try
 			{
 				await _context.SaveChangesAsync();
-				return StatusCode(200, objTblVersionServer);
+				return StatusCode(200, objTblPdrtemplate);
 			}
 			catch (Exception ex)
 			{
@@ -245,17 +245,17 @@ namespace NINETRAX.Controllers.DbManagement
 		
 		#endregion
 
-		#region TblVersionServerDelete
+		#region TblPdrtemplateDelete
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTblVersionServer(int id)
+		public async Task<IActionResult> DeleteTblPdrtemplate(int id)
 		{
-			var objTblVersionServer = await _context.TblVersionServers.FindAsync(id);
-			if (objTblVersionServer == null)
+			var objTblPdrtemplate = await _context.TblPdrtemplates.FindAsync(id);
+			if (objTblPdrtemplate == null)
 			{
 				return StatusCode(404, "Data not found");
 			}
 		
-			_context.TblVersionServers.Remove(objTblVersionServer);
+			_context.TblPdrtemplates.Remove(objTblPdrtemplate);
 			await _context.SaveChangesAsync();
 		
 			return StatusCode(200, true);

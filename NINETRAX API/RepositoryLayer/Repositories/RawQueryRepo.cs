@@ -23,15 +23,26 @@ namespace RepositoryLayer
             string sql = default(string);
             if (string.IsNullOrEmpty(getAllByWhereGLB.WhereConditions))
             {
-                //sql = "SELECT * FROM " + tableOrViewName + " ORDER BY " + sortColumn + " OFFSET " + limitStart + " ROWS FETCH NEXT " + 10 + " ROWS ONLY";
-                sql = string.Format("SELECT * FROM {0} ORDER BY {1} OFFSET {2} ROWS FETCH NEXT {3} ROWS ONLY",
+                //mssql
+                //sql = string.Format("SELECT * FROM {0} ORDER BY {1} OFFSET {2} ROWS FETCH NEXT {3} ROWS ONLY",
+                //    getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+
+
+                //mysql
+                sql = string.Format("SELECT * FROM {0} ORDER BY {1} LIMIT {2}, {3}",
                     getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+
             }
             else
             {
-                //sql = "SELECT * FROM " + tableOrViewName + " WHERE " + whereCondition + " ORDER BY " + sortColumn + " OFFSET " + limitStart + " ROWS FETCH NEXT " + 10 + " ROWS ONLY";
-                sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2} OFFSET {3} ROWS FETCH NEXT {4} ROWS ONLY",
+                //mssql
+                //sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2} OFFSET {3} ROWS FETCH NEXT {4} ROWS ONLY",
+                //      getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+           
+                //mysql
+                sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2} LIMIT {3}, {4}",
                       getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+           
             }
 
             var returnData = await _context.Set<T>().FromSqlRaw(sql).AsNoTracking().ToListAsync();
@@ -74,13 +85,28 @@ namespace RepositoryLayer
             string sql = default(string);
             if (string.IsNullOrEmpty(getAllByLikeGLB.WhereConditions))
             {
-                sql = string.Format("SELECT DISTINCT TOP ({0}) {1} FROM {2} WHERE {3} LIKE('%{4}%') ORDER BY {5} {6}",
-                    getAllByLikeGLB.NumberOfReturnRow, getAllByLikeGLB.ColumnName, getAllByLikeGLB.TableOrViewName, getAllByLikeGLB.ColumnName, getAllByLikeGLB.ColumnValue, getAllByLikeGLB.ColumnName, getAllByLikeGLB.OrderBy);
+                //mssql
+                //sql = string.Format("SELECT DISTINCT TOP ({0}) {1} FROM {2} WHERE {3} LIKE('%{4}%') ORDER BY {5} {6}",
+                //    getAllByLikeGLB.NumberOfReturnRow, getAllByLikeGLB.ColumnName, getAllByLikeGLB.TableOrViewName, getAllByLikeGLB.ColumnName, getAllByLikeGLB.ColumnValue, getAllByLikeGLB.ColumnName, getAllByLikeGLB.OrderBy);
+            
+                //mysql
+                sql = string.Format("SELECT DISTINCT {0} FROM {1} WHERE {2} LIKE('%{3}%') ORDER BY {4} {5} LIMIT {6}",
+                    getAllByLikeGLB.ColumnName, getAllByLikeGLB.TableOrViewName, getAllByLikeGLB.ColumnName, getAllByLikeGLB.ColumnValue, getAllByLikeGLB.ColumnName, getAllByLikeGLB.OrderBy, getAllByLikeGLB.NumberOfReturnRow);
+            
+            
             }
             else
             {
-                sql = string.Format("SELECT DISTINCT TOP ({0}) {1} FROM {2} WHERE {3} LIKE('%{4}%') AND ({5}) ORDER BY {6} {7}",
-                    getAllByLikeGLB.NumberOfReturnRow, getAllByLikeGLB.ColumnName, getAllByLikeGLB.TableOrViewName, getAllByLikeGLB.ColumnName, getAllByLikeGLB.ColumnValue, getAllByLikeGLB.WhereConditions, getAllByLikeGLB.ColumnName, getAllByLikeGLB.OrderBy);
+                //mssql
+                //sql = string.Format("SELECT DISTINCT TOP ({0}) {1} FROM {2} WHERE {3} LIKE('%{4}%') AND ({5}) ORDER BY {6} {7}",
+                //    getAllByLikeGLB.NumberOfReturnRow, getAllByLikeGLB.ColumnName, getAllByLikeGLB.TableOrViewName, getAllByLikeGLB.ColumnName, getAllByLikeGLB.ColumnValue, getAllByLikeGLB.WhereConditions, getAllByLikeGLB.ColumnName, getAllByLikeGLB.OrderBy);
+           
+                //mysql
+                sql = string.Format("SELECT DISTINCT {0} FROM {1} WHERE {2} LIKE('%{3}%') AND ({4}) ORDER BY {5} {6} LIMIT {7}",
+                    getAllByLikeGLB.ColumnName, getAllByLikeGLB.TableOrViewName, 
+                    getAllByLikeGLB.ColumnName, getAllByLikeGLB.ColumnValue, 
+                    getAllByLikeGLB.WhereConditions, getAllByLikeGLB.ColumnName, 
+                    getAllByLikeGLB.OrderBy, getAllByLikeGLB.NumberOfReturnRow);
             }
 
             List<Object> list = new List<Object>();

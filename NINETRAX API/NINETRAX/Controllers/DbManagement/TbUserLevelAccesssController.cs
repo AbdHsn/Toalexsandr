@@ -11,40 +11,40 @@ namespace NINETRAX.Controllers.DbManagement
 {
     [Route("api/d/[controller]")]
     [ApiController]
-    public class TblVersionServersController: Controller
+    public class TbUserLevelAccesssController: Controller
     {
 
         #region Variables
 		private readonly IWebHostEnvironment _heSrv;
 		private readonly EntityContext _context;
-		private readonly IRawQueryRepo<TblVersionServer> _TblVersionServerContext;
-		private readonly IRawQueryRepo<TblVersionServersView> _getTblVersionServersView;
+		private readonly IRawQueryRepo<TbUserLevelAccess> _TbUserLevelAccessContext;
+		private readonly IRawQueryRepo<TbUserLevelAccesssView> _getTbUserLevelAccesssView;
 		private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
 		private readonly IRawQueryRepo<Object> _getAllByLike;
 		#endregion
 
 		#region Constructor
-		public TblVersionServersController(
+		public TbUserLevelAccesssController(
 			IWebHostEnvironment heSrv,
 			EntityContext context,
-			IRawQueryRepo<TblVersionServer> TblVersionServerContext,
-			IRawQueryRepo<TblVersionServersView> getTblVersionServersView,
+			IRawQueryRepo<TbUserLevelAccess> TbUserLevelAccessContext,
+			IRawQueryRepo<TbUserLevelAccesssView> getTbUserLevelAccesssView,
 			IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-			_TblVersionServerContext = TblVersionServerContext;
+			_TbUserLevelAccessContext = TbUserLevelAccessContext;
 			_heSrv = heSrv;
 			_context = context;
-			_getTblVersionServersView = getTblVersionServersView;
+			_getTbUserLevelAccesssView = getTbUserLevelAccesssView;
 			_getTotalRecordCountGLB = getTotalRecordCountGLB;
 			_getAllByLike = getAllByLike;
 		}
 		#endregion
 
-		#region GetTblVersionServerView
-		[HttpPost("GetTblVersionServersView")]
-		public async Task<ActionResult<DatatableResponseGLB>> GetTblVersionServersView(DatatableGLB datatableGLB)
+		#region GetTbUserLevelAccessView
+		[HttpPost("GetTbUserLevelAccesssView")]
+		public async Task<ActionResult<DatatableResponseGLB>> GetTbUserLevelAccesssView(DatatableGLB datatableGLB)
         {
 			DatatableResponseGLB response = new DatatableResponseGLB();
 			try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
 				#endregion where-condition gathering code
 		
 				#region database query code 
-				var dataGrid = await _getTblVersionServersView.GetAllByWhere(new GetAllByWhereGLB()
+				var dataGrid = await _getTbUserLevelAccesssView.GetAllByWhere(new GetAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbUserLevelAccesssView",
 					SortColumn = sortInformation,
 					WhereConditions = whereConditionStatement,
 					LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 		
 				var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbUserLevelAccesssView",
 					WhereConditions = whereConditionStatement
 				});
 	
@@ -135,9 +135,9 @@ namespace NINETRAX.Controllers.DbManagement
 	}
 	#endregion
 
-		#region GetTblVersionServerAutoCompletion
-		[HttpGet("GetTblVersionServerAutoCompletion")]
-		public async Task<ActionResult<IEnumerable<object>>> GetTblVersionServerAutoCompleteSuggestion(string column, string value)
+		#region GetTbUserLevelAccessAutoCompletion
+		[HttpGet("GetTbUserLevelAccessAutoCompletion")]
+		public async Task<ActionResult<IEnumerable<object>>> GetTbUserLevelAccessAutoCompleteSuggestion(string column, string value)
 		{
 			#region Call Repository Function
 			if (!string.IsNullOrEmpty(column) && !string.IsNullOrEmpty(value))
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
 					ColumnName = column,
 					ColumnValue = value,
 					NumberOfReturnRow = 10,
-					TableOrViewName = "TblVersionServersView"
+					TableOrViewName = "TbUserLevelAccesssView"
 				});
 		
 				#endregion database query code
@@ -163,13 +163,13 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region GetTblVersionServers
+		#region GetTbUserLevelAccesss
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TblVersionServer>>> GetTblVersionServers()
+		public async Task<ActionResult<IEnumerable<TbUserLevelAccess>>> GetTbUserLevelAccesss()
 		{
 			try
 			{
-				return await _context.TblVersionServers.ToListAsync();
+				return await _context.TbUserLevelAccesses.ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -178,21 +178,21 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerById
+		#region TbUserLevelAccessById
 		[HttpGet("{id}")]
-		public async Task<ActionResult<TblVersionServer>> GetTblVersionServer(int id)
+		public async Task<ActionResult<TbUserLevelAccess>> GetTbUserLevelAccess(int id)
 		{
-			var objTblVersionServer = new TblVersionServer();
+			var objTbUserLevelAccess = new TbUserLevelAccess();
 			try
 			{
-				objTblVersionServer = await _context.TblVersionServers.Where(d => d.Id == id).FirstOrDefaultAsync();
+				objTbUserLevelAccess = await _context.TbUserLevelAccesses.Where(d => d.Id == id).FirstOrDefaultAsync();
 		
-				if (objTblVersionServer == null)
+				if (objTbUserLevelAccess == null)
 				{
 					return StatusCode(404, "Data not found.");
 				}
 		
-				return objTblVersionServer;
+				return objTbUserLevelAccess;
 			}
 			catch (Exception ex)
 			{
@@ -201,17 +201,17 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerUpdate 
+		#region TbUserLevelAccessUpdate 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTblVersionServer(int id, TblVersionServer objTblVersionServer)
+		public async Task<IActionResult> PutTbUserLevelAccess(int id, TbUserLevelAccess objTbUserLevelAccess)
 		{
 		
-			if (id != objTblVersionServer.Id)
+			if (id != objTbUserLevelAccess.Id)
 			{
 				return StatusCode(404, "Data not found.");
 			}
 		
-			_context.Entry(objTblVersionServer).State = EntityState.Modified;
+			_context.Entry(objTbUserLevelAccess).State = EntityState.Modified;
 		
 			try
 			{
@@ -222,20 +222,20 @@ namespace NINETRAX.Controllers.DbManagement
 			{
 				return StatusCode(500, "API response failed.");
 			}
-			return StatusCode(200, objTblVersionServer);
+			return StatusCode(200, objTbUserLevelAccess);
 		}
 		
 		#endregion
 
-		#region TblVersionServerCreate
+		#region TbUserLevelAccessCreate
 		[HttpPost]
-		public async Task<ActionResult<TblVersionServer>> CreateTblVersionServer (TblVersionServer objTblVersionServer)
+		public async Task<ActionResult<TbUserLevelAccess>> CreateTbUserLevelAccess (TbUserLevelAccess objTbUserLevelAccess)
 		{
-			_context.TblVersionServers.Add(objTblVersionServer);
+			_context.TbUserLevelAccesses.Add(objTbUserLevelAccess);
 			try
 			{
 				await _context.SaveChangesAsync();
-				return StatusCode(200, objTblVersionServer);
+				return StatusCode(200, objTbUserLevelAccess);
 			}
 			catch (Exception ex)
 			{
@@ -245,17 +245,17 @@ namespace NINETRAX.Controllers.DbManagement
 		
 		#endregion
 
-		#region TblVersionServerDelete
+		#region TbUserLevelAccessDelete
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTblVersionServer(int id)
+		public async Task<IActionResult> DeleteTbUserLevelAccess(int id)
 		{
-			var objTblVersionServer = await _context.TblVersionServers.FindAsync(id);
-			if (objTblVersionServer == null)
+			var objTbUserLevelAccess = await _context.TbUserLevelAccesses.FindAsync(id);
+			if (objTbUserLevelAccess == null)
 			{
 				return StatusCode(404, "Data not found");
 			}
 		
-			_context.TblVersionServers.Remove(objTblVersionServer);
+			_context.TbUserLevelAccesses.Remove(objTbUserLevelAccess);
 			await _context.SaveChangesAsync();
 		
 			return StatusCode(200, true);

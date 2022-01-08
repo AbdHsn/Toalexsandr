@@ -11,40 +11,40 @@ namespace NINETRAX.Controllers.DbManagement
 {
     [Route("api/d/[controller]")]
     [ApiController]
-    public class TblVersionServersController: Controller
+    public class TbMenuNamingConventionsController: Controller
     {
 
         #region Variables
 		private readonly IWebHostEnvironment _heSrv;
 		private readonly EntityContext _context;
-		private readonly IRawQueryRepo<TblVersionServer> _TblVersionServerContext;
-		private readonly IRawQueryRepo<TblVersionServersView> _getTblVersionServersView;
+		private readonly IRawQueryRepo<TbMenuNamingConvention> _TbMenuNamingConventionContext;
+		private readonly IRawQueryRepo<TbMenuNamingConventionsView> _getTbMenuNamingConventionsView;
 		private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
 		private readonly IRawQueryRepo<Object> _getAllByLike;
 		#endregion
 
 		#region Constructor
-		public TblVersionServersController(
+		public TbMenuNamingConventionsController(
 			IWebHostEnvironment heSrv,
 			EntityContext context,
-			IRawQueryRepo<TblVersionServer> TblVersionServerContext,
-			IRawQueryRepo<TblVersionServersView> getTblVersionServersView,
+			IRawQueryRepo<TbMenuNamingConvention> TbMenuNamingConventionContext,
+			IRawQueryRepo<TbMenuNamingConventionsView> getTbMenuNamingConventionsView,
 			IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-			_TblVersionServerContext = TblVersionServerContext;
+			_TbMenuNamingConventionContext = TbMenuNamingConventionContext;
 			_heSrv = heSrv;
 			_context = context;
-			_getTblVersionServersView = getTblVersionServersView;
+			_getTbMenuNamingConventionsView = getTbMenuNamingConventionsView;
 			_getTotalRecordCountGLB = getTotalRecordCountGLB;
 			_getAllByLike = getAllByLike;
 		}
 		#endregion
 
-		#region GetTblVersionServerView
-		[HttpPost("GetTblVersionServersView")]
-		public async Task<ActionResult<DatatableResponseGLB>> GetTblVersionServersView(DatatableGLB datatableGLB)
+		#region GetTbMenuNamingConventionView
+		[HttpPost("GetTbMenuNamingConventionsView")]
+		public async Task<ActionResult<DatatableResponseGLB>> GetTbMenuNamingConventionsView(DatatableGLB datatableGLB)
         {
 			DatatableResponseGLB response = new DatatableResponseGLB();
 			try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
 				#endregion where-condition gathering code
 		
 				#region database query code 
-				var dataGrid = await _getTblVersionServersView.GetAllByWhere(new GetAllByWhereGLB()
+				var dataGrid = await _getTbMenuNamingConventionsView.GetAllByWhere(new GetAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbMenuNamingConventionsView",
 					SortColumn = sortInformation,
 					WhereConditions = whereConditionStatement,
 					LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 		
 				var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
 				{
-					TableOrViewName = "TblVersionServersView",
+					TableOrViewName = "TbMenuNamingConventionsView",
 					WhereConditions = whereConditionStatement
 				});
 	
@@ -135,9 +135,9 @@ namespace NINETRAX.Controllers.DbManagement
 	}
 	#endregion
 
-		#region GetTblVersionServerAutoCompletion
-		[HttpGet("GetTblVersionServerAutoCompletion")]
-		public async Task<ActionResult<IEnumerable<object>>> GetTblVersionServerAutoCompleteSuggestion(string column, string value)
+		#region GetTbMenuNamingConventionAutoCompletion
+		[HttpGet("GetTbMenuNamingConventionAutoCompletion")]
+		public async Task<ActionResult<IEnumerable<object>>> GetTbMenuNamingConventionAutoCompleteSuggestion(string column, string value)
 		{
 			#region Call Repository Function
 			if (!string.IsNullOrEmpty(column) && !string.IsNullOrEmpty(value))
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
 					ColumnName = column,
 					ColumnValue = value,
 					NumberOfReturnRow = 10,
-					TableOrViewName = "TblVersionServersView"
+					TableOrViewName = "TbMenuNamingConventionsView"
 				});
 		
 				#endregion database query code
@@ -163,13 +163,13 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region GetTblVersionServers
+		#region GetTbMenuNamingConventions
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TblVersionServer>>> GetTblVersionServers()
+		public async Task<ActionResult<IEnumerable<TbMenuNamingConvention>>> GetTbMenuNamingConventions()
 		{
 			try
 			{
-				return await _context.TblVersionServers.ToListAsync();
+				return await _context.TbMenuNamingConventions.ToListAsync();
 			}
 			catch (Exception ex)
 			{
@@ -178,21 +178,21 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerById
+		#region TbMenuNamingConventionById
 		[HttpGet("{id}")]
-		public async Task<ActionResult<TblVersionServer>> GetTblVersionServer(int id)
+		public async Task<ActionResult<TbMenuNamingConvention>> GetTbMenuNamingConvention(int id)
 		{
-			var objTblVersionServer = new TblVersionServer();
+			var objTbMenuNamingConvention = new TbMenuNamingConvention();
 			try
 			{
-				objTblVersionServer = await _context.TblVersionServers.Where(d => d.Id == id).FirstOrDefaultAsync();
+				objTbMenuNamingConvention = await _context.TbMenuNamingConventions.Where(d => d.Id == id).FirstOrDefaultAsync();
 		
-				if (objTblVersionServer == null)
+				if (objTbMenuNamingConvention == null)
 				{
 					return StatusCode(404, "Data not found.");
 				}
 		
-				return objTblVersionServer;
+				return objTbMenuNamingConvention;
 			}
 			catch (Exception ex)
 			{
@@ -201,17 +201,17 @@ namespace NINETRAX.Controllers.DbManagement
 		}
 		#endregion
 
-		#region TblVersionServerUpdate 
+		#region TbMenuNamingConventionUpdate 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTblVersionServer(int id, TblVersionServer objTblVersionServer)
+		public async Task<IActionResult> PutTbMenuNamingConvention(int id, TbMenuNamingConvention objTbMenuNamingConvention)
 		{
 		
-			if (id != objTblVersionServer.Id)
+			if (id != objTbMenuNamingConvention.Id)
 			{
 				return StatusCode(404, "Data not found.");
 			}
 		
-			_context.Entry(objTblVersionServer).State = EntityState.Modified;
+			_context.Entry(objTbMenuNamingConvention).State = EntityState.Modified;
 		
 			try
 			{
@@ -222,20 +222,20 @@ namespace NINETRAX.Controllers.DbManagement
 			{
 				return StatusCode(500, "API response failed.");
 			}
-			return StatusCode(200, objTblVersionServer);
+			return StatusCode(200, objTbMenuNamingConvention);
 		}
 		
 		#endregion
 
-		#region TblVersionServerCreate
+		#region TbMenuNamingConventionCreate
 		[HttpPost]
-		public async Task<ActionResult<TblVersionServer>> CreateTblVersionServer (TblVersionServer objTblVersionServer)
+		public async Task<ActionResult<TbMenuNamingConvention>> CreateTbMenuNamingConvention (TbMenuNamingConvention objTbMenuNamingConvention)
 		{
-			_context.TblVersionServers.Add(objTblVersionServer);
+			_context.TbMenuNamingConventions.Add(objTbMenuNamingConvention);
 			try
 			{
 				await _context.SaveChangesAsync();
-				return StatusCode(200, objTblVersionServer);
+				return StatusCode(200, objTbMenuNamingConvention);
 			}
 			catch (Exception ex)
 			{
@@ -245,17 +245,17 @@ namespace NINETRAX.Controllers.DbManagement
 		
 		#endregion
 
-		#region TblVersionServerDelete
+		#region TbMenuNamingConventionDelete
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTblVersionServer(int id)
+		public async Task<IActionResult> DeleteTbMenuNamingConvention(int id)
 		{
-			var objTblVersionServer = await _context.TblVersionServers.FindAsync(id);
-			if (objTblVersionServer == null)
+			var objTbMenuNamingConvention = await _context.TbMenuNamingConventions.FindAsync(id);
+			if (objTbMenuNamingConvention == null)
 			{
 				return StatusCode(404, "Data not found");
 			}
 		
-			_context.TblVersionServers.Remove(objTblVersionServer);
+			_context.TbMenuNamingConventions.Remove(objTbMenuNamingConvention);
 			await _context.SaveChangesAsync();
 		
 			return StatusCode(200, true);

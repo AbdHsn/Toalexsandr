@@ -9,7 +9,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<EntityContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
+    //options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
+     options.UseMySql(builder.Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

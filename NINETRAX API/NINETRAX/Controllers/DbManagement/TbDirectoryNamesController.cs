@@ -1,7 +1,8 @@
+ 
+
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
 using DataLayer.Models.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
@@ -32,12 +33,12 @@ namespace NINETRAX.Controllers.DbManagement
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-		_TbDirectoryNameContext = TbDirectoryNameContext;
-		_heSrv = heSrv;
-		_context = context;
-		_getTbDirectoryNamesView = getTbDirectoryNamesView;
-		_getTotalRecordCountGLB = getTotalRecordCountGLB;
-		_getAllByLike = getAllByLike;
+			_TbDirectoryNameContext = TbDirectoryNameContext;
+			_heSrv = heSrv;
+			_context = context;
+			_getTbDirectoryNamesView = getTbDirectoryNamesView;
+			_getTotalRecordCountGLB = getTotalRecordCountGLB;
+			_getAllByLike = getAllByLike;
 		}
 		#endregion
 

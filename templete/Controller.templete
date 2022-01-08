@@ -34,12 +34,12 @@ namespace NINETRAX.Controllers.DbManagement
 			IRawQueryRepo<Object> getAllByLike
 		)
 		{
-		_${entity.name}Context = ${entity.name}Context;
-		_heSrv = heSrv;
-		_context = context;
-		_get${entity.name}sView = get${entity.name}sView;
-		_getTotalRecordCountGLB = getTotalRecordCountGLB;
-		_getAllByLike = getAllByLike;
+			_${entity.name}Context = ${entity.name}Context;
+			_heSrv = heSrv;
+			_context = context;
+			_get${entity.name}sView = get${entity.name}sView;
+			_getTotalRecordCountGLB = getTotalRecordCountGLB;
+			_getAllByLike = getAllByLike;
 		}
 		#endregion
 
