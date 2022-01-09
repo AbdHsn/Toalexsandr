@@ -32,7 +32,7 @@ import * as Yup from "yup";
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
-class DirectoryNameList extends Component {
+class TbDirectoryNameList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -680,4 +680,4 @@ class DirectoryNameList extends Component {
   }
 }
 
-export default DirectoryNameList;
+export default TbDirectoryNameList;

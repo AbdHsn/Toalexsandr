@@ -1,8 +1,8 @@
 import http from "../http-common";
 
-class DirectoryNameService {
+class TbDirectoryNameService {
   getAll() {
-    return http.get("/settings/DirectoryNames");
+    return http.get("/d/TbDirectoryNames/GetTbDirectoryNamesView");
   }
 
   //   get(id) {
@@ -10,7 +10,7 @@ class DirectoryNameService {
   //   }
 
   create(data) {
-    return http.post("/settings/DirectoryNames", data);
+    return http.post("/d/TbDirectoryNames/GetTbDirectoryNamesView", data);
   }
 
   //   update(id, data) {
@@ -30,4 +30,4 @@ class DirectoryNameService {
   //   }
 }
 
-export default new DirectoryNameService();
+export default new TbDirectoryNameService();

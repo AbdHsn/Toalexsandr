@@ -31,9 +31,9 @@ import * as Yup from "yup";
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import directoryNameService from "services/directory-name.service";
+import directoryNameService from "services/TbDirectoryNameService.service";
 
-class DirectoryNameAddOrUpdate extends Component {
+class TbDirectoryNameAddUpdate extends Component {
   constructor(props) {
     super(props);
 
@@ -330,4 +330,4 @@ class DirectoryNameAddOrUpdate extends Component {
   }
 }
 
-export default DirectoryNameAddOrUpdate;
+export default TbDirectoryNameAddUpdate;
