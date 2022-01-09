@@ -173,12 +173,18 @@ import BlogDetails from "../pages/Blog/BlogDetails";
 //Directory Names
 import DirectoryNameList from "../pages/DirectoryNames/directory-name-list";
 
+//TbDirectoryName-List
+import TbDirectoryNameList from "../pages/TbDirectoryName/TbDirectoryName-list";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
   { path: "/directory-name-list", component: DirectoryNameList },
   { path: "/dashboard-crypto", component: DashboardCrypto },
   { path: "/dashboard-blog", component: DashboardBlog },
+
+  //OwnPath
+  { path: "/tb-directory-name-list", component: TbDirectoryNameList },
 
   //Crypto
   { path: "/crypto-wallet", component: CryptoWallet },

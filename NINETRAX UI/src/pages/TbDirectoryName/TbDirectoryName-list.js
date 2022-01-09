@@ -31,6 +31,7 @@ import * as Yup from "yup";
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
+import TbDirectoryNameService from "services/TbDirectoryNameService.service";
 
 class TbDirectoryNameList extends Component {
   constructor(props) {
@@ -42,23 +43,16 @@ class TbDirectoryNameList extends Component {
       deleteConfirmation: false,
 
       modelLstLoading: false,
-      modelLst: [],
-      model: { id: 0, personName: "", personTitle: "", baseOfOperation: "" },
+      modelLstTbDirectoryName: [],
+      modelTbDirectoryName: {
+        id: 0,
+        personName: "",
+        personTitle: "",
+        baseOfOperation: "",
+      },
 
       rowSizeDdl: ["10", "30", "50", "100", "All"],
-      // dataTable: {
-      //   start: 0,
-      //   length: "10",
-      //   totalRecords: 0,
-      //   columns: [],
-      //   searches: [],
-      //   orders: [
-      //     {
-      //       column: "Id",
-      //       order_by: "DESC",
-      //     },
-      //   ],
-      // },
+
       //Datatable properties
       start: 0,
       length: "10",
@@ -84,15 +78,23 @@ class TbDirectoryNameList extends Component {
       searchByBaseOfOperation: undefined,
     };
 
-    this.openAddUpdateModal = this.openAddUpdateModal.bind(this);
-    this.onRowDeleteClick = this.onRowDeleteClick.bind(this);
+    this.retriveTbDirectoryNamesView =
+      this.retriveTbDirectoryNamesView.bind(this);
+
+    this.onColumnSearchChange = this.onColumnSearchChange.bind(this);
+    this.onSizePerPageChange = this.onSizePerPageChange.bind(this);
+    this.onColumnSearchPressEnter = this.onColumnSearchPressEnter.bind(this);
+    this.onPageItemClick = this.onPageItemClick.bind(this);
+
+    // this.openAddUpdateModal = this.openAddUpdateModal.bind(this);
+    // this.onRowDeleteClick = this.onRowDeleteClick.bind(this);
   }
 
   componentDidMount() {
-    this.loadTableData();
+    this.retriveTbDirectoryNamesView();
   }
 
-  loadTableData = async e => {
+  retriveTbDirectoryNamesView = async e => {
     const currentSearchLst = [
       {
         search_by: "Id",
@@ -134,17 +136,16 @@ class TbDirectoryNameList extends Component {
 
     console.log("Current state: --->", this.state);
 
-    await axios
-      .post(
-        "https://localhost:44324/api/settings/DirectoryNames/GetDirectoryNames",
-        this.state
-      )
+    TbDirectoryNameService.GetTbDirectoryNamesView(this.state)
       .then(response => {
         this.setState(preState => {
-          preState.modelLst = response.data.data;
+          preState.modelLstTbDirectoryName = response.data.data;
           preState.totalRecords = response.data.recordsTotal;
           return preState;
         });
+
+        console.log("Server data: --->", response);
+
         //this.render();
         // this.setState({
         //   modelLst: response.data.data,
@@ -160,176 +161,267 @@ class TbDirectoryNameList extends Component {
         // });
         toastr.error("Failed to fetch data", "MESSAGE");
       });
+
+    // await axios
+    //   .post(
+    //     "https://localhost:7074/api/d/TbDirectoryNames/GetTbDirectoryNamesView",
+    //     this.state
+    //   )
+    //   .then(response => {
+    //     this.setState(preState => {
+    //       preState.modelLst = response.data.data;
+    //       preState.totalRecords = response.data.recordsTotal;
+    //       return preState;
+    //     });
+
+    //     console.log("Server data: --->", response);
+
+    //     //this.render();
+    //     // this.setState({
+    //     //   modelLst: response.data.data,
+    //     //   totalRecords: response.data.recordsTotal,
+    //     //   // dataTable: {
+    //     //   //   totalRecords: response.data.recordsTotal,
+    //     //   // },
+    //     // });
+    //   })
+    //   .catch(error => {
+    //     // this.setState(s => {
+    //     //   s.modelLstLoading = false;
+    //     // });
+    //     toastr.error("Failed to fetch data", "MESSAGE");
+    //   });
   };
 
-  onSizePerPageChange = e => {
-    // this.setState(preState => {
-    //   preState.start = 0;
-    //   preState.length = e;
-    //   //this.loadTableData();
-    // });
-    this.setState(preState => ({
-      start: 0,
-      length: e,
-    }));
-  };
+  onColumnSearchChange = e => {
+    console.log("on Column change: --->", e.target.value, e.target.name);
 
-  onColumnSearchChange = (e, columnName) => {
-    console.log("change data----> ", e, columnName, this.state);
-    switch (columnName) {
+    switch (e.target.name) {
       case "Id": {
-        this.setState(preState => {
-          preState.searchById = e.target.value;
-        });
+        this.setState(
+          preState => {
+            preState.searchById = e.target.value;
+          },
+          () => this.retriveTbDirectoryNamesView()
+        );
+        // this.setState({
+        //   searchById: e.target.value,
+        // });
+        //this.retriveTbDirectoryNamesView();
         break;
       }
       case "PersonName": {
-        this.setState(preState => {
-          preState.searchByPersonName = e.target.value;
-        });
+        // this.setState({
+        //   searchByPersonName: e.target.value,
+        // });
+        this.setState(
+          preState => {
+            preState.searchByPersonName = e.target.value;
+          },
+          () => this.retriveTbDirectoryNamesView()
+        );
         break;
       }
       case "PersonTitle": {
-        this.setState(preState => {
-          preState.searchByPersonTitle = e.target.value;
-        });
+        // this.setState({
+        //   searchByPersonTitle: e.target.value,
+        // });
+        this.setState(
+          preState => {
+            preState.searchByPersonTitle = e.target.value;
+          },
+          () => this.retriveTbDirectoryNamesView()
+        );
         break;
       }
       case "BaseOfOperation": {
-        this.setState(preState => {
-          preState.searchByBaseOfOperation = e.target.value;
-        });
+        // this.setState(preState => {
+        //   preState.searchByBaseOfOperation = e.target.value;
+        // });
+        this.setState(
+          preState => {
+            preState.searchByBaseOfOperation = e.target.value;
+          },
+          () => this.retriveTbDirectoryNamesView()
+        );
         break;
       }
       default: {
         break;
       }
     }
-    console.log("change event after", e, columnName, this.state);
+
+    console.log(
+      "on column change event after",
+      e.target.value,
+      e.target.name,
+      this.state
+    );
+  };
+
+  onSizePerPageChange = e => {
+    this.setState(
+      preState => {
+        preState.start = 0;
+        preState.length = e;
+      },
+      () => this.retriveTbDirectoryNamesView()
+    );
+    // this.setState({
+    //   start: 0,
+    //   length: e,
+    // });
   };
 
   onColumnSearchPressEnter = e => {
     if (e.key === "Enter") {
-      console.log("key press event", e);
-      this.loadTableData();
-    }
-  };
-
-  onRowEditClick = item => {
-    console.log("Edit Item ----> ", item);
-  };
-
-  openAddUpdateModal = item => {
-    if (item?.id) {
-      this.setState(preState => {
-        preState.model = item;
-        preState.isAddUpdateModalOpened = true;
-        preState.modalTitle = "Update Directory Name";
-      });
-    } else {
-      this.setState(preState => {
-        preState.isAddUpdateModalOpened = true;
-        preState.modalTitle = "Add New Directory Name";
-      });
-    }
-    this.setState({ visible: true });
-  };
-
-  closeAddUpdateModal = e => {
-    this.setState(preState => {
-      preState.model = {};
-      preState.isAddUpdateModalOpened = false;
-    });
-    this.setState({ visible: false });
-  };
-
-  onRowDeleteClick = item => {
-    console.log("onRowDeleteClicked: ", item);
-    if (item?.id) {
-      Swal.fire({
-        title: `Are you sure to delete ${item.personName}?`,
-        // text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes, delete it!",
-      }).then(result => {
-        if (result.isConfirmed) {
-          axios
-            .delete(
-              "https://localhost:44324/api/settings/DirectoryNames/" + item.id
-            )
-            .then(response => {
-              if (response.data) {
-                toastr.success("Delete succeeded", "MESSAGE");
-                this.loadTableData();
-                Swal.close();
-              }
-            })
-            .catch(error => {
-              toastr.error("Delete failed", "MESSAGE");
-              Swal.close();
-            });
-        }
-
-        // if (result.isConfirmed) {
-        //   Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        // }
-      });
-    }
-  };
-
-  onSaveClick = item => {
-    if (item?.id > 0) {
-      axios
-        .put(
-          "https://localhost:44324/api/settings/DirectoryNames/" + item.id,
-          item
-        )
-        .then(response => {
-          let updatedItem = this.state.modelLst.find(
-            f => f.id === response.data.id
-          );
-          updatedItem.id = response.data.id;
-          updatedItem.personName = response.data.personName;
-          updatedItem.personTitle = response.data.personTitle;
-          updatedItem.baseOfOperation = response.data.baseOfOperation;
-
-          toastr.success("Update succeeded.", "MESSAGE");
-          this.closeAddUpdateModal();
-          //this.setState({ modelLst: response.data.data });
-        })
-        .catch(error => {
-          toastr.error("Update failed", "MESSAGE");
-        });
-    } else {
-      axios
-        .post("https://localhost:44324/api/settings/DirectoryNames/", item)
-        .then(response => {
-          // if reload needed, push new item into state is not needed.
-          // this.setState(preState => {
-          //   preState.modelLst = [response.data, ...preState.modelLst];
-          // });
-
-          toastr.success("New item created.", "MESSAGE");
-          this.closeAddUpdateModal();
-          this.loadTableData();
-        })
-        .catch(error => {
-          toastr.error("Create failed", "MESSAGE");
-        });
+      this.retriveTbDirectoryNamesView();
     }
   };
 
   onPageItemClick = pageSelected => {
-    this.setState(preState => {
-      preState.start = pageSelected.selected * +this.state.length;
-      this.loadTableData();
-    });
+    this.setState(
+      preState => {
+        preState.start = pageSelected.selected * +this.state.length;
+      },
+      () => this.retriveTbDirectoryNamesView()
+    );
   };
 
+  // onRowEditClick = item => {
+  //   console.log("Edit Item ----> ", item);
+  // };
+
+  // openAddUpdateModal = item => {
+  //   if (item?.id) {
+  //     this.setState(preState => {
+  //       preState.model = item;
+  //       preState.isAddUpdateModalOpened = true;
+  //       preState.modalTitle = "Update Directory Name";
+  //     });
+  //   } else {
+  //     this.setState(preState => {
+  //       preState.isAddUpdateModalOpened = true;
+  //       preState.modalTitle = "Add New Directory Name";
+  //     });
+  //   }
+  //   this.setState({ visible: true });
+  // };
+
+  // closeAddUpdateModal = e => {
+  //   this.setState(preState => {
+  //     preState.model = {};
+  //     preState.isAddUpdateModalOpened = false;
+  //   });
+  //   this.setState({ visible: false });
+  // };
+
+  // onRowDeleteClick = item => {
+  //   console.log("onRowDeleteClicked: ", item);
+  //   if (item?.id) {
+  //     Swal.fire({
+  //       title: `Are you sure to delete ${item.personName}?`,
+  //       // text: "You won't be able to revert this!",
+  //       icon: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonColor: "#d33",
+  //       cancelButtonColor: "#3085d6",
+  //       confirmButtonText: "Yes, delete it!",
+  //     }).then(result => {
+  //       if (result.isConfirmed) {
+  //         axios
+  //           .delete(
+  //             "https://localhost:44324/api/settings/DirectoryNames/" + item.id
+  //           )
+  //           .then(response => {
+  //             if (response.data) {
+  //               toastr.success("Delete succeeded", "MESSAGE");
+  //               this.loadTableData();
+  //               Swal.close();
+  //             }
+  //           })
+  //           .catch(error => {
+  //             toastr.error("Delete failed", "MESSAGE");
+  //             Swal.close();
+  //           });
+  //       }
+
+  //       // if (result.isConfirmed) {
+  //       //   Swal.fire("Deleted!", "Your file has been deleted.", "success");
+  //       // }
+  //     });
+  //   }
+  // };
+
+  // onSaveClick = item => {
+  //   if (item?.id > 0) {
+  //     axios
+  //       .put(
+  //         "https://localhost:44324/api/settings/DirectoryNames/" + item.id,
+  //         item
+  //       )
+  //       .then(response => {
+  //         let updatedItem = this.state.modelLst.find(
+  //           f => f.id === response.data.id
+  //         );
+  //         updatedItem.id = response.data.id;
+  //         updatedItem.personName = response.data.personName;
+  //         updatedItem.personTitle = response.data.personTitle;
+  //         updatedItem.baseOfOperation = response.data.baseOfOperation;
+
+  //         toastr.success("Update succeeded.", "MESSAGE");
+  //         this.closeAddUpdateModal();
+  //         //this.setState({ modelLst: response.data.data });
+  //       })
+  //       .catch(error => {
+  //         toastr.error("Update failed", "MESSAGE");
+  //       });
+  //   } else {
+  //     axios
+  //       .post("https://localhost:44324/api/settings/DirectoryNames/", item)
+  //       .then(response => {
+  //         // if reload needed, push new item into state is not needed.
+  //         // this.setState(preState => {
+  //         //   preState.modelLst = [response.data, ...preState.modelLst];
+  //         // });
+
+  //         toastr.success("New item created.", "MESSAGE");
+  //         this.closeAddUpdateModal();
+  //         this.loadTableData();
+  //       })
+  //       .catch(error => {
+  //         toastr.error("Create failed", "MESSAGE");
+  //       });
+  //   }
+  // };
+
+  // onPageItemClick = pageSelected => {
+  //   this.setState(preState => {
+  //     preState.start = pageSelected.selected * +this.state.length;
+  //     this.retriveTbDirectoryNamesView();
+  //   });
+  // };
+
   render() {
+    const {
+      modelLstTbDirectoryName,
+      modelTbDirectoryName,
+
+      rowSizeDdl,
+
+      start,
+      length,
+      totalRecords,
+      columns,
+      searches,
+      orders,
+
+      searchById,
+      searchByPersonName,
+      searchByPersonTitle,
+      searchByBaseOfOperation,
+    } = this.state;
+
     return (
       <React.Fragment>
         <div className="page-content">
@@ -428,9 +520,7 @@ class TbDirectoryNameList extends Component {
                             name="PersonName"
                             id="PersonName"
                             defaultValue={this.searchByPersonName}
-                            onChange={e =>
-                              this.onColumnSearchChange(e, "PersonName")
-                            }
+                            onChange={e => this.onColumnSearchChange(e)}
                             onKeyUp={this.onColumnSearchPressEnter}
                           />
                           {/* <datalist id="idLst">
@@ -448,9 +538,7 @@ class TbDirectoryNameList extends Component {
                             name="PersonTitle"
                             id="PersonTitle"
                             defaultValue={this.state.searchByPersonTitle}
-                            onChange={e =>
-                              this.onColumnSearchChange(e, "PersonTitle")
-                            }
+                            onChange={e => this.onColumnSearchChange(e)}
                             onKeyUp={this.onColumnSearchPressEnter}
                           />
                           {/* <datalist id="idLst">
@@ -468,9 +556,7 @@ class TbDirectoryNameList extends Component {
                             name="BaseOfOperation"
                             id="BaseOfOperation"
                             defaultValue={this.state.searchByBaseOfOperation}
-                            onChange={e =>
-                              this.onColumnSearchChange(e, "BaseOfOperation")
-                            }
+                            onChange={e => this.onColumnSearchChange(e)}
                             onKeyUp={this.onColumnSearchPressEnter}
                           />
                           {/* <datalist id="idLst">
@@ -485,7 +571,7 @@ class TbDirectoryNameList extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.modelLst.map((item, index) => {
+                      {this.state.modelLstTbDirectoryName.map((item, index) => {
                         return (
                           <tr key={index}>
                             {/* <td>{item.id}</td> */}
@@ -520,7 +606,11 @@ class TbDirectoryNameList extends Component {
                       })}
 
                       <tr
-                        hidden={this.state.modelLst.length > 0 ? true : false}
+                        hidden={
+                          this.state.modelLstTbDirectoryName.length > 0
+                            ? true
+                            : false
+                        }
                       >
                         <td colSpan={100} className="text-center text-info">
                           Data is empty
@@ -550,126 +640,6 @@ class TbDirectoryNameList extends Component {
                       activeClassName={"active"}
                     />
                   </div>
-
-                  <Modal
-                    isOpen={this.state.isAddUpdateModalOpened}
-                    toggle={this.openAddUpdateModal}
-                    scrollable={true}
-                    backdrop={"static"}
-                    centered={true}
-                    id="staticBackdrop"
-                  >
-                    <div className="modal-header">
-                      <h5 className="modal-title" id="staticBackdropLabel">
-                        {this.state.modalTitle}
-                      </h5>
-                    </div>
-                    <div className="modal-body">
-                      <Formik
-                        enableReinitialize={true}
-                        initialValues={{
-                          id: (this.state && this.state.model.id) || 0,
-                          personName:
-                            (this.state && this.state.model.personName) || "",
-                          personTitle:
-                            (this.state && this.state.model.personTitle) || "",
-                          baseOfOperation:
-                            (this.state && this.state.model.baseOfOperation) ||
-                            "",
-                        }}
-                        validationSchema={Yup.object().shape({
-                          personName: Yup.string().required(
-                            "Person name is required"
-                          ),
-                          personTitle:
-                            Yup.string().required("Title is required"),
-                          baseOfOperation: Yup.string().required(
-                            "Base of operation is required"
-                          ),
-                        })}
-                        onSubmit={values => this.onSaveClick(values)}
-                      >
-                        {({ errors, status, touched }) => (
-                          <Form className="needs-validation">
-                            <div className="mb-3">
-                              <Label className="form-label">Persone Name</Label>
-                              <Field
-                                name="personName"
-                                type="text"
-                                className={
-                                  "form-control" +
-                                  (errors.personName && touched.personName
-                                    ? " is-invalid"
-                                    : "")
-                                }
-                              />
-                              <ErrorMessage
-                                name="personName"
-                                component="div"
-                                className="invalid-feedback"
-                              />
-                            </div>
-
-                            <div className="mb-3">
-                              <Label className="form-label">Title</Label>
-                              <Field
-                                name="personTitle"
-                                type="text"
-                                className={
-                                  "form-control" +
-                                  (errors.personTitle && touched.personTitle
-                                    ? " is-invalid"
-                                    : "")
-                                }
-                              />
-                              <ErrorMessage
-                                name="personTitle"
-                                component="div"
-                                className="invalid-feedback"
-                              />
-                            </div>
-                            <div className="mb-3">
-                              <Label className="form-label">
-                                Base of Operation
-                              </Label>
-                              <Field
-                                name="baseOfOperation"
-                                type="text"
-                                className={
-                                  "form-control" +
-                                  (errors.baseOfOperation &&
-                                  touched.baseOfOperation
-                                    ? " is-invalid"
-                                    : "")
-                                }
-                              />
-                              <ErrorMessage
-                                name="baseOfOperation"
-                                component="div"
-                                className="invalid-feedback"
-                              />
-                            </div>
-
-                            <div className="d-flex flex-wrap gap-2">
-                              <button
-                                type="submit"
-                                className="btn btn-sm btn-outline-success"
-                              >
-                                <i className="far fa-save"></i> Save
-                              </button>
-                              <button
-                                type="reset"
-                                className="btn btn-sm btn-outline-danger"
-                                onClick={this.closeAddUpdateModal}
-                              >
-                                <i className="far fa-times-circle"></i> Close
-                              </button>
-                            </div>
-                          </Form>
-                        )}
-                      </Formik>
-                    </div>
-                  </Modal>
                 </CardBody>
               </Card>
             </Col>

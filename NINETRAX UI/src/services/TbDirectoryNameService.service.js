@@ -13,6 +13,10 @@ class TbDirectoryNameService {
     return http.post("/d/TbDirectoryNames/GetTbDirectoryNamesView", data);
   }
 
+  GetTbDirectoryNamesView(data) {
+    return http.post("/d/TbDirectoryNames/GetTbDirectoryNamesView", data);
+  }
+
   //   update(id, data) {
   //     return http.put(`/tutorials/${id}`, data);
   //   }
