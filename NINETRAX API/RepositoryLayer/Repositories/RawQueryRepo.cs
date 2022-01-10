@@ -27,10 +27,20 @@ namespace RepositoryLayer
                 //sql = string.Format("SELECT * FROM {0} ORDER BY {1} OFFSET {2} ROWS FETCH NEXT {3} ROWS ONLY",
                 //    getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
 
+                if (getAllByWhereGLB.LimitEnd == 0)
+                {
+                    //mysql
+                    sql = string.Format("SELECT * FROM {0} ORDER BY {1}",
+                        getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.SortColumn);
 
-                //mysql
-                sql = string.Format("SELECT * FROM {0} ORDER BY {1} LIMIT {2}, {3}",
-                    getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+                }
+                else {
+                    //mysql
+                    sql = string.Format("SELECT * FROM {0} ORDER BY {1} LIMIT {2}, {3}",
+                        getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+
+                }
+
 
             }
             else
@@ -38,11 +48,21 @@ namespace RepositoryLayer
                 //mssql
                 //sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2} OFFSET {3} ROWS FETCH NEXT {4} ROWS ONLY",
                 //      getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
-           
-                //mysql
-                sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2} LIMIT {3}, {4}",
-                      getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
-           
+
+                if (getAllByWhereGLB.LimitEnd == 0)
+                {
+                    //mysql
+                    sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2}",
+                          getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn);
+
+                }
+                else {
+                    //mysql
+                    sql = string.Format("SELECT * FROM {0} WHERE {1} ORDER BY {2} LIMIT {3}, {4}",
+                          getAllByWhereGLB.TableOrViewName, getAllByWhereGLB.WhereConditions, getAllByWhereGLB.SortColumn, getAllByWhereGLB.LimitStart, getAllByWhereGLB.LimitEnd);
+
+                }
+
             }
 
             var returnData = await _context.Set<T>().FromSqlRaw(sql).AsNoTracking().ToListAsync();
