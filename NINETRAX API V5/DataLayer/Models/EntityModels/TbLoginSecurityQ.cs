@@ -1,0 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace DataLayer.Models.EntityModels
+{
+    public partial class TbLoginSecurityQ
+    {
+        public int Id { get; set; }
+        public string? SecurityQuestions { get; set; }
+    }
+}
