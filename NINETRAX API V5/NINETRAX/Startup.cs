@@ -69,6 +69,8 @@ namespace NINETRAX
         {
             if (env.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
 
@@ -86,10 +88,10 @@ namespace NINETRAX
                 endpoints.MapControllers();
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(options => {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "NINETRAX API v1");
-            });
+            //app.UseSwagger();
+            //app.UseSwaggerUI(options => {
+            //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "NINETRAX API v1");
+            //});
         }
     }
 }
