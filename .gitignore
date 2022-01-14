@@ -4,7 +4,6 @@
 /NINETRAX API V6/NINETRAX/bin
 /NINETRAX API V6/RepositoryLayer/obj
 /NINETRAX API V6/RepositoryLayer/bin
-/NINETRAX UI/NINETRAX/node_modules
 /NINETRAX API V6/.vs
 /NINETRAX API V5/DataLayer/obj
 /NINETRAX API V5/DataLayer/bin
@@ -13,3 +12,6 @@
 /NINETRAX API V5/RepositoryLayer/obj
 /NINETRAX API V5/RepositoryLayer/bin
 /NINETRAX API V5/.vs
+/NINETRAX UI/NINETRAX/node_modules
+/NINETRAX UI Hooks/NINETRAX/node_modules
+/NINETRAX UI Hooks Staterkit/NINETRAX/node_modules
