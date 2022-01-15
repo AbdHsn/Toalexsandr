@@ -34,7 +34,10 @@ export * from "./contacts/actions"
 export * from "./mails/actions"
 
 //dashboard
-export * from "./dashboard/actions";
+export * from "./dashboard/actions"
 
 //dashboard-saas
-export * from "./dashboard-saas/actions";
+export * from "./dashboard-saas/actions"
+
+//dashboard-saas
+export * from "./directory-name/actions"

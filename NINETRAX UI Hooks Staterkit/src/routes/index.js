@@ -9,12 +9,14 @@ import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
 import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
+import DirectoryName from "../pages/DirectoryName/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
+  { path: "/directory-name-list", component: DirectoryName },
 
   // //profile
   { path: "/profile", component: UserProfile },
