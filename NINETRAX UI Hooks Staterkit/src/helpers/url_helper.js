@@ -65,6 +65,12 @@ export const ADD_NEW_CUSTOMER = "/add/customer"
 export const UPDATE_CUSTOMER = "/update/customer"
 export const DELETE_CUSTOMER = "/delete/customer"
 
+//DIRECTORY NAME
+export const GET_DIRECTORYNAMES = "/directoryNames"
+export const ADD_NEW_DIRECTORYNAME = "/add/directoryName"
+export const UPDATE_DIRECTORYNAME = "/update/directoryName"
+export const DELETE_DIRECTORYNAME = "/delete/directoryName"
+
 //SHOPS
 export const GET_SHOPS = "/shops"
 

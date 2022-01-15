@@ -26,6 +26,7 @@ const INIT_STATE = {
 const DirectoryName = (state = INIT_STATE, action) => {
   switch (action.type) {
     case GET_DIRECTORYNAMES_SUCCESS:
+      console.log("reducer -->", action.payload, state)
       return {
         ...state,
         directoryNames: action.payload,

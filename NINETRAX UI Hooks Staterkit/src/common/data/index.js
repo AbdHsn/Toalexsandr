@@ -20,8 +20,9 @@ import {
   productsData,
   recentProducts,
   shops,
-  productComments
+  productComments,
 } from "./ecommerce"
+import { directoryNameData } from "./directory-name"
 import { chats, contacts, groups, messages } from "./chat"
 import { calenderDefaultCategories, events } from "./calender"
 import { users, userProfile } from "./contacts"
@@ -79,5 +80,6 @@ export {
   novEarningData,
   octEarningData,
   chatData,
-  productComments
+  productComments,
+  directoryNameData,
 }

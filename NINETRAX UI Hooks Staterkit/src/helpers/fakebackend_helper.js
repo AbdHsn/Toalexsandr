@@ -277,6 +277,21 @@ const onAddComment = (productId, commentText) => {
   })
 }
 
+// get DirectoryNames
+export const getDirectoryNames = () => get(url.GET_DIRECTORYNAMES)
+
+// add DirectoryName
+export const addNewDirectoryName = directoryName =>
+  post(url.ADD_NEW_DIRECTORYNAME, directoryName)
+
+// update DirectoryName
+export const updateDirectoryName = directoryName =>
+  put(url.UPDATE_DIRECTORYNAME, directoryName)
+
+// delete DirectoryName
+export const deleteDirectoryName = directoryName =>
+  del(url.DELETE_DIRECTORYNAME, { headers: { directoryName } })
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

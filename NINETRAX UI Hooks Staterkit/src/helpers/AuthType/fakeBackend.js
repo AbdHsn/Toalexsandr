@@ -41,6 +41,7 @@ import {
   novEarningData,
   octEarningData,
   productComments,
+  directoryNameData,
 } from "../../common/data"
 
 let users = [
@@ -959,7 +960,7 @@ const fakeBackend = () => {
               if (replyIdx > -1) {
                 if (
                   modifiedProductComments[commentIdx]["replies"][replyIdx][
-                  "hasLiked"
+                    "hasLiked"
                   ]
                 ) {
                   modifiedProductComments[commentIdx]["replies"][replyIdx][
@@ -1078,6 +1079,60 @@ const fakeBackend = () => {
           resolve([200, modifiedComments])
         } else {
           reject([400, "Cannot add comment"])
+        }
+      })
+    })
+  })
+
+  mock.onGet(url.GET_DIRECTORYNAMES).reply(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("Directory Name: -->", directoryNameData)
+
+        if (directoryNameData) {
+          // Passing fake JSON data as response
+          resolve([200, directoryNameData])
+        } else {
+          reject([400, "Cannot get directory name data"])
+        }
+      })
+    })
+  })
+
+  mock.onPost(url.ADD_NEW_DIRECTORYNAME).reply(directoryName => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (directoryName && directoryName.data) {
+          // Passing fake JSON data as response
+          resolve([200, directoryName.data])
+        } else {
+          reject([400, "Cannot add directory name"])
+        }
+      })
+    })
+  })
+
+  mock.onPut(url.UPDATE_DIRECTORYNAME).reply(directoryName => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (directoryName && directoryName.data) {
+          // Passing fake JSON data as response
+          resolve([200, directoryName.data])
+        } else {
+          reject([400, "Cannot update directory name"])
+        }
+      })
+    })
+  })
+
+  mock.onDelete(url.DELETE_DIRECTORYNAME).reply(config => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (config && config.headers) {
+          // Passing fake JSON data as response
+          resolve([200, config.headers.directoryName])
+        } else {
+          reject([400, "Cannot delete directory name"])
         }
       })
     })
