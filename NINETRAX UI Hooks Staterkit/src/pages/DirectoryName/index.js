@@ -39,7 +39,7 @@ const DirectoryNames = props => {
           </title>
         </MetaTags>
         <Container fluid>
-          {console.log("component on renderer -->", directoryNames)}
+          {console.log("component on renderer --->", directoryNames)}
           {/* <Breadcrumbs
             title="Directory Names"
             breadcrumbItem="DirectoryNames"
