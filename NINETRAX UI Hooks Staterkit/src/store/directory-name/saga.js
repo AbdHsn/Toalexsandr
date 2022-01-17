@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "redux-saga/effects"
+import { all, call, put, takeEvery, fork } from "redux-saga/effects"
 
 // Ecommerce Redux States
 import {
@@ -63,11 +63,15 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
   }
 }
 
-function* directoryNameSaga() {
+function* directoryNameWatcher() {
   yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
   yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
   yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
   yield takeEvery(DELETE_DIRECTORYNAME, onDeleteDirectoryName)
+}
+
+function* directoryNameSaga() {
+  yield all([fork(directoryNameWatcher)])
 }
 
 export default directoryNameSaga

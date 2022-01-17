@@ -278,7 +278,7 @@ const onAddComment = (productId, commentText) => {
 }
 
 // get DirectoryNames
-export const getDirectoryNames = () => {
+const getDirectoryNames = () => {
   console.log("fakebackend_helper -->")
   get(url.GET_DIRECTORYNAMES)
 }
@@ -311,4 +311,5 @@ export {
   onLikeReply,
   onAddReply,
   onAddComment,
+  getDirectoryNames,
 }

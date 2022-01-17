@@ -20,7 +20,10 @@ axiosApi.interceptors.response.use(
 
 export async function get(url, config = {}) {
   console.log("axios --->", url)
-  return await axiosApi.get(url, { ...config }).then(response => response.data)
+  return await axiosApi.get(url, { ...config }).then(response => {
+    console.log("axios response --->", response.data)
+    response.data
+  })
 }
 
 export async function post(url, data, config = {}) {

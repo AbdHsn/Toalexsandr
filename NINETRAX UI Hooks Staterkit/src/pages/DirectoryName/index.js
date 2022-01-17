@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import MetaTags from "react-meta-tags"
 import { Container } from "reactstrap"
-import PropTypes from "prop-types"
 
-import {
-  getDirectoryNames as onGetDirectoryNames,
-  // addNewCustomer as onAddNewCustomer,
-  // updateCustomer as onUpdateCustomer,
-  // deleteCustomer as onDeleteCustomer,
-} from "store/directory-name/actions"
+import { getDirectoryNames } from "store/directory-name/actions"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
@@ -16,19 +10,25 @@ const DirectoryNames = props => {
   const dispatch = useDispatch()
 
   const { directoryNames } = useSelector(state => ({
-    directoryNames: state.DirectoryName.directoryNames,
+    directoryNames: state.DirectoryNames.directoryNames,
   }))
+
+  useEffect(() => {
+    dispatch(onGetDirectoryNames())
+  }, [dispatch])
+
+  console.log("directoryNames from view", directoryNames)
 
   // const [directoryNameList, setdirectoryNameList] = useState([])
 
-  useEffect(() => {
-    if (directoryNames && !directoryNames.length) {
-      console.log("fetch func call -->", directoryNames)
+  // useEffect(() => {
+  //   if (directoryNames && !directoryNames.length) {
+  //     console.log("fetch func call -->", directoryNames)
 
-      dispatch(onGetDirectoryNames())
-    }
-    console.log("fetch func call 2 -->", directoryNames)
-  }, [dispatch, directoryNames])
+  //     dispatch(onGetDirectoryNames())
+  //   }
+  //   console.log("fetch func call 2 -->", directoryNames)
+  // }, [dispatch, directoryNames])
 
   return (
     <React.Fragment>
@@ -50,12 +50,12 @@ const DirectoryNames = props => {
   )
 }
 
-DirectoryNames.propTypes = {
-  //customers: PropTypes.array,
-  onGetDirectoryNames: PropTypes.func,
-  // onAddNewCustomer: PropTypes.func,
-  // onDeleteCustomer: PropTypes.func,
-  // onUpdateCustomer: PropTypes.func,
-}
+// DirectoryNames.propTypes = {
+//   //customers: PropTypes.array,
+//   onGetDirectoryNames: PropTypes.func,
+//   // onAddNewCustomer: PropTypes.func,
+//   // onDeleteCustomer: PropTypes.func,
+//   // onUpdateCustomer: PropTypes.func,
+// }
 
 export default DirectoryNames
