@@ -19,6 +19,7 @@ axiosApi.interceptors.response.use(
 )
 
 export async function get(url, config = {}) {
+  console.log("axios --->", url)
   return await axiosApi.get(url, { ...config }).then(response => response.data)
 }
 

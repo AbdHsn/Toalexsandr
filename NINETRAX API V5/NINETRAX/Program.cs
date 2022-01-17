@@ -21,7 +21,7 @@ namespace NINETRAX
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    //webBuilder.UseUrls("http://*:5200");
+                    webBuilder.UseUrls("http://*:5200");
                 });
     }
 }

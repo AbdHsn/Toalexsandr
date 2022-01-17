@@ -1,23 +1,5 @@
 const directoryNameData = [
   {
-    id: 1,
-    personName: "Robert Hanneken",
-    personTitle: "Program Manager",
-    baseOfOperation: "JACNAS",
-  },
-  {
-    id: 2,
-    personName: "Travis Hulka",
-    personTitle: "Contracts Manager",
-    baseOfOperation: "JACNAS",
-  },
-  {
-    id: 4,
-    personName: "Reden Dumaop",
-    personTitle: "Environmental Manager",
-    baseOfOperation: "JACNAS",
-  },
-  {
     id: 5,
     personName: "James Rushing",
     personTitle: "Safety Manager",

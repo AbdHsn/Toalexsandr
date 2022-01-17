@@ -1087,7 +1087,7 @@ const fakeBackend = () => {
   mock.onGet(url.GET_DIRECTORYNAMES).reply(() => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("Directory Name: -->", directoryNameData)
+        console.log("Directory Name: fakeBackend-->", directoryNameData)
 
         if (directoryNameData) {
           // Passing fake JSON data as response

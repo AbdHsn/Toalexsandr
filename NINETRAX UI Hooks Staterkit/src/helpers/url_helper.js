@@ -1,3 +1,12 @@
+//BASE URL
+export const BASE_URL = "http://localhost:5200/api"
+
+//DIRECTORY NAME
+export const GET_DIRECTORYNAMES = BASE_URL + "/d/TbDirectoryNames"
+export const ADD_NEW_DIRECTORYNAME = BASE_URL + "/add/directoryName"
+export const UPDATE_DIRECTORYNAME = BASE_URL + "/update/directoryName"
+export const DELETE_DIRECTORYNAME = BASE_URL + "/delete/directoryName"
+
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"
 
@@ -64,12 +73,6 @@ export const GET_CUSTOMERS = "/customers"
 export const ADD_NEW_CUSTOMER = "/add/customer"
 export const UPDATE_CUSTOMER = "/update/customer"
 export const DELETE_CUSTOMER = "/delete/customer"
-
-//DIRECTORY NAME
-export const GET_DIRECTORYNAMES = "/directoryNames"
-export const ADD_NEW_DIRECTORYNAME = "/add/directoryName"
-export const UPDATE_DIRECTORYNAME = "/update/directoryName"
-export const DELETE_DIRECTORYNAME = "/delete/directoryName"
 
 //SHOPS
 export const GET_SHOPS = "/shops"

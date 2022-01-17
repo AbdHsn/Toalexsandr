@@ -24,7 +24,7 @@ import {
   addNewDirectoryName,
   updateDirectoryName,
   deleteDirectoryName,
-} from "helpers/fakebackend_helper"
+} from "helpers/api_services"
 
 function* fetchDirectoryNames() {
   try {
