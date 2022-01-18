@@ -24,9 +24,11 @@ import {
   addNewDirectoryName,
   updateDirectoryName,
   deleteDirectoryName,
-} from "helpers/api_services"
+} from "../../helpers/backend_helper"
 
 function* fetchDirectoryNames() {
+  console.log("SAGA FetchDirectoryName")
+
   try {
     const response = yield call(getDirectoryNames)
     yield put(getDirectoryNamesSuccess(response))
@@ -63,7 +65,9 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
   }
 }
 
-function* directoryNameWatcher() {
+export function* directoryNameWatcher() {
+  console.log("SAGA DirectoryNameWatcher")
+
   yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
   yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
   yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
@@ -71,6 +75,8 @@ function* directoryNameWatcher() {
 }
 
 function* directoryNameSaga() {
+  console.log("SAGA yield all")
+
   yield all([fork(directoryNameWatcher)])
 }
 

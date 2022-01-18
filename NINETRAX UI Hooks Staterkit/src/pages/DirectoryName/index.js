@@ -2,33 +2,28 @@ import React, { useEffect } from "react"
 import MetaTags from "react-meta-tags"
 import { Container } from "reactstrap"
 
-import { getDirectoryNames } from "store/directory-name/actions"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
+// actions
+import { getDirectoryNames } from "../../store/directory-name/actions"
+
 const DirectoryNames = props => {
   const dispatch = useDispatch()
-
   const { directoryNames } = useSelector(state => ({
-    directoryNames: state.DirectoryNames.directoryNames,
+    directoryNames: state.DirectoryName.directoryNames,
   }))
 
+  // /*
+  // get data
+  // */
   useEffect(() => {
-    dispatch(onGetDirectoryNames())
+    console.log("UseEffect C:I")
+    dispatch(getDirectoryNames())
   }, [dispatch])
 
-  console.log("directoryNames from view", directoryNames)
-
-  // const [directoryNameList, setdirectoryNameList] = useState([])
-
-  // useEffect(() => {
-  //   if (directoryNames && !directoryNames.length) {
-  //     console.log("fetch func call -->", directoryNames)
-
-  //     dispatch(onGetDirectoryNames())
-  //   }
-  //   console.log("fetch func call 2 -->", directoryNames)
-  // }, [dispatch, directoryNames])
+  // // your API's response data will be in events variable.
+  // console.log("Directory Name ---> ", directoryNames)
 
   return (
     <React.Fragment>
@@ -39,7 +34,8 @@ const DirectoryNames = props => {
           </title>
         </MetaTags>
         <Container fluid>
-          {console.log("component on renderer --->", directoryNames)}
+          <h3>Directory Names</h3>
+          {/* {console.log("component on renderer --->", directoryNames)} */}
           {/* <Breadcrumbs
             title="Directory Names"
             breadcrumbItem="DirectoryNames"
@@ -49,13 +45,5 @@ const DirectoryNames = props => {
     </React.Fragment>
   )
 }
-
-// DirectoryNames.propTypes = {
-//   //customers: PropTypes.array,
-//   onGetDirectoryNames: PropTypes.func,
-//   // onAddNewCustomer: PropTypes.func,
-//   // onDeleteCustomer: PropTypes.func,
-//   // onUpdateCustomer: PropTypes.func,
-// }
 
 export default DirectoryNames

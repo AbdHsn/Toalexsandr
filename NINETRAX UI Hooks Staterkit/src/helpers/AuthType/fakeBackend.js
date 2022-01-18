@@ -1084,20 +1084,20 @@ const fakeBackend = () => {
     })
   })
 
-  // mock.onGet(url.GET_DIRECTORYNAMES).reply(() => {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       console.log("Directory Name: fakeBackend-->", directoryNameData)
+  mock.onGet(url.GET_DIRECTORYNAMES).reply(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("fakeBackend --->", resolve, reject)
 
-  //       if (directoryNameData) {
-  //         // Passing fake JSON data as response
-  //         resolve([200, directoryNameData])
-  //       } else {
-  //         reject([400, "Cannot get directory name data"])
-  //       }
-  //     })
-  //   })
-  // })
+        if (directoryNameData) {
+          // Passing fake JSON data as response
+          resolve([200, directoryNameData])
+        } else {
+          reject([400, "Cannot get directory name data"])
+        }
+      })
+    })
+  })
 
   mock.onPost(url.ADD_NEW_DIRECTORYNAME).reply(directoryName => {
     return new Promise((resolve, reject) => {

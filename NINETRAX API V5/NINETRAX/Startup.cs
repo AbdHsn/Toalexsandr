@@ -18,6 +18,7 @@ namespace NINETRAX
 {
     public class Startup
     {
+        string CorsPolicy = "CorsPolicy";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,15 +47,13 @@ namespace NINETRAX
             services.AddScoped(typeof(IRawQueryRepo<>), typeof(RawQueryRepo<>));
             #endregion
 
-
-            services.AddCors(options => options.AddPolicy("CorsPolicy",
+            services.AddCors(options => options.AddPolicy(name: CorsPolicy,
                 builder =>
                 {
                     builder.AllowAnyHeader()
                            .AllowAnyMethod()
                            .SetIsOriginAllowed((host) => true)
                            .WithOrigins(
-                                "http://adminui.abdullahbinhasan.xyz/",
                                 "http://localhost:3000",
                                 "https://localhost:3000"
                             )
@@ -80,6 +79,7 @@ namespace NINETRAX
             //app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(CorsPolicy);
 
             app.UseAuthorization();
 

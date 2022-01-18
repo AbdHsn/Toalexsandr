@@ -1,6 +1,6 @@
 import {
-  GET_DIRECTORYNAMES_FAIL,
   GET_DIRECTORYNAMES_SUCCESS,
+  GET_DIRECTORYNAMES_FAIL,
   ADD_DIRECTORYNAME_SUCCESS,
   ADD_DIRECTORYNAME_FAIL,
   UPDATE_DIRECTORYNAME_SUCCESS,
@@ -10,23 +10,23 @@ import {
 } from "./actionTypes"
 
 const INIT_STATE = {
-  // products: [],
-  // product: {},
-  // orders: [],
-  // cartData: {},
-  // directoryNames: [],
-  // shops: [],
-  // productComments: [],
-
   directoryNames: [],
   directoryName: {},
   error: {},
 }
 
 const DirectoryName = (state = INIT_STATE, action) => {
+  console.log("reducer from store...state, action", state, action)
+
   switch (action.type) {
+    // case GET_DIRECTORYNAMES:
+    //   console.log("reducer -->", action.payload, state)
+    //   return {
+    //     ...state,
+    //     directoryNames: action.payload,
+    //   }
+
     case GET_DIRECTORYNAMES_SUCCESS:
-      console.log("reducer -->", action.payload, state)
       return {
         ...state,
         directoryNames: action.payload,

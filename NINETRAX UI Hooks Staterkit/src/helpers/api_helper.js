@@ -5,25 +5,31 @@ import accessToken from "./jwt-token-access/accessToken"
 const token = accessToken
 
 //apply base url for axios
-const API_URL = ""
+const API_URL = "http://localhost:5200/api"
 
 const axiosApi = axios.create({
   baseURL: API_URL,
 })
 
-axiosApi.defaults.headers.common["Authorization"] = token
+// axiosApi.defaults.headers.common["Authorization"] = token
 
-axiosApi.interceptors.response.use(
-  response => response,
-  error => Promise.reject(error)
-)
+// axiosApi.interceptors.response.use(
+//   response => response,
+//   error => Promise.reject(error)
+// )
 
 export async function get(url, config = {}) {
-  console.log("axios --->", url)
+  console.log("api_helper url, config", url, config)
   return await axiosApi.get(url, { ...config }).then(response => {
-    console.log("axios response --->", response.data)
+    console.log("api_helper response --->", response.data)
     response.data
   })
+
+  // console.log("Plain axios 01 --->", url, axios.get(url))
+  // return await axios.get(url).then(response => {
+  //   console.log("Plain axios 02--->", response.data)
+  //   response.data
+  // })
 }
 
 export async function post(url, data, config = {}) {
