@@ -228,6 +228,8 @@ const postJwtRegister = (url, data) => {
 
 const getDirectoryNamesView = directoryName => {
   post(url.GET_DIRECTORYNAMES_View, directoryName)
+  // console.log("backend helper result", data)
+  // return data
 }
 
 const getDirectoryNames = () => {

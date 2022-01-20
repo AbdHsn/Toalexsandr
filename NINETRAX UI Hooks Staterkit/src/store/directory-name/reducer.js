@@ -41,7 +41,7 @@ const INIT_STATE = {
 
   directoryNames: [],
   directoryName: {},
-  error: {},
+  error: undefined,
 }
 
 const DirectoryName = (state = INIT_STATE, action) => {
@@ -51,13 +51,16 @@ const DirectoryName = (state = INIT_STATE, action) => {
     case GET_DIRECTORYNAMES_VIEW_SUCCESS:
       return {
         ...state,
-        directoryNamesModelLst: action.payload.data,
+        directoryNamesModelLst: action.payload,
+        // start: action.payload.start,
+        // length: action.payload.length,
+        totalRecords: action.payload.totalRecords,
       }
 
     case GET_DIRECTORYNAMES_VIEW_FAIL:
       return {
         ...state,
-        error: action.payload,
+        error: "Failed to fetch DIRECTORYNAMES VIEW Data",
       }
 
     case GET_DIRECTORYNAMES_SUCCESS:

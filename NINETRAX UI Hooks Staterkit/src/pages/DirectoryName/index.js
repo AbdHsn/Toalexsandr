@@ -14,9 +14,11 @@ import Breadcrumbs from "components/Common/Breadcrumb"
 
 const DirectoryNames = props => {
   const dispatch = useDispatch()
+
   const { directoryNames } = useSelector(state => ({
     directoryNames: state.DirectoryName.directoryNames,
   }))
+
   const { directoryNamesModelLst } = useSelector(state => ({
     directoryNamesModelLst: state.DirectoryName.directoryNamesModelLst,
   }))
@@ -24,19 +26,20 @@ const DirectoryNames = props => {
   //Get data...
   useEffect(() => {
     dispatch(
-      getDirectoryNamesView({
-        columns: [],
-        orders: [
-          {
-            column: "Id",
-            order_by: "DESC",
-          },
-        ],
-        start: 0,
-        length: "All",
-        search: {},
-        searches: [],
-      })
+      // getDirectoryNamesView({
+      //   columns: [],
+      //   orders: [
+      //     {
+      //       column: "Id",
+      //       order_by: "DESC",
+      //     },
+      //   ],
+      //   start: 0,
+      //   length: "All",
+      //   search: {},
+      //   searches: [],
+      // })
+      getDirectoryNames()
     )
   }, [dispatch])
 
@@ -165,6 +168,9 @@ const DirectoryNames = props => {
             title="Directory Name"
             breadcrumbItem="Directory Name BreadCrumb"
           />
+
+          {console.log("Directory Name view---> ", directoryNamesModelLst)}
+
           <Row>
             <Col xs="12">
               <Card>
