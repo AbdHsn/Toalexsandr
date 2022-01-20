@@ -2,6 +2,9 @@ import {
   GET_DIRECTORYNAMES,
   GET_DIRECTORYNAMES_FAIL,
   GET_DIRECTORYNAMES_SUCCESS,
+  GET_DIRECTORYNAMES_VIEW,
+  GET_DIRECTORYNAMES_VIEW_SUCCESS,
+  GET_DIRECTORYNAMES_VIEW_FAIL,
   ADD_NEW_DIRECTORYNAME,
   ADD_DIRECTORYNAME_SUCCESS,
   ADD_DIRECTORYNAME_FAIL,
@@ -12,6 +15,21 @@ import {
   DELETE_DIRECTORYNAME_SUCCESS,
   DELETE_DIRECTORYNAME_FAIL,
 } from "./actionTypes"
+
+export const getDirectoryNamesView = directoryNames => ({
+  type: GET_DIRECTORYNAMES_VIEW,
+  payload: directoryNames,
+})
+
+export const getDirectoryNamesViewSuccess = directoryNames => ({
+  type: GET_DIRECTORYNAMES_VIEW_SUCCESS,
+  payload: directoryNames,
+})
+
+export const getDirectoryNamesViewFail = error => ({
+  type: GET_DIRECTORYNAMES_VIEW_FAIL,
+  payload: error,
+})
 
 export const getDirectoryNames = () => ({
   type: GET_DIRECTORYNAMES,

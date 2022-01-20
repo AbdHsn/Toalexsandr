@@ -62,11 +62,7 @@ function* socialLogin({ payload: { data, history, type } }) {
   try {
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const fireBaseBackend = getFirebaseBackend()
-      const response = yield call(
-        fireBaseBackend.socialLoginUser,
-        data,
-        type,
-      )
+      const response = yield call(fireBaseBackend.socialLoginUser, data, type)
       localStorage.setItem("authUser", JSON.stringify(response))
       yield put(loginSuccess(response))
     } else {

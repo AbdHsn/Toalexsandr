@@ -1,7 +1,13 @@
 import { call, put, takeEvery } from "redux-saga/effects"
 
 // Crypto Redux States
-import { GET_PROJECTS, GET_PROJECT_DETAIL, ADD_NEW_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from "./actionTypes"
+import {
+  GET_PROJECTS,
+  GET_PROJECT_DETAIL,
+  ADD_NEW_PROJECT,
+  DELETE_PROJECT,
+  UPDATE_PROJECT,
+} from "./actionTypes"
 import {
   getProjectsSuccess,
   getProjectsFail,
@@ -16,7 +22,13 @@ import {
 } from "./actions"
 
 //Include Both Helper File with needed methods
-import { getProjects, getProjectsDetails, addNewProject, updateProject, deleteProject } from "helpers/fakebackend_helper"
+import {
+  getProjects,
+  getProjectsDetails,
+  addNewProject,
+  updateProject,
+  deleteProject,
+} from "helpers/fakebackend_helper"
 
 function* fetchProjects() {
   try {
@@ -59,7 +71,6 @@ function* onAddNewProject({ payload: project }) {
     const response = yield call(addNewProject, project)
     yield put(addProjectSuccess(response))
   } catch (error) {
-
     yield put(addProjectFail(error))
   }
 }

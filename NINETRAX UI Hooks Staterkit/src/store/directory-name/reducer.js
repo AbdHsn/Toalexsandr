@@ -1,4 +1,6 @@
 import {
+  GET_DIRECTORYNAMES_VIEW_SUCCESS,
+  GET_DIRECTORYNAMES_VIEW_FAIL,
   GET_DIRECTORYNAMES_SUCCESS,
   GET_DIRECTORYNAMES_FAIL,
   ADD_DIRECTORYNAME_SUCCESS,
@@ -10,6 +12,33 @@ import {
 } from "./actionTypes"
 
 const INIT_STATE = {
+  modelLstLoading: false,
+  directoryNamesModelLst: [],
+  directoryNameModel: {
+    id: 0,
+    personName: "",
+    personTitle: "",
+    baseOfOperation: "",
+  },
+
+  rowSizeDdl: ["10", "30", "50", "100", "All"],
+  start: 0,
+  length: "10",
+  totalRecords: 0,
+  columns: [],
+  searches: [],
+  orders: [
+    {
+      column: "Id",
+      order_by: "DESC",
+    },
+  ],
+
+  searchById: undefined,
+  searchByPersonName: undefined,
+  searchByPersonTitle: undefined,
+  searchByBaseOfOperation: undefined,
+
   directoryNames: [],
   directoryName: {},
   error: {},
@@ -19,12 +48,17 @@ const DirectoryName = (state = INIT_STATE, action) => {
   console.log("reducer from store...state, action", state, action)
 
   switch (action.type) {
-    // case GET_DIRECTORYNAMES:
-    //   console.log("reducer -->", action.payload, state)
-    //   return {
-    //     ...state,
-    //     directoryNames: action.payload,
-    //   }
+    case GET_DIRECTORYNAMES_VIEW_SUCCESS:
+      return {
+        ...state,
+        directoryNamesModelLst: action.payload.data,
+      }
+
+    case GET_DIRECTORYNAMES_VIEW_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      }
 
     case GET_DIRECTORYNAMES_SUCCESS:
       return {

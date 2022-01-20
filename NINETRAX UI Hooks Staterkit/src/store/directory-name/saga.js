@@ -2,12 +2,15 @@ import { all, call, put, takeEvery, fork } from "redux-saga/effects"
 
 // Ecommerce Redux States
 import {
+  GET_DIRECTORYNAMES_VIEW,
   GET_DIRECTORYNAMES,
   ADD_NEW_DIRECTORYNAME,
   DELETE_DIRECTORYNAME,
   UPDATE_DIRECTORYNAME,
 } from "./actionTypes"
 import {
+  getDirectoryNamesViewSuccess,
+  getDirectoryNamesViewFail,
   getDirectoryNamesFail,
   getDirectoryNamesSuccess,
   addDirectoryNameFail,
@@ -20,6 +23,7 @@ import {
 
 //Include Both Helper File with needed methods
 import {
+  getDirectoryNamesView,
   getDirectoryNames,
   addNewDirectoryName,
   updateDirectoryName,
@@ -34,6 +38,16 @@ function* fetchDirectoryNames() {
     yield put(getDirectoryNamesSuccess(response))
   } catch (error) {
     yield put(getDirectoryNamesFail(error))
+  }
+}
+
+function* fetchDirectoryNamesView({ payload: directoryName }) {
+  try {
+    const response = yield call(getDirectoryNamesView, directoryName)
+
+    yield put(getDirectoryNamesViewSuccess(response))
+  } catch (error) {
+    yield put(getDirectoryNamesViewFail(error))
   }
 }
 
@@ -66,8 +80,7 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
 }
 
 export function* directoryNameWatcher() {
-  console.log("SAGA DirectoryNameWatcher")
-
+  yield takeEvery(GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
   yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
   yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
   yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
@@ -75,8 +88,6 @@ export function* directoryNameWatcher() {
 }
 
 function* directoryNameSaga() {
-  console.log("SAGA yield all")
-
   yield all([fork(directoryNameWatcher)])
 }
 

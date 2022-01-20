@@ -226,8 +226,11 @@ const postJwtRegister = (url, data) => {
 //   })
 // }
 
+const getDirectoryNamesView = directoryName => {
+  post(url.GET_DIRECTORYNAMES_View, directoryName)
+}
+
 const getDirectoryNames = () => {
-  console.log("backend_helper")
   get(url.GET_DIRECTORYNAMES)
 }
 
@@ -251,4 +254,5 @@ export {
   addNewDirectoryName,
   updateDirectoryName,
   deleteDirectoryName,
+  getDirectoryNamesView,
 }

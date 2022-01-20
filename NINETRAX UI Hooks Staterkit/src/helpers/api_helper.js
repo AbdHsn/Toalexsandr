@@ -33,9 +33,11 @@ export async function get(url, config = {}) {
 }
 
 export async function post(url, data, config = {}) {
-  return axiosApi
-    .post(url, { ...data }, { ...config })
-    .then(response => response.data)
+  console.log("api_helper url, config", url, data, config)
+
+  return axiosApi.post(url, { ...data }, { ...config }).then(response => {
+    console.log("api_helper response", response.data)
+  })
 }
 
 export async function put(url, data, config = {}) {

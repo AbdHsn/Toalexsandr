@@ -1,4 +1,6 @@
 //DIRECTORY NAME
+export const GET_DIRECTORYNAMES_View =
+  "/d/TbDirectoryNames/GetTbDirectoryNamesView"
 export const GET_DIRECTORYNAMES = "/d/TbDirectoryNames"
 export const ADD_NEW_DIRECTORYNAME = "/add/directoryName"
 export const UPDATE_DIRECTORYNAME = "/update/directoryName"

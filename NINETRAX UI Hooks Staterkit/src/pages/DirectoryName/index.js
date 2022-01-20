@@ -1,10 +1,13 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import MetaTags from "react-meta-tags"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
 // actions
-import { getDirectoryNames } from "../../store/directory-name/actions"
+import {
+  getDirectoryNames,
+  getDirectoryNamesView,
+} from "../../store/directory-name/actions"
 
 import { Card, CardBody, Col, Container, Row, Table } from "reactstrap"
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -14,118 +17,135 @@ const DirectoryNames = props => {
   const { directoryNames } = useSelector(state => ({
     directoryNames: state.DirectoryName.directoryNames,
   }))
+  const { directoryNamesModelLst } = useSelector(state => ({
+    directoryNamesModelLst: state.DirectoryName.directoryNamesModelLst,
+  }))
 
   //Get data...
   useEffect(() => {
-    dispatch(getDirectoryNames())
+    dispatch(
+      getDirectoryNamesView({
+        columns: [],
+        orders: [
+          {
+            column: "Id",
+            order_by: "DESC",
+          },
+        ],
+        start: 0,
+        length: "All",
+        search: {},
+        searches: [],
+      })
+    )
   }, [dispatch])
 
   // // your API's response data will be in events variable.
-  // console.log("Directory Name ---> ", directoryNames)
+  console.log("Directory Name view---> ", directoryNamesModelLst)
 
-  const toggle = () => {
-    if (modal) {
-      setModal(false)
-      setCustomer(null)
-    } else {
-      setModal(true)
-    }
-  }
+  // const toggle = () => {
+  //   if (modal) {
+  //     setModal(false)
+  //     setCustomer(null)
+  //   } else {
+  //     setModal(true)
+  //   }
+  // }
 
-  const handleCustomerClick = arg => {
-    const customer = arg
+  // const handleCustomerClick = arg => {
+  //   const customer = arg
 
-    setCustomer({
-      id: customer.id,
-      username: customer.username,
-      phone: customer.phone,
-      email: customer.email,
-      address: customer.address,
-      rating: customer.rating,
-      walletBalance: customer.walletBalance,
-      joiningDate: customer.joiningDate,
-    })
+  //   setCustomer({
+  //     id: customer.id,
+  //     username: customer.username,
+  //     phone: customer.phone,
+  //     email: customer.email,
+  //     address: customer.address,
+  //     rating: customer.rating,
+  //     walletBalance: customer.walletBalance,
+  //     joiningDate: customer.joiningDate,
+  //   })
 
-    setIsEdit(true)
-    toggle()
-  }
+  //   setIsEdit(true)
+  //   toggle()
+  // }
 
-  var node = useRef()
-  const onPaginationPageChange = page => {
-    if (
-      node &&
-      node.current &&
-      node.current.props &&
-      node.current.props.pagination &&
-      node.current.props.pagination.options
-    ) {
-      node.current.props.pagination.options.onPageChange(page)
-    }
-  }
+  // var node = useRef()
+  // const onPaginationPageChange = page => {
+  //   if (
+  //     node &&
+  //     node.current &&
+  //     node.current.props &&
+  //     node.current.props.pagination &&
+  //     node.current.props.pagination.options
+  //   ) {
+  //     node.current.props.pagination.options.onPageChange(page)
+  //   }
+  // }
 
   //delete customer
-  const [deleteModal, setDeleteModal] = useState(false)
+  // const [deleteModal, setDeleteModal] = useState(false)
 
-  const onClickDelete = customer => {
-    setCustomer(customer)
-    setDeleteModal(true)
-  }
+  // const onClickDelete = customer => {
+  //   setCustomer(customer)
+  //   setDeleteModal(true)
+  // }
 
-  const handleDeleteCustomer = () => {
-    if (customer.id) {
-      dispatch(onDeleteCustomer(customer))
-      onPaginationPageChange(1)
-      setDeleteModal(false)
-    }
-  }
+  // const handleDeleteCustomer = () => {
+  //   if (customer.id) {
+  //     dispatch(onDeleteCustomer(customer))
+  //     onPaginationPageChange(1)
+  //     setDeleteModal(false)
+  //   }
+  // }
 
-  const { SearchBar } = Search
+  // const { SearchBar } = Search
 
-  useEffect(() => {
-    if (customers && !customers.length) {
-      dispatch(onGetCustomers())
-    }
-  }, [dispatch, customers])
+  // useEffect(() => {
+  //   if (customers && !customers.length) {
+  //     dispatch(onGetCustomers())
+  //   }
+  // }, [dispatch, customers])
 
-  useEffect(() => {
-    setCustomerList(customers)
-  }, [customers])
+  // useEffect(() => {
+  //   setCustomerList(customers)
+  // }, [customers])
 
-  useEffect(() => {
-    if (!isEmpty(customers)) {
-      setCustomerList(customers)
-    }
-  }, [customers])
+  // useEffect(() => {
+  //   if (!isEmpty(customers)) {
+  //     setCustomerList(customers)
+  //   }
+  // }, [customers])
 
-  // eslint-disable-next-line no-unused-vars
-  const handleTableChange = (type, { page, searchText }) => {
-    setCustomerList(
-      customers.filter(customer =>
-        Object.keys(customer).some(key =>
-          customer[key].toLowerCase().includes(searchText.toLowerCase())
-        )
-      )
-    )
-  }
+  // // eslint-disable-next-line no-unused-vars
+  // const handleTableChange = (type, { page, searchText }) => {
+  //   setCustomerList(
+  //     customers.filter(customer =>
+  //       Object.keys(customer).some(key =>
+  //         customer[key].toLowerCase().includes(searchText.toLowerCase())
+  //       )
+  //     )
+  //   )
+  // }
 
-  const handleCustomerClicks = () => {
-    setCustomerList("")
-    setIsEdit(false)
-    toggle()
-  }
+  // const handleCustomerClicks = () => {
+  //   setCustomerList("")
+  //   setIsEdit(false)
+  //   toggle()
+  // }
 
-  const defaultSorted = [
-    {
-      dataField: "id",
-      order: "desc",
-    },
-  ]
+  // const defaultSorted = [
+  //   {
+  //     dataField: "id",
+  //     order: "desc",
+  //   },
+  // ]
 
-  /** set Date formate */
-  const handleValidDate = date => {
-    const date1 = moment(new Date(date)).format("DD MMM Y")
-    return date1
-  }
+  // /** set Date formate */
+  // const handleValidDate = date => {
+  //   const date1 = moment(new Date(date)).format("DD MMM Y")
+  //   return date1
+  // }
 
   return (
     <React.Fragment>
