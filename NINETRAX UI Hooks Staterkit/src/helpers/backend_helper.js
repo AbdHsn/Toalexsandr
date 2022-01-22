@@ -1,5 +1,5 @@
 import axios from "axios"
-import { del, get, post, put } from "./api_helper"
+import { del, get, post, put, API_URL } from "./api_helper"
 import * as url from "./url_helper"
 
 // Gets the logged in user data from local session
@@ -227,9 +227,12 @@ const postJwtRegister = (url, data) => {
 // }
 
 const getDirectoryNamesView = directoryName => {
-  post(url.GET_DIRECTORYNAMES_View, directoryName)
-  // console.log("backend helper result", data)
-  // return data
+  console.log("Backend_helper --->", directoryName)
+  post(url.GET_DIRECTORYNAMES_View_URL, directoryName)
+}
+
+const getDirectoryNamesViewAxios = async directoryName => {
+  post(url.GET_DIRECTORYNAMES_View_URL, directoryName)
 }
 
 const getDirectoryNames = () => {
@@ -257,4 +260,5 @@ export {
   updateDirectoryName,
   deleteDirectoryName,
   getDirectoryNamesView,
+  getDirectoryNamesViewAxios,
 }

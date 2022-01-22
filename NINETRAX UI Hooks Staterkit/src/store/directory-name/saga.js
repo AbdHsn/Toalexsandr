@@ -31,8 +31,6 @@ import {
 } from "../../helpers/backend_helper"
 
 function* fetchDirectoryNames() {
-  console.log("SAGA FetchDirectoryName")
-
   try {
     const response = yield call(getDirectoryNames)
     yield put(getDirectoryNamesSuccess(response))
@@ -43,8 +41,9 @@ function* fetchDirectoryNames() {
 
 function* fetchDirectoryNamesView({ payload: directoryName }) {
   try {
+    console.log("Saga ---> ", directoryName)
     const response = yield call(getDirectoryNamesView, directoryName)
-
+    console.log("Saga after---> ", response)
     yield put(getDirectoryNamesViewSuccess(response))
   } catch (error) {
     yield put(getDirectoryNamesViewFail(error))
@@ -79,16 +78,20 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
   }
 }
 
-export function* directoryNameWatcher() {
-  yield takeEvery(GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
+export function* watchDirectoryNameSaga() {
   yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
+  yield takeEvery(GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
   yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
   yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
   yield takeEvery(DELETE_DIRECTORYNAME, onDeleteDirectoryName)
 }
 
+// export function* watchFetchDemoData() {
+//   yield takeEvery(GET_DEMO_DATA, fetchDemoData)
+// }
+
 function* directoryNameSaga() {
-  yield all([fork(directoryNameWatcher)])
+  yield all([fork(watchDirectoryNameSaga)])
 }
 
 export default directoryNameSaga

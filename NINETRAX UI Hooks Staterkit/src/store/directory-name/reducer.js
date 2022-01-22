@@ -12,27 +12,27 @@ import {
 } from "./actionTypes"
 
 const INIT_STATE = {
-  modelLstLoading: false,
-  directoryNamesModelLst: [],
-  directoryNameModel: {
-    id: 0,
-    personName: "",
-    personTitle: "",
-    baseOfOperation: "",
-  },
+  // modelLstLoading: false,
+  // directoryNamesModelLst: [],
+  // directoryNameModel: {
+  //   id: 0,
+  //   personName: "",
+  //   personTitle: "",
+  //   baseOfOperation: "",
+  // },
 
-  rowSizeDdl: ["10", "30", "50", "100", "All"],
-  start: 0,
-  length: "10",
-  totalRecords: 0,
-  columns: [],
-  searches: [],
-  orders: [
-    {
-      column: "Id",
-      order_by: "DESC",
-    },
-  ],
+  // rowSizeDdl: ["10", "30", "50", "100", "All"],
+  // start: 0,
+  // length: "10",
+  // totalRecords: 0,
+  // columns: [],
+  // searches: [],
+  // orders: [
+  //   {
+  //     column: "Id",
+  //     order_by: "DESC",
+  //   },
+  // ],
 
   searchById: undefined,
   searchByPersonName: undefined,
@@ -46,14 +46,13 @@ const INIT_STATE = {
 }
 
 const DirectoryName = (state = INIT_STATE, action) => {
+  console.log("reducer run", action.type, state.directoryNamesTbl)
+
   switch (action.type) {
     case GET_DIRECTORYNAMES_VIEW_SUCCESS:
       return {
         ...state,
         directoryNamesTbl: action.payload,
-        // start: action.payload.start,
-        // length: action.payload.length,
-        //totalRecords: action.payload.totalRecords,
       }
 
     case GET_DIRECTORYNAMES_VIEW_FAIL:
