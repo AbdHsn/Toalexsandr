@@ -40,21 +40,20 @@ const INIT_STATE = {
   searchByBaseOfOperation: undefined,
 
   directoryNames: [],
+  directoryNamesTbl: {},
   directoryName: {},
   error: undefined,
 }
 
 const DirectoryName = (state = INIT_STATE, action) => {
-  console.log("reducer from store...state, action", state, action)
-
   switch (action.type) {
     case GET_DIRECTORYNAMES_VIEW_SUCCESS:
       return {
         ...state,
-        directoryNamesModelLst: action.payload,
+        directoryNamesTbl: action.payload,
         // start: action.payload.start,
         // length: action.payload.length,
-        totalRecords: action.payload.totalRecords,
+        //totalRecords: action.payload.totalRecords,
       }
 
     case GET_DIRECTORYNAMES_VIEW_FAIL:
