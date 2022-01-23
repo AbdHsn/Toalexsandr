@@ -29,6 +29,7 @@ import {
   updateDirectoryName,
   deleteDirectoryName,
 } from "../../helpers/backend_helper"
+import { delay } from "lodash"
 
 function* fetchDirectoryNames() {
   try {
@@ -41,11 +42,13 @@ function* fetchDirectoryNames() {
 
 function* fetchDirectoryNamesView({ payload: directoryName }) {
   try {
-    console.log("Saga ---> ", directoryName)
     const response = yield call(getDirectoryNamesView, directoryName)
+    console.log("Saga ---> ", directoryName)
+    // yield delay(3000)
     console.log("Saga after---> ", response)
     yield put(getDirectoryNamesViewSuccess(response))
   } catch (error) {
+    console.log("Saga after failed---> ", error)
     yield put(getDirectoryNamesViewFail(error))
   }
 }
@@ -79,11 +82,11 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
 }
 
 function* watchDirectoryNameSaga() {
-  yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
+  //yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
   yield takeEvery(GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
-  yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
-  yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
-  yield takeEvery(DELETE_DIRECTORYNAME, onDeleteDirectoryName)
+  // yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
+  // yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
+  // yield takeEvery(DELETE_DIRECTORYNAME, onDeleteDirectoryName)
 }
 
 // export function* watchFetchDemoData() {

@@ -2,6 +2,14 @@ import axios from "axios"
 import { del, get, post, put, API_URL } from "./api_helper"
 import * as url from "./url_helper"
 
+const token = ""
+const header = {
+  headers: {
+    Authorization: "Bearer " + token,
+    "Content-Type": "application/json",
+  },
+}
+
 // Gets the logged in user data from local session
 const getLoggedInUser = () => {
   const user = localStorage.getItem("user")
@@ -226,9 +234,15 @@ const postJwtRegister = (url, data) => {
 //   })
 // }
 
-const getDirectoryNamesView = directoryName => {
-  console.log("Backend_helper --->", directoryName)
-  post(url.GET_DIRECTORYNAMES_View_URL, directoryName)
+const getDirectoryNamesView = async directoryName => {
+  // console.log("Backend_helper --->", directoryName)
+  // await post(url.GET_DIRECTORYNAMES_VIEW, directoryName)
+
+  return await axios.post(
+    "http://localhost:5200/api/d/TbDirectoryNames/GetTbDirectoryNamesView",
+    directoryName,
+    header
+  )
 }
 
 const getDirectoryNamesViewAxios = async directoryName => {

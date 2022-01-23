@@ -263,20 +263,20 @@ const DirectoryNames = props => {
         searches: [],
       })
     )
-  }, [dispatch, directoryNamesTbl])
+  }, [])
 
   // your API's response data will be in events variable.
   console.log("component data --->", directoryNamesTbl)
 
-  useEffect(() => {
-    setModelList(directoryNamesTbl)
-  }, [directoryNamesTbl])
+  // useEffect(() => {
+  //   setModelList(directoryNamesTbl)
+  // }, [directoryNamesTbl])
 
-  useEffect(() => {
-    if (!isEmpty(directoryNamesTbl)) {
-      setModelList(directoryNamesTbl)
-    }
-  }, [directoryNamesTbl])
+  // useEffect(() => {
+  //   if (!isEmpty(directoryNamesTbl)) {
+  //     setModelList(directoryNamesTbl)
+  //   }
+  // }, [directoryNamesTbl])
 
   const handleDelete = id => {
     const newDirectoryNames = directoryNameData.filter(f => f.id !== id)
@@ -294,7 +294,7 @@ const DirectoryNames = props => {
         <Container fluid>
           <Breadcrumbs title="DN" breadcrumbItem="DN" />
           <Row>
-            <Col xs="12">
+            {/* <Col xs="12">
               <Card>
                 <CardBody>
                   <h3>Directory Names</h3>
@@ -337,7 +337,7 @@ const DirectoryNames = props => {
                     </thead>
                     <tbody>
                       {modelList &&
-                        modelList?.data?.map((item, index) => {
+                        modelList.data.map((item, index) => {
                           return (
                             <tr key={index}>
                               <td>{item.id}</td>
@@ -362,7 +362,7 @@ const DirectoryNames = props => {
                   </Table>
                 </CardBody>
               </Card>
-            </Col>
+            </Col> */}
           </Row>
         </Container>
       </div>
