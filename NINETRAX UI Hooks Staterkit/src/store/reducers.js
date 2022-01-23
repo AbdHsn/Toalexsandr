@@ -43,7 +43,7 @@ import Dashboard from "./dashboard/reducer"
 import DashboardSaas from "./dashboard-saas/reducer"
 
 //Directory name saas
-import DirectoryName from "./directory-name/reducer"
+import directoryNameReducer from "./directory-name/reducer"
 
 const rootReducer = combineReducers({
   // public
@@ -63,7 +63,7 @@ const rootReducer = combineReducers({
   contacts,
   Dashboard,
   DashboardSaas,
-  DirectoryName,
+  directoryNameData: directoryNameReducer,
 })
 
 export default rootReducer

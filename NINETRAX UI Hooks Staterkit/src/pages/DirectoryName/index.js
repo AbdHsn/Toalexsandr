@@ -26,7 +26,7 @@ const DirectoryNames = props => {
   const dispatch = useDispatch()
 
   const { directoryNamesTbl } = useSelector(state => ({
-    directoryNamesTbl: state.DirectoryName.directoryNamesTbl,
+    directoryNamesTbl: state.directoryNameData.directoryNamesTbl,
   }))
 
   const [customerList, setCustomerList] = useState([])

@@ -45,7 +45,7 @@ const INIT_STATE = {
   error: undefined,
 }
 
-const DirectoryName = (state = INIT_STATE, action) => {
+const directoryNameReducer = (state = INIT_STATE, action) => {
   console.log("reducer run", action.type, state.directoryNamesTbl)
 
   switch (action.type) {
@@ -120,4 +120,4 @@ const DirectoryName = (state = INIT_STATE, action) => {
   }
 }
 
-export default DirectoryName
+export default directoryNameReducer

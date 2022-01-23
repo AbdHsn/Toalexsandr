@@ -78,7 +78,7 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
   }
 }
 
-export function* watchDirectoryNameSaga() {
+function* watchDirectoryNameSaga() {
   yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
   yield takeEvery(GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
   yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
