@@ -21,7 +21,7 @@ const INIT_STATE = {
   //   baseOfOperation: "",
   // },
 
-  // rowSizeDdl: ["10", "30", "50", "100", "All"],
+  rowSizeDdl: ["10", "30", "50", "100", "All"],
   // start: 0,
   // length: "10",
   // totalRecords: 0,
@@ -46,7 +46,7 @@ const INIT_STATE = {
 }
 
 const directoryNameReducer = (state = INIT_STATE, action) => {
-  console.log("reducer run", action.type, state.directoryNamesTbl)
+  console.log("reducer run", action.type, state)
 
   switch (action.type) {
     case GET_DIRECTORYNAMES_VIEW_SUCCESS:
@@ -58,7 +58,7 @@ const directoryNameReducer = (state = INIT_STATE, action) => {
     case GET_DIRECTORYNAMES_VIEW_FAIL:
       return {
         ...state,
-        error: "Failed to fetch DIRECTORYNAMES VIEW Data",
+        error: action.payload,
       }
 
     case GET_DIRECTORYNAMES_SUCCESS:

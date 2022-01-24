@@ -1,11 +1,14 @@
 import axios from "axios"
-import { del, get, post, put, API_URL } from "./api_helper"
-import * as url from "./url_helper"
+import { envConfigurations } from "App"
+import accessToken from "./jwt-token-access/accessToken"
 
-const token = ""
+//pass new generated access token here
+const token = accessToken
+
 const header = {
   headers: {
     Authorization: "Bearer " + token,
+    timeout: 30000,
     "Content-Type": "application/json",
   },
 }
@@ -234,45 +237,54 @@ const postJwtRegister = (url, data) => {
 //   })
 // }
 
-const getDirectoryNamesView = async directoryName => {
-  // console.log("Backend_helper --->", directoryName)
-  // await post(url.GET_DIRECTORYNAMES_VIEW, directoryName)
-
-  return await axios.post(
-    "http://localhost:5200/api/d/TbDirectoryNames/GetTbDirectoryNamesView",
-    directoryName,
-    header
-  )
+const getMethod = async url => {
+  return await axios
+    .get(envConfigurations.baseUrl + url, header)
+    .then(response => {
+      if (response.status >= 200 || response.status <= 299) return response.data
+    })
+    .catch(error => {
+      throw error.response
+    })
 }
 
-const getDirectoryNamesViewAxios = async directoryName => {
-  post(url.GET_DIRECTORYNAMES_View_URL, directoryName)
+const postMethod = async (url, postData) => {
+  return await axios
+    .post(envConfigurations.baseUrl + url, { ...postData }, { ...header })
+    .then(response => {
+      if (response.status >= 200 || response.status <= 299) return response.data
+    })
+    .catch(error => {
+      throw error.response
+    })
 }
-
-const getDirectoryNames = () => {
-  get(url.GET_DIRECTORYNAMES)
+const putMethod = async (url, postData) => {
+  return await axios
+    .put(envConfigurations.baseUrl + url, { ...postData }, { ...header })
+    .then(response => {
+      if (response.status >= 200 || response.status <= 299) return response.data
+    })
+    .catch(error => {
+      throw error.response
+    })
 }
-
-// add DirectoryName
-const addNewDirectoryName = directoryName =>
-  post(url.ADD_NEW_DIRECTORYNAME, directoryName)
-
-// update DirectoryName
-const updateDirectoryName = directoryName =>
-  put(url.UPDATE_DIRECTORYNAME, directoryName)
-
-// delete DirectoryName
-const deleteDirectoryName = directoryName =>
-  del(url.DELETE_DIRECTORYNAME, { headers: { directoryName } })
+const deleteMethod = async url => {
+  return await axios
+    .delete(envConfigurations.baseUrl + url, { ...header })
+    .then(response => {
+      if (response.status >= 200 || response.status <= 299) return response.data
+    })
+    .catch(error => {
+      throw error.response
+    })
+}
 
 export {
   getLoggedInUser,
   isUserAuthenticated,
   postJwtRegister,
-  getDirectoryNames,
-  addNewDirectoryName,
-  updateDirectoryName,
-  deleteDirectoryName,
-  getDirectoryNamesView,
-  getDirectoryNamesViewAxios,
+  getMethod,
+  postMethod,
+  putMethod,
+  deleteMethod,
 }

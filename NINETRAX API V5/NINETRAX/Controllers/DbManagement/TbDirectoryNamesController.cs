@@ -130,7 +130,9 @@ namespace NINETRAX.Controllers.DbManagement
                 response.totalRecords = dataGridCount.TotalRecord;
                 response.totalFilteredRecords = dataGridCount.TotalRecord;
 
+
                 return StatusCode(200, response);
+              //  return StatusCode(400, "Failed to proceed...");
             }
             catch (Exception ex)
             {

@@ -26,6 +26,13 @@ import "./assets/scss/theme.scss"
 // Activating fake backend
 //fakeBackend()
 
+export const envConfigurations = {
+  baseUrl: process.env.REACT_APP_BASE_URL.substring(
+    1,
+    process.env.REACT_APP_BASE_URL.length - 2
+  ),
+}
+
 // const firebaseConfig = {
 //   apiKey: process.env.REACT_APP_APIKEY,
 //   authDomain: process.env.REACT_APP_AUTHDOMAIN,

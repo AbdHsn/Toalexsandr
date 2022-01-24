@@ -1,13 +1,7 @@
 import { all, call, put, takeEvery, fork } from "redux-saga/effects"
 
 // Ecommerce Redux States
-import {
-  GET_DIRECTORYNAMES_VIEW,
-  GET_DIRECTORYNAMES,
-  ADD_NEW_DIRECTORYNAME,
-  DELETE_DIRECTORYNAME,
-  UPDATE_DIRECTORYNAME,
-} from "./actionTypes"
+import * as actionType from "./actionTypes"
 import {
   getDirectoryNamesViewSuccess,
   getDirectoryNamesViewFail,
@@ -21,15 +15,13 @@ import {
   deleteDirectoryNameFail,
 } from "./actions"
 
-//Include Both Helper File with needed methods
 import {
-  getDirectoryNamesView,
-  getDirectoryNames,
-  addNewDirectoryName,
-  updateDirectoryName,
-  deleteDirectoryName,
+  getMethod,
+  postMethod,
+  putMethod,
+  deleteMethod,
 } from "../../helpers/backend_helper"
-import { delay } from "lodash"
+import * as url from "../../helpers/url_helper"
 
 function* fetchDirectoryNames() {
   try {
@@ -40,16 +32,14 @@ function* fetchDirectoryNames() {
   }
 }
 
-function* fetchDirectoryNamesView({ payload: directoryName }) {
+function* fetchDirectoryNamesView({ payload: data }) {
   try {
-    const response = yield call(getDirectoryNamesView, directoryName)
-    console.log("Saga ---> ", directoryName)
-    // yield delay(3000)
-    console.log("Saga after---> ", response)
+    let response = yield call(postMethod, url.GET_DIRECTORYNAMES_VIEW, data)
+    console.log("Saga success---> ", response)
     yield put(getDirectoryNamesViewSuccess(response))
   } catch (error) {
-    console.log("Saga after failed---> ", error)
-    yield put(getDirectoryNamesViewFail(error))
+    console.log("Saga failed---> ", error.data)
+    yield put(getDirectoryNamesViewFail(error.data))
   }
 }
 
@@ -83,15 +73,11 @@ function* onAddNewDirectoryName({ payload: directoryName }) {
 
 function* watchDirectoryNameSaga() {
   //yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
-  yield takeEvery(GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
+  yield takeEvery(actionType.GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
   // yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
   // yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
   // yield takeEvery(DELETE_DIRECTORYNAME, onDeleteDirectoryName)
 }
-
-// export function* watchFetchDemoData() {
-//   yield takeEvery(GET_DEMO_DATA, fetchDemoData)
-// }
 
 function* directoryNameSaga() {
   yield all([fork(watchDirectoryNameSaga)])
