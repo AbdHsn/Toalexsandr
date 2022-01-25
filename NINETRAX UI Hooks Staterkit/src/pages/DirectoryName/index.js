@@ -4,21 +4,28 @@ import MetaTags from "react-meta-tags"
 import { useSelector, useDispatch } from "react-redux"
 import { isEmpty } from "lodash"
 import PropTypes from "prop-types"
+import { useFormik } from "formik"
+import * as Yup from "yup"
 import {
   Button,
-  ButtonDropdown,
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Row,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  Table,
-  Row,
-  Col,
-  Card,
-  CardBody,
-  CardTitle,
   Modal,
+  ModalHeader,
+  ModalBody,
+  Input,
+  FormFeedback,
   Label,
-  Container,
+  Form,
+  CardTitle,
+  ButtonDropdown,
+  Table,
 } from "reactstrap"
 
 import {
@@ -58,6 +65,12 @@ const DirectoryNames = props => {
   const [postData, setPostData] = useState(ini_PostingData)
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
+  const [modal, setModal] = useState(false)
+  const [customerList, setCustomerList] = useState([])
+  const [isEdit, setIsEdit] = useState(false)
+  const [customer, setCustomer] = useState(null)
+  const [directoryName, setDirectoryName] = useState(null)
+
   useEffect(() => {
     dispatch(onGetDirectoryNamesView(postData))
   }, [postData])
@@ -66,6 +79,65 @@ const DirectoryNames = props => {
     const newDirectoryNames = directoryNameData.filter(f => f.id !== id)
     setDirectoryNameData(newDirectoryNames)
   }
+  const handleEdit = id => {
+    const newDirectoryNames = directoryNameData.filter(f => f.id !== id)
+    setDirectoryNameData(newDirectoryNames)
+  }
+
+  const toggle = () => {
+    if (modal) {
+      setModal(false)
+      setDirectoryName(null)
+    } else {
+      setModal(true)
+    }
+  }
+
+  const onAddDirectoryName = () => {
+    //setCustomerList("")
+    setIsEdit(false)
+    toggle()
+  }
+
+  // validation
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      personName: (directoryName && directoryName.personName) || "",
+      personTitle: (directoryName && directoryName.personTitle) || "",
+      baseOfOperation: (directoryName && directoryName.baseOfOperation) || "",
+    },
+    validationSchema: Yup.object({
+      personName: Yup.string().required("Please Enter Person Name"),
+      personTitle: Yup.string().required("Please Enter Person Title"),
+      baseOfOperation: Yup.string().required("Please Enter Base of Operation"),
+    }),
+    onSubmit: values => {
+      if (isEdit) {
+        const update = {
+          id: directoryName ? directoryName.id : 0,
+          personName: values.personName,
+          personTitle: values.personTitle,
+          baseOfOperation: values.baseOfOperation,
+        }
+        // update function
+        // dispatch(onUpdateCustomer(update))
+        validation.resetForm()
+      } else {
+        const _new = {
+          personName: values["personName"],
+          personTitle: values["personTitle"],
+          baseOfOperation: values["baseOfOperation"],
+        }
+        // save new function
+        // dispatch(onAddNewCustomer(_new))
+        validation.resetForm()
+      }
+      toggle()
+    },
+  })
 
   return (
     <React.Fragment>
@@ -110,6 +182,14 @@ const DirectoryNames = props => {
                           })}
                         </DropdownMenu>
                       </ButtonDropdown>
+
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onAddDirectoryName}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
                     </div>
                   </div>
 
@@ -152,6 +232,15 @@ const DirectoryNames = props => {
                               <td>
                                 <button
                                   type="button"
+                                  className="btn btn-sm btn-outline-primary ml-2"
+                                  onClick={e => handleEdit(item.id)}
+                                  data-toggle="modal"
+                                  data-target=".bs-example-modal-center"
+                                >
+                                  <i className="far fa-pencil"></i> Edit
+                                </button>
+                                <button
+                                  type="button"
                                   className="btn btn-sm btn-outline-danger ml-2"
                                   onClick={e => handleDelete(item.id)}
                                   data-toggle="modal"
@@ -165,6 +254,108 @@ const DirectoryNames = props => {
                         })}
                     </tbody>
                   </Table>
+
+                  <Modal isOpen={modal} toggle={toggle}>
+                    <ModalHeader toggle={toggle} tag="h4">
+                      {!!isEdit ? "Edit Customer" : "Add Customer"}
+                    </ModalHeader>
+                    <ModalBody>
+                      <Form
+                        onSubmit={e => {
+                          e.preventDefault()
+                          validation.handleSubmit()
+                          return false
+                        }}
+                      >
+                        <Row form>
+                          <Col className="col-12">
+                            <div className="mb-3">
+                              <Label className="form-label">personName</Label>
+                              <Input
+                                name="personName"
+                                type="text"
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                value={validation.values.personName || ""}
+                                invalid={
+                                  validation.touched.personName &&
+                                  validation.errors.personName
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.personName &&
+                              validation.errors.personName ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.personName}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+
+                            <div className="mb-3">
+                              <Label className="form-label">Person Title</Label>
+                              <Input
+                                name="personTitle"
+                                type="text"
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                value={validation.values.personTitle || ""}
+                                invalid={
+                                  validation.touched.personTitle &&
+                                  validation.errors.personTitle
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.personTitle &&
+                              validation.errors.personTitle ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.personTitle}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+
+                            <div className="mb-3">
+                              <Label className="form-label">
+                                Base Of Operation
+                              </Label>
+                              <Input
+                                name="baseOfOperation"
+                                type="text"
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                value={validation.values.baseOfOperation || ""}
+                                invalid={
+                                  validation.touched.baseOfOperation &&
+                                  validation.errors.baseOfOperation
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.baseOfOperation &&
+                              validation.errors.baseOfOperation ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.baseOfOperation}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <div className="text-end">
+                              <button
+                                type="submit"
+                                className="btn btn-success save-customer"
+                              >
+                                Save
+                              </button>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </ModalBody>
+                  </Modal>
                 </CardBody>
               </Card>
             </Col>

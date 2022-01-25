@@ -563,7 +563,7 @@ const EcommerceCustomers = props => {
 };
 
 EcommerceCustomers.propTypes = {
-  customers: PropTypes.array,
+  customers: PropTypes.object,
   onGetCustomers: PropTypes.func,
   onAddNewCustomer: PropTypes.func,
   onDeleteCustomer: PropTypes.func,
