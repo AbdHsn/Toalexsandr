@@ -42,45 +42,29 @@ const DirectoryNames = props => {
     rowSizeDdl: state.directoryNameData.rowSizeDdl,
   }))
 
-  const [modal, setModal] = useState(false)
-  const [dataTable, setDataTable] = useState([])
-  const [isEdit, setIsEdit] = useState(false)
-  const [directoryName, setdirectoryName] = useState(null)
-  const [pageSizeDrp, setPageSizeDrp] = useState(false)
-  const [postData, setPostData] = useState({
+  const ini_PostingData = {
+    start: 0,
+    length: "10",
+    search: {},
     columns: [],
+    searches: [],
     orders: [
       {
         column: "Id",
         order_by: "DESC",
       },
     ],
-    start: 0,
-    length: "All",
-    search: {},
-    searches: [],
-  })
+  }
+  const [postData, setPostData] = useState(ini_PostingData)
+  const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
   useEffect(() => {
     dispatch(onGetDirectoryNamesView(postData))
-  }, [])
-
-  const onChangePageSize = () => {}
-
-  const pageOptions = {
-    // sizePerPage: 10,
-    // totalSize: customers.length, // replace later with size(orders),
-    // custom: true,
-  }
+  }, [postData])
 
   const handleDelete = id => {
     const newDirectoryNames = directoryNameData.filter(f => f.id !== id)
     setDirectoryNameData(newDirectoryNames)
-  }
-  const onSizePerPageChange = number => {
-    setPostData(...postData, {
-      length: number,
-    })
   }
 
   return (
@@ -106,7 +90,7 @@ const DirectoryNames = props => {
                         toggle={() => setPageSizeDrp(!pageSizeDrp)}
                       >
                         <Button id="caret" color="info" disabled>
-                          Row Size: {directoryNamesTbl.totalRecords}
+                          Row Size: {postData.length}
                         </Button>
                         <DropdownToggle caret color="info">
                           <i className="mdi mdi-chevron-down" />
@@ -116,7 +100,9 @@ const DirectoryNames = props => {
                             return (
                               <DropdownItem
                                 key={index}
-                                onClick={e => onSizePerPageChange(item)}
+                                onClick={e =>
+                                  setPostData({ ...postData, length: item })
+                                }
                               >
                                 {item}
                               </DropdownItem>
