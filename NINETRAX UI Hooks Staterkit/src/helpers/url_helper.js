@@ -4,9 +4,9 @@ export const GET_DIRECTORYNAMES_View_URL =
 export const GET_DIRECTORYNAMES_VIEW =
   "/d/TbDirectoryNames/GetTbDirectoryNamesView"
 export const GET_DIRECTORYNAMES = "/d/TbDirectoryNames"
-export const ADD_NEW_DIRECTORYNAME = "/add/directoryName"
-export const UPDATE_DIRECTORYNAME = "/update/directoryName"
-export const DELETE_DIRECTORYNAME = "/delete/directoryName"
+export const ADD_NEW_DIRECTORYNAME = "/d/TbDirectoryNames"
+export const UPDATE_DIRECTORYNAME = "/d/TbDirectoryNames/"
+export const DELETE_DIRECTORYNAME = "/d/TbDirectoryNames/"
 
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"

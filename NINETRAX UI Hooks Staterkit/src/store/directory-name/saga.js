@@ -43,40 +43,53 @@ function* fetchDirectoryNamesView({ payload: data }) {
   }
 }
 
+function* onAddNewDirectoryName({ payload: directoryName }) {
+  try {
+    const response = yield call(
+      postMethod,
+      url.ADD_NEW_DIRECTORYNAME,
+      directoryName
+    )
+    yield put(addDirectoryNameSuccess(response))
+  } catch (error) {
+    yield put(addDirectoryNameFail(error.data))
+  }
+}
+
 function* onUpdateDirectoryName({ payload: directoryName }) {
   try {
-    const response = yield call(updateDirectoryName, directoryName)
+    const response = yield call(
+      putMethod,
+      url.UPDATE_DIRECTORYNAME + directoryName.id,
+      directoryName
+    )
     yield put(updateDirectoryNameSuccess(response))
   } catch (error) {
-    yield put(updateDirectoryNameFail(error))
+    yield put(updateDirectoryNameFail(error.data))
   }
 }
 
 function* onDeleteDirectoryName({ payload: directoryName }) {
   try {
-    const response = yield call(deleteDirectoryName, directoryName)
-    yield put(deleteDirectoryNameSuccess(response))
+    const response = yield call(
+      deleteMethod,
+      url.DELETE_DIRECTORYNAME + directoryName
+    )
+    if (response) {
+      yield put(deleteDirectoryNameSuccess(directoryName))
+    } else {
+      yield put(deleteDirectoryNameFail(false))
+    }
   } catch (error) {
-    yield put(deleteDirectoryNameFail(error))
-  }
-}
-
-function* onAddNewDirectoryName({ payload: directoryName }) {
-  try {
-    const response = yield call(addNewDirectoryName, directoryName)
-
-    yield put(addDirectoryNameSuccess(response))
-  } catch (error) {
-    yield put(addDirectoryNameFail(error))
+    yield put(deleteDirectoryNameFail(error.data))
   }
 }
 
 function* watchDirectoryNameSaga() {
-  //yield takeEvery(GET_DIRECTORYNAMES, fetchDirectoryNames)
   yield takeEvery(actionType.GET_DIRECTORYNAMES_VIEW, fetchDirectoryNamesView)
-  // yield takeEvery(ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
-  // yield takeEvery(UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
-  // yield takeEvery(DELETE_DIRECTORYNAME, onDeleteDirectoryName)
+  yield takeEvery(actionType.ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
+  yield takeEvery(actionType.UPDATE_DIRECTORYNAME, onUpdateDirectoryName)
+  yield takeEvery(actionType.DELETE_DIRECTORYNAME, onDeleteDirectoryName)
 }
 
 function* directoryNameSaga() {

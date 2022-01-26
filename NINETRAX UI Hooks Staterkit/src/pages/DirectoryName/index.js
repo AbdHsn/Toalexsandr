@@ -27,15 +27,13 @@ import {
   ButtonDropdown,
   Table,
 } from "reactstrap"
-
+import DeleteModal from "../../components/Common/DeleteModal"
 import {
   getDirectoryNamesView as onGetDirectoryNamesView,
-  // addNewCustomer as onAddNewCustomer,
-  // updateCustomer as onUpdateCustomer,
-  // deleteCustomer as onDeleteCustomer,
+  addNewDirectoryName as onAddNewDirectoryName,
+  updateDirectoryName as onUpdateDirectoryName,
+  deleteDirectoryName as onDeleteDirectoryName,
 } from "store/directory-name/actions"
-
-//import { getDirectoryNamesViewAxios } from "../../helpers/backend_helper"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
 
@@ -68,20 +66,43 @@ const DirectoryNames = props => {
   const [modal, setModal] = useState(false)
   const [customerList, setCustomerList] = useState([])
   const [isEdit, setIsEdit] = useState(false)
+  const [rerenderer, setRerenderer] = useState(false)
   const [customer, setCustomer] = useState(null)
-  const [directoryName, setDirectoryName] = useState(null)
+  const [directoryName, setDirectoryName] = useState({})
+  const [deleteModal, setDeleteModal] = useState(false)
 
   useEffect(() => {
     dispatch(onGetDirectoryNamesView(postData))
-  }, [postData])
+  }, [postData, rerenderer])
 
-  const handleDelete = id => {
-    const newDirectoryNames = directoryNameData.filter(f => f.id !== id)
-    setDirectoryNameData(newDirectoryNames)
+  const onDeleteConfirmation = id => {
+    if (id > 0) {
+      setDirectoryName({
+        id: id,
+      })
+      setDeleteModal(true)
+    }
+    //dispatch(onDeleteDirectoryName(id))
+    //setRerenderer(!rerenderer)
+    // if (directoryName.id > 0) {
+    //   dispatch(onDeleteCustomer(customer))
+    //   onPaginationPageChange(1)
+    //   setDeleteModal(false)
+    // }
   }
-  const handleEdit = id => {
-    const newDirectoryNames = directoryNameData.filter(f => f.id !== id)
-    setDirectoryNameData(newDirectoryNames)
+
+  const handleDelete = () => {
+    if (directoryName.id > 0) {
+      dispatch(onDeleteDirectoryName(directoryName.id))
+      //onPaginationPageChange(1)
+      setDeleteModal(false)
+    }
+  }
+
+  const handleEdit = item => {
+    setDirectoryName(item)
+    setIsEdit(true)
+    toggle()
   }
 
   const toggle = () => {
@@ -94,12 +115,10 @@ const DirectoryNames = props => {
   }
 
   const onAddDirectoryName = () => {
-    //setCustomerList("")
     setIsEdit(false)
     toggle()
   }
 
-  // validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -114,6 +133,7 @@ const DirectoryNames = props => {
       personTitle: Yup.string().required("Please Enter Person Title"),
       baseOfOperation: Yup.string().required("Please Enter Base of Operation"),
     }),
+
     onSubmit: values => {
       if (isEdit) {
         const update = {
@@ -123,16 +143,16 @@ const DirectoryNames = props => {
           baseOfOperation: values.baseOfOperation,
         }
         // update function
-        // dispatch(onUpdateCustomer(update))
+        dispatch(onUpdateDirectoryName(update))
         validation.resetForm()
       } else {
-        const _new = {
+        const create = {
           personName: values["personName"],
           personTitle: values["personTitle"],
           baseOfOperation: values["baseOfOperation"],
         }
         // save new function
-        // dispatch(onAddNewCustomer(_new))
+        dispatch(onAddNewDirectoryName(create))
         validation.resetForm()
       }
       toggle()
@@ -233,16 +253,16 @@ const DirectoryNames = props => {
                                 <button
                                   type="button"
                                   className="btn btn-sm btn-outline-primary ml-2"
-                                  onClick={e => handleEdit(item.id)}
+                                  onClick={e => handleEdit(item)}
                                   data-toggle="modal"
                                   data-target=".bs-example-modal-center"
                                 >
-                                  <i className="far fa-pencil"></i> Edit
-                                </button>
+                                  <i className="far fa-edit"></i> Edit
+                                </button>{" "}
                                 <button
                                   type="button"
                                   className="btn btn-sm btn-outline-danger ml-2"
-                                  onClick={e => handleDelete(item.id)}
+                                  onClick={e => onDeleteConfirmation(item.id)}
                                   data-toggle="modal"
                                   data-target=".bs-example-modal-center"
                                 >
@@ -257,7 +277,7 @@ const DirectoryNames = props => {
 
                   <Modal isOpen={modal} toggle={toggle}>
                     <ModalHeader toggle={toggle} tag="h4">
-                      {!!isEdit ? "Edit Customer" : "Add Customer"}
+                      {isEdit ? "Edit Directory Name" : "Add Directory Name"}
                     </ModalHeader>
                     <ModalBody>
                       <Form
@@ -356,6 +376,12 @@ const DirectoryNames = props => {
                       </Form>
                     </ModalBody>
                   </Modal>
+
+                  <DeleteModal
+                    show={deleteModal}
+                    onDeleteClick={handleDelete}
+                    onCloseClick={() => setDeleteModal(false)}
+                  />
                 </CardBody>
               </Card>
             </Col>

@@ -22,17 +22,6 @@ const INIT_STATE = {
   // },
 
   rowSizeDdl: ["10", "30", "50", "100", "All"],
-  // start: 0,
-  // length: "10",
-  // totalRecords: 0,
-  // columns: [],
-  // searches: [],
-  // orders: [
-  //   {
-  //     column: "Id",
-  //     order_by: "DESC",
-  //   },
-  // ],
 
   searchById: undefined,
   searchByPersonName: undefined,
@@ -76,7 +65,10 @@ const directoryNameReducer = (state = INIT_STATE, action) => {
     case ADD_DIRECTORYNAME_SUCCESS:
       return {
         ...state,
-        directoryNames: [...state.directoryNames, action.payload],
+        directoryNamesTbl: {
+          ...state.directoryNamesTbl,
+          data: [action.payload, ...state.directoryNamesTbl.data],
+        },
       }
 
     case ADD_DIRECTORYNAME_FAIL:
@@ -88,11 +80,14 @@ const directoryNameReducer = (state = INIT_STATE, action) => {
     case UPDATE_DIRECTORYNAME_SUCCESS:
       return {
         ...state,
-        directoryNames: state.directoryNames.map(directoryName =>
-          directoryName.id.toString() === action.payload.id.toString()
-            ? { directoryName, ...action.payload }
-            : directoryName
-        ),
+        directoryNamesTbl: {
+          ...state.directoryNamesTbl,
+          data: state.directoryNamesTbl.data.map(directoryName =>
+            directoryName.id.toString() === action.payload.id.toString()
+              ? { directoryName, ...action.payload }
+              : directoryName
+          ),
+        },
       }
 
     case UPDATE_DIRECTORYNAME_FAIL:
@@ -104,10 +99,12 @@ const directoryNameReducer = (state = INIT_STATE, action) => {
     case DELETE_DIRECTORYNAME_SUCCESS:
       return {
         ...state,
-        directoryNames: state.directoryNames.filter(
-          directoryName =>
-            directoryName.id.toString() !== action.payload.id.toString()
-        ),
+        directoryNamesTbl: {
+          ...state.directoryNamesTbl,
+          data: state.directoryNamesTbl.data.filter(
+            f => f.id.toString() !== action.payload.toString()
+          ),
+        },
       }
 
     case DELETE_DIRECTORYNAME_FAIL:

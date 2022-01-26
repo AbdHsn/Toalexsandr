@@ -256,16 +256,24 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbDirectoryName(int id)
         {
-            var objTbDirectoryName = await _context.TbDirectoryNames.FindAsync(id);
-            if (objTbDirectoryName == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var objTbDirectoryName = await _context.TbDirectoryNames.FindAsync(id);
+                if (objTbDirectoryName == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.TbDirectoryNames.Remove(objTbDirectoryName);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "API response failed.");
             }
 
-            _context.TbDirectoryNames.Remove(objTbDirectoryName);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(200, true);
         }
 
         #endregion
