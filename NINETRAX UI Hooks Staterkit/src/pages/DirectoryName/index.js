@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import MetaTags from "react-meta-tags"
+import ReactPaginate from "react-paginate"
+//import ReactPaginate from "react-paginate"
+//import "react-pagination-js/dist/styles.css" // import css
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import { isEmpty } from "lodash"
@@ -64,16 +67,18 @@ const DirectoryNames = props => {
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
   const [modal, setModal] = useState(false)
-  const [customerList, setCustomerList] = useState([])
-  const [isEdit, setIsEdit] = useState(false)
-  const [rerenderer, setRerenderer] = useState(false)
-  const [customer, setCustomer] = useState(null)
-  const [directoryName, setDirectoryName] = useState({})
   const [deleteModal, setDeleteModal] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const [directoryName, setDirectoryName] = useState({})
+
+  const [searchId, setSearchId] = useState("")
+  const [personName, setPersonName] = useState("")
+  const [personTitle, setPersonTitle] = useState("")
+  const [baseOfOperation, setBaseOfOperation] = useState("")
 
   useEffect(() => {
     dispatch(onGetDirectoryNamesView(postData))
-  }, [postData, rerenderer])
+  }, [postData])
 
   const onDeleteConfirmation = id => {
     if (id > 0) {
@@ -82,13 +87,6 @@ const DirectoryNames = props => {
       })
       setDeleteModal(true)
     }
-    //dispatch(onDeleteDirectoryName(id))
-    //setRerenderer(!rerenderer)
-    // if (directoryName.id > 0) {
-    //   dispatch(onDeleteCustomer(customer))
-    //   onPaginationPageChange(1)
-    //   setDeleteModal(false)
-    // }
   }
 
   const handleDelete = () => {
@@ -104,6 +102,10 @@ const DirectoryNames = props => {
     setIsEdit(true)
     toggle()
   }
+
+  // const handlePaginationChange = data => {
+  //   console.log("dddd", data)
+  // }
 
   const toggle = () => {
     if (modal) {
@@ -158,6 +160,20 @@ const DirectoryNames = props => {
       toggle()
     },
   })
+
+  const handlePressEnter = e => {
+    if (e.key === "Enter") {
+      setPostData({
+        ...postData,
+        searches: [
+          { search_by: "Id", value: searchId },
+          { search_by: "PersonName", value: personName },
+          { search_by: "PersonTitle", value: personTitle },
+          { search_by: "BaseOfOperation", value: baseOfOperation },
+        ],
+      })
+    }
+  }
 
   return (
     <React.Fragment>
@@ -233,10 +249,50 @@ const DirectoryNames = props => {
                         <th></th>
                       </tr>
                       <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Id Search"
+                            name="searchById"
+                            id="searchById"
+                            onChange={e => setSearchId(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Person Name Search"
+                            name="searchByPersonName"
+                            id="searchByPersonName"
+                            onChange={e => setPersonName(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Person Title Search"
+                            name="searchByPersonTitle"
+                            id="searchByPersonTitle"
+                            onChange={e => setPersonTitle(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Base Operation Search"
+                            name="searchByBaseOfOperation"
+                            id="searchByBa"
+                            onChange={e => setBaseOfOperation(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
                         <th></th>
                       </tr>
                     </thead>
@@ -274,6 +330,35 @@ const DirectoryNames = props => {
                         })}
                     </tbody>
                   </Table>
+
+                  <div className="mt-2">
+                    <ReactPaginate
+                      containerClassName={"pagination justify-content-left"}
+                      previousLabel={"Previous"}
+                      previousClassName={"page-item"}
+                      previousLinkClassName={"page-link"}
+                      nextLabel={"Next"}
+                      nextClassName={"page-item"}
+                      nextLinkClassName={"page-link"}
+                      breakLabel={"..."}
+                      breakClassName={"page-item"}
+                      breakLinkClassName={"page-link"}
+                      pageCount={Math.ceil(
+                        directoryNamesTbl.totalRecords / +postData.length
+                      )}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={3}
+                      onPageChange={e =>
+                        setPostData({
+                          ...postData,
+                          start: e.selected * postData.length,
+                        })
+                      }
+                      pageClassName={"page-item"}
+                      pageLinkClassName={"page-link"}
+                      activeClassName={"active"}
+                    />
+                  </div>
 
                   <Modal isOpen={modal} toggle={toggle}>
                     <ModalHeader toggle={toggle} tag="h4">
