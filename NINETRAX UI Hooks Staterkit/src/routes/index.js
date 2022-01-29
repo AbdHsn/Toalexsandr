@@ -27,6 +27,8 @@ const authProtectedRoutes = [
 ]
 
 const publicRoutes = [
+  // { path: "/dashboard", component: Dashboard },
+  // { path: "/directory-name-list", component: DirectoryName },
   { path: "/logout", component: Logout },
   { path: "/login", component: Login },
   { path: "/forgot-password", component: ForgetPwd },

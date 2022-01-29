@@ -1,61 +1,72 @@
-import PropTypes from "prop-types";
-import MetaTags from "react-meta-tags";
-import React from "react";
+import PropTypes from "prop-types"
+import MetaTags from "react-meta-tags"
+import React from "react"
 
-import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  Alert,
+  Container,
+  Form,
+  Input,
+  FormFeedback,
+  Label,
+} from "reactstrap"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"
 
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom"
 
 // Formik validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from "yup"
+import { useFormik } from "formik"
 
 //Social Media Imports
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin } from "react-google-login"
 // import TwitterLogin from "react-twitter-auth"
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 
 // actions
-import { loginUser, socialLogin } from "../../store/actions";
+import { loginUser, socialLogin } from "../../store/actions"
 
 // import images
-import profile from "assets/images/profile-img.png";
-import logo from "assets/images/logo.svg";
+import profile from "assets/images/profile-img.png"
+import logo from "assets/images/logo.svg"
 
 //Import config
-import { facebook, google } from "../../config";
+import { facebook, google } from "../../config"
 
 const Login = props => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@themesbrand.com" || '',
-      password: "123456" || '',
+      email: "admin@ninetrax.com" || "",
+      password: "123456" || "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
-    onSubmit: (values) => {
-      dispatch(loginUser(values, props.history));
-    }
-  });
+    onSubmit: values => {
+      dispatch(loginUser(values, props.history))
+    },
+  })
 
   const { error } = useSelector(state => ({
     error: state.Login.error,
-  }));
+  }))
 
   // handleValidSubmit
   const handleValidSubmit = (event, values) => {
-    dispatch(loginUser(values, props.history));
-  };
+    dispatch(loginUser(values, props.history))
+  }
 
   const signIn = (res, type) => {
     if (type === "google" && res) {
@@ -64,31 +75,31 @@ const Login = props => {
         email: res.profileObj.email,
         token: res.tokenObj.access_token,
         idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.history, type));
+      }
+      dispatch(socialLogin(postData, props.history, type))
     } else if (type === "facebook" && res) {
       const postData = {
         name: res.name,
         email: res.email,
         token: res.accessToken,
         idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.history, type));
+      }
+      dispatch(socialLogin(postData, props.history, type))
     }
-  };
+  }
 
   //handleGoogleLoginResponse
   const googleResponse = response => {
-    signIn(response, "google");
-  };
+    signIn(response, "google")
+  }
 
   //handleTwitterLoginResponse
   // const twitterResponse = e => {}
 
   //handleFacebookLoginResponse
   const facebookResponse = response => {
-    signIn(response, "facebook");
-  };
+    signIn(response, "facebook")
+  }
 
   return (
     <React.Fragment>
@@ -136,10 +147,10 @@ const Login = props => {
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
+                      onSubmit={e => {
+                        e.preventDefault()
+                        validation.handleSubmit()
+                        return false
                       }}
                     >
                       {error ? <Alert color="danger">{error}</Alert> : null}
@@ -155,11 +166,15 @@ const Login = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
                           }
                         />
                         {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                          <FormFeedback type="invalid">
+                            {validation.errors.email}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -173,11 +188,17 @@ const Login = props => {
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
                           invalid={
-                            validation.touched.password && validation.errors.password ? true : false
+                            validation.touched.password &&
+                            validation.errors.password
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
+                        {validation.touched.password &&
+                        validation.errors.password ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.password}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -258,7 +279,7 @@ const Login = props => {
                                 </Link>
                               )}
                               onSuccess={googleResponse}
-                              onFailure={() => { }}
+                              onFailure={() => {}}
                             />
                           </li>
                         </ul>
@@ -292,11 +313,11 @@ const Login = props => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Login);
+export default withRouter(Login)
 
 Login.propTypes = {
   history: PropTypes.object,
-};
+}

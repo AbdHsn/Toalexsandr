@@ -6,11 +6,13 @@ import { apiError, loginSuccess, logoutUserSuccess } from "./actions"
 
 //Include Both Helper File with needed methods
 import { getFirebaseBackend } from "../../../helpers/firebase_helper"
-import {
-  postFakeLogin,
-  postJwtLogin,
-  postSocialLogin,
-} from "../../../helpers/fakebackend_helper"
+// import {
+//   postFakeLogin,
+//   postJwtLogin,
+//   postSocialLogin,
+// } from "../../../helpers/fakebackend_helper"
+import { postMethod } from "../../../helpers/backend_helper"
+import * as url from "../../../helpers/url_helper"
 
 const fireBaseBackend = getFirebaseBackend()
 
@@ -24,10 +26,16 @@ function* loginUser({ payload: { user, history } }) {
       )
       yield put(loginSuccess(response))
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      const response = yield call(postJwtLogin, {
+      console.log("jwt executed...")
+      // const response = yield call(postMethod, url.POST_FAKE_JWT_LOGIN, {
+      //   email: user.email,
+      //   password: user.password,
+      // })
+      let response = {
         email: user.email,
         password: user.password,
-      })
+      }
+
       localStorage.setItem("authUser", JSON.stringify(response))
       yield put(loginSuccess(response))
     } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
