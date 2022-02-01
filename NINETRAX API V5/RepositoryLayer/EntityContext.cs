@@ -24,6 +24,12 @@ namespace RepositoryLayer
             //    entity.HasNoKey();
             //});
 
+            modelBuilder.Entity<ATbNasinspectionsView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+
             modelBuilder.Entity<TbDirectoryNamesView>(entity =>
             {
                 entity.HasNoKey();
