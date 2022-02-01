@@ -8,6 +8,10 @@ export const ADD_NEW_DIRECTORYNAME = "/d/TbDirectoryNames"
 export const UPDATE_DIRECTORYNAME = "/d/TbDirectoryNames/"
 export const DELETE_DIRECTORYNAME = "/d/TbDirectoryNames/"
 
+//IMPORT FROM MAXIMO
+export const IMPORT_FROM_MAXIMO_URL =
+  "/d/ATbNasinspectionsImports/ImportFromMaximo"
+
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"
 

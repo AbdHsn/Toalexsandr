@@ -1,12 +1,16 @@
 using DataLayer.Models.EntityModels;
+using DataLayer.Models.ExcelModels;
 using DataLayer.Models.GlobalModels;
 using DataLayer.Models.ViewModels;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -264,6 +268,111 @@ namespace NINETRAX.Controllers.DbManagement
             return StatusCode(200, true);
         }
 
+        #endregion
+
+        #region ImportFromMAXIMO
+        [HttpPost("ImportFromMaximo")]
+        public async Task<Object> ImportFromMaximo(IFormFile importFile)
+        {
+            try
+            {
+                //var f = file;
+
+                var excelData = new List<ATbNasinspectionsImport>();
+                #region FileProcessing
+                if (Request.Form.Files[0] != null)
+                {
+                    //var uploadedExcelFile = Request.Form.Files[0];
+                    var uploadedExcelFile = importFile;
+
+                    string getExtension = Path.GetExtension(uploadedExcelFile.FileName).ToLower();
+
+                    if (getExtension == ".xlsx" || getExtension == ".xls" || getExtension == ".csv")
+                    {
+                        // required because of known issue when running on .NET Core
+                        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+                        using (var stream = new MemoryStream())
+                        {
+                            uploadedExcelFile.CopyTo(stream);
+                            stream.Position = 0;
+                            using (var reader = ExcelReaderFactory.CreateReader(stream))
+                            {
+                                int count = 0;
+                                while (reader.Read()) //Each row of the file
+                                {
+                                    //skipping header record.
+                                    if (count == 0)
+                                    {
+                                        count++;
+                                        continue;
+                                    }
+
+                                    //var t = reader.GetValue(0).ToString();
+
+                                    //Assigning excel data into ExcelReaderVM
+                                    excelData.Add(new ATbNasinspectionsImport
+                                    {
+                                        WorkOrder = reader.GetValue(0).ToString(),
+                                        Description = reader.GetValue(1).ToString(),
+                                        Long_Description = reader.GetValue(2).ToString(),
+                                        Location = reader.GetValue(3).ToString(),
+                                        Asset = reader.GetValue(4).ToString(),
+                                        Asset_Description = reader.GetValue(5).ToString(),
+                                        Status = reader.GetValue(6).ToString(),
+                                        Crew = reader.GetValue(7).ToString(),
+                                        Lead = reader.GetValue(8).ToString(),
+                                        WorkType = reader.GetValue(9).ToString(),
+                                        SubWorkType = reader.GetValue(10).ToString(),
+                                        Elin = reader.GetValue(11).ToString(),
+                                        OnBehalfOf = reader.GetValue(12)?.ToString(),
+                                        Phone = reader.GetValue(13).ToString(),
+                                        Duration = reader.GetValue(14).ToString(),
+                                        TargetStart = reader.GetValue(15) != null ?  DateTime.Parse(reader.GetValue(15).ToString()) : null,
+                                        TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null,
+                                        ActualStart = reader.GetValue(17) != null ?  DateTime.Parse(reader.GetValue(17).ToString()) : null,
+                                        ActualFinish =reader.GetValue(18) != null ?  DateTime.Parse(reader.GetValue(18).ToString()) : null,
+                                        StatusDate = reader.GetValue(19) != null ?  DateTime.Parse(reader.GetValue(19).ToString()) : null
+                                    });
+                                    count++;
+                                }
+                            }
+                        }
+
+                        //save data
+                        if (excelData.Count() > 0)
+                        {
+                            _context.ChangeTracker.AutoDetectChangesEnabled = false;
+                            _context.ATbNasinspectionsImports.AddRange(excelData);
+                            _context.ChangeTracker.DetectChanges();
+                            await _context.SaveChangesAsync();
+                            //Don't forget to revert changes
+                            _context.ChangeTracker.AutoDetectChangesEnabled = true;
+
+                            return StatusCode(200, _context.ATbNasinspectionsImports);
+
+                        }
+                        else {
+                            return StatusCode(404, "No data found to procceed.");
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid file provided.");
+                    }
+                }
+                else
+                {
+                    return NotFound("File not provided to proceed.");
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                string error = ex.StackTrace.ToString();
+                return StatusCode(500, "Excel importing failed to proceed.");
+            }
+        }
         #endregion
 
     }

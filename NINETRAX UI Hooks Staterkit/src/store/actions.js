@@ -39,5 +39,8 @@ export * from "./dashboard/actions"
 //dashboard-saas
 export * from "./dashboard-saas/actions"
 
-//dashboard-saas
+//directory name
 export * from "./directory-name/actions"
+
+//import from maximo
+export * from "./import-from-maximo/actions"

@@ -31,6 +31,7 @@ import {
   Table,
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
+import ImportFromMaximoModal from "../../pages/ImportFromMaximo"
 import {
   getDirectoryNamesView as onGetDirectoryNamesView,
   addNewDirectoryName as onAddNewDirectoryName,
@@ -68,6 +69,7 @@ const DirectoryNames = props => {
 
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
+  const [importMaximoModal, setImportMaximoModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [directoryName, setDirectoryName] = useState({})
 
@@ -89,6 +91,13 @@ const DirectoryNames = props => {
     }
   }
 
+  const onImportFromMAXIMODialog = () => {
+    setImportMaximoModal(true)
+  }
+
+  const handleImportMaximo = () => {
+    setImportMaximoModal(false)
+  }
   const handleDelete = () => {
     if (directoryName.id > 0) {
       dispatch(onDeleteDirectoryName(directoryName.id))
@@ -96,7 +105,6 @@ const DirectoryNames = props => {
       setDeleteModal(false)
     }
   }
-
   const handleEdit = item => {
     setDirectoryName(item)
     setIsEdit(true)
@@ -225,6 +233,16 @@ const DirectoryNames = props => {
                         onClick={onAddDirectoryName}
                       >
                         <i className="bx bx-plus"></i> New
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger ml-2"
+                        onClick={e => onImportFromMAXIMODialog()}
+                        data-toggle="modal"
+                        data-target=".bs-example-modal-center"
+                      >
+                        <i className="far fa-trash-alt"></i> Import MAXIMO
                       </button>
                     </div>
                   </div>
@@ -466,6 +484,12 @@ const DirectoryNames = props => {
                     show={deleteModal}
                     onDeleteClick={handleDelete}
                     onCloseClick={() => setDeleteModal(false)}
+                  />
+
+                  <ImportFromMaximoModal
+                    show={importMaximoModal}
+                    onImportClick={() => handleImportMaximo}
+                    onCloseClick={() => setImportMaximoModal(false)}
                   />
                 </CardBody>
               </Card>

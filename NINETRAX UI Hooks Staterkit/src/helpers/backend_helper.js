@@ -10,6 +10,7 @@ const header = {
     Authorization: "Bearer " + token,
     timeout: 30000,
     "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
 }
 

@@ -45,6 +45,9 @@ import DashboardSaas from "./dashboard-saas/reducer"
 //Directory name saas
 import directoryNameReducer from "./directory-name/reducer"
 
+//Import from maximo
+import importFromMaximoReducer from "./import-from-maximo/reducer"
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -64,6 +67,7 @@ const rootReducer = combineReducers({
   Dashboard,
   DashboardSaas,
   directoryNameData: directoryNameReducer,
+  importFromMaximoData: importFromMaximoReducer,
 })
 
 export default rootReducer
