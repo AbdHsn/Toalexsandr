@@ -12,6 +12,15 @@ export const DELETE_DIRECTORYNAME = "/d/TbDirectoryNames/"
 export const IMPORT_FROM_MAXIMO_URL =
   "/d/ATbNasinspectionsImports/ImportFromMaximo"
 
+//ATbNasinspections
+export const GET_ATbNasinspections_VIEW_URL =
+  "/d​/ATbNasinspections​/GetATbNasinspectionsView"
+export const GET_All_ATbNasinspections_URL = "/d​/ATbNasinspections"
+export const ADD_NEW_ATbNasinspections_URL = "/d/ATbNasinspections"
+export const GET_ONLY_ATbNasinspections_URL = "/d​/ATbNasinspections/"
+export const UPDATE_ATbNasinspections_URL = "/d/ATbNasinspections/"
+export const DELETE_ATbNasinspections_URL = "/d/ATbNasinspections/"
+
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"
 
