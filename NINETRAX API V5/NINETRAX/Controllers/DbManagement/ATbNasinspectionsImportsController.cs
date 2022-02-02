@@ -27,7 +27,8 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IRawQueryRepo<ATbNasinspectionsImport> _ATbNasinspectionsImportContext;
         private readonly IRawQueryRepo<ATbNasinspectionsImportsView> _getATbNasinspectionsImportsView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
-        private readonly IRawQueryRepo<Object> _getAllByLike;
+        private readonly IRawQueryRepo<object> _getAllByLike;
+        private readonly IRawQueryRepo<object> _callSP;
         #endregion
 
         #region Constructor
@@ -37,7 +38,8 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<ATbNasinspectionsImport> ATbNasinspectionsImportContext,
             IRawQueryRepo<ATbNasinspectionsImportsView> getATbNasinspectionsImportsView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
-            IRawQueryRepo<Object> getAllByLike
+            IRawQueryRepo<Object> getAllByLike,
+            IRawQueryRepo<Object> callSP
         )
         {
             _ATbNasinspectionsImportContext = ATbNasinspectionsImportContext;
@@ -46,6 +48,7 @@ namespace NINETRAX.Controllers.DbManagement
             _getATbNasinspectionsImportsView = getATbNasinspectionsImportsView;
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
+            _callSP = callSP;
         }
         #endregion
 
@@ -349,7 +352,13 @@ namespace NINETRAX.Controllers.DbManagement
                             //Don't forget to revert changes
                             _context.ChangeTracker.AutoDetectChangesEnabled = true;
 
-                            return StatusCode(200, _context.ATbNasinspectionsImports);
+                            var importedCount = await _context.Database.ExecuteSqlRawAsync($"CALL InspectionsImportMatchAppend()"); 
+
+                            if (importedCount > 0)
+                                return StatusCode(200, $"{importedCount} Data imported succeeded.");
+                            else
+                                return StatusCode(200, "No data imported.");
+
 
                         }
                         else {

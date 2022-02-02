@@ -21,8 +21,9 @@ namespace RepositoryLayer
         #endregion "Get Methods Definition"
 
         #region "DB Operation Methods Definition"
-
+        Task<int> ExecuteStoreProcedure(string storeProcedure);
         #endregion "DB Operation Methods Definition"
+
 
     }
 }
