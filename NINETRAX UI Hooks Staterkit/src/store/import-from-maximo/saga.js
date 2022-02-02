@@ -1,27 +1,28 @@
 import { all, call, put, takeEvery, fork } from "redux-saga/effects"
-
-// Ecommerce Redux States
 import * as actionType from "./actionTypes"
-import { addImportFromMaximoSuccess, addImportFromMaximoFail } from "./actions"
-
+import * as action from "./actions"
 import { postMethod } from "../../helpers/backend_helper"
-import * as url from "../../helpers/url_helper"
 
-function* onImportFromMaximo({ payload: obj }) {
+function* importFromMaximoApi({ payload: obj }) {
+  console.log("importFromMaximoApi run", obj)
   try {
-    const response = yield call(postMethod, url.IMPORT_FROM_MAXIMO_URL, obj)
-    yield put(addImportFromMaximoSuccess(response))
+    const response = yield call(
+      postMethod,
+      "/d/ATbNasinspectionsImports/ImportFromMaximo",
+      obj
+    )
+    yield put(action.importFromMaximoSuccess(response))
   } catch (error) {
-    yield put(addImportFromMaximoFail(error.data))
+    yield put(action.importFromMaximoFail(error.data))
   }
 }
 
-function* watchImportFromMaximoSaga() {
-  yield takeEvery(actionType.ADD_NEW_IMPORT_FROM_MAXIMO, onImportFromMaximo)
+function* watchImportFromMaximo() {
+  yield takeEvery(actionType.IMPORT_FROM_MAXIMO, importFromMaximoApi)
 }
 
 function* importFromMaximoSaga() {
-  yield all([fork(watchImportFromMaximoSaga)])
+  yield all([fork(watchImportFromMaximo)])
 }
 
 export default importFromMaximoSaga
