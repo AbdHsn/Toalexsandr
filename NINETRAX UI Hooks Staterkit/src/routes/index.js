@@ -10,6 +10,7 @@ import Logout from "../pages/Authentication/Logout"
 import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
 import DirectoryName from "../pages/DirectoryName/index"
+import woInspect from "../pages/work-order-inspections/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -17,6 +18,7 @@ import Dashboard from "../pages/Dashboard/index"
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/directory-name-list", component: DirectoryName },
+  { path: "/wo-inspect", component: woInspect },
 
   // //profile
   { path: "/profile", component: UserProfile },

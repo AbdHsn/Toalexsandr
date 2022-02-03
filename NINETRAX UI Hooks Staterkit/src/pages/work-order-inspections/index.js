@@ -28,7 +28,6 @@ import {
   Table,
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
-import ImportFromMaximoModal from "../ImportFromMaximo"
 import * as action from "store/work-order-inspections/actions"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -63,6 +62,7 @@ const workOrderInspections = props => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [importMaximoModal, setImportMaximoModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
+
   const [wOInspection, setWOInspection] = useState({})
   const [id, setId] = useState("")
   const [annex, setAnnex] = useState("")
@@ -96,24 +96,25 @@ const workOrderInspections = props => {
     }
   }
 
-  const onImportFromMAXIMODialog = () => {
-    setImportMaximoModal(true)
-  }
+  // const onImportFromMAXIMODialog = () => {
+  //   setImportMaximoModal(true)
+  // }
 
-  const handleImportMaximo = () => {
-    setImportMaximoModal(false)
-  }
+  // const handleImportMaximo = () => {
+  //   setImportMaximoModal(false)
+  // }
+
   const handleDelete = () => {
-    if (directoryName.id > 0) {
-      dispatch(onDeleteDirectoryName(directoryName.id))
-      //onPaginationPageChange(1)
-      setDeleteModal(false)
-    }
+    // if (directoryName.id > 0) {
+    //   dispatch(onDeleteDirectoryName(directoryName.id))
+    //   //onPaginationPageChange(1)
+    //   setDeleteModal(false)
+    // }
   }
   const handleEdit = item => {
-    setDirectoryName(item)
-    setIsEdit(true)
-    toggle()
+    // setDirectoryName(item)
+    // setIsEdit(true)
+    // toggle()
   }
 
   // const handlePaginationChange = data => {
@@ -121,57 +122,55 @@ const workOrderInspections = props => {
   // }
 
   const toggle = () => {
-    if (modal) {
-      setModal(false)
-      setDirectoryName(null)
-    } else {
-      setModal(true)
-    }
+    // if (modal) {
+    //   setModal(false)
+    //   setDirectoryName(null)
+    // } else {
+    //   setModal(true)
+    // }
   }
 
   const onAddDirectoryName = () => {
-    setIsEdit(false)
-    toggle()
+    // setIsEdit(false)
+    // toggle()
   }
 
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      personName: (directoryName && directoryName.personName) || "",
-      personTitle: (directoryName && directoryName.personTitle) || "",
-      baseOfOperation: (directoryName && directoryName.baseOfOperation) || "",
-    },
-    validationSchema: Yup.object({
-      personName: Yup.string().required("Please Enter Person Name"),
-      personTitle: Yup.string().required("Please Enter Person Title"),
-      baseOfOperation: Yup.string().required("Please Enter Base of Operation"),
-    }),
-
-    onSubmit: values => {
-      if (isEdit) {
-        const update = {
-          id: directoryName ? directoryName.id : 0,
-          personName: values.personName,
-          personTitle: values.personTitle,
-          baseOfOperation: values.baseOfOperation,
-        }
-        // update function
-        dispatch(onUpdateDirectoryName(update))
-        validation.resetForm()
-      } else {
-        const create = {
-          personName: values["personName"],
-          personTitle: values["personTitle"],
-          baseOfOperation: values["baseOfOperation"],
-        }
-        // save new function
-        dispatch(onAddNewDirectoryName(create))
-        validation.resetForm()
-      }
-      toggle()
-    },
+    // // enableReinitialize : use this flag when initial values needs to be changed
+    // enableReinitialize: true,
+    // initialValues: {
+    //   personName: (directoryName && directoryName.personName) || "",
+    //   personTitle: (directoryName && directoryName.personTitle) || "",
+    //   baseOfOperation: (directoryName && directoryName.baseOfOperation) || "",
+    // },
+    // validationSchema: Yup.object({
+    //   personName: Yup.string().required("Please Enter Person Name"),
+    //   personTitle: Yup.string().required("Please Enter Person Title"),
+    //   baseOfOperation: Yup.string().required("Please Enter Base of Operation"),
+    // }),
+    // onSubmit: values => {
+    //   if (isEdit) {
+    //     const update = {
+    //       id: directoryName ? directoryName.id : 0,
+    //       personName: values.personName,
+    //       personTitle: values.personTitle,
+    //       baseOfOperation: values.baseOfOperation,
+    //     }
+    //     // update function
+    //     dispatch(onUpdateDirectoryName(update))
+    //     validation.resetForm()
+    //   } else {
+    //     const create = {
+    //       personName: values["personName"],
+    //       personTitle: values["personTitle"],
+    //       baseOfOperation: values["baseOfOperation"],
+    //     }
+    //     // save new function
+    //     dispatch(onAddNewDirectoryName(create))
+    //     validation.resetForm()
+    //   }
+    //   toggle()
+    // },
   })
 
   const handlePressEnter = e => {
@@ -179,10 +178,23 @@ const workOrderInspections = props => {
       setPostData({
         ...postData,
         searches: [
-          { search_by: "Id", value: searchId },
-          { search_by: "PersonName", value: personName },
-          { search_by: "PersonTitle", value: personTitle },
-          { search_by: "BaseOfOperation", value: baseOfOperation },
+          { search_by: "Id", value: id },
+          { search_by: "Annex", value: annex },
+          { search_by: "SpecItem", value: specItem },
+          { search_by: "Title", value: title },
+          { search_by: "WorkOrder", value: workOrder },
+          { search_by: "Description", value: description },
+          { search_by: "Location", value: location },
+          { search_by: "Asset", value: asset },
+          { search_by: "Crew", value: crew },
+          { search_by: "Lead", value: lead },
+          { search_by: "WorkType", value: workType },
+          { search_by: "SubWorkType", value: subWorkType },
+          { search_by: "ActualFinish", value: actualFinish },
+          { search_by: "QcInspector", value: qcInspector },
+          { search_by: "InspectionResults", value: inspectionDate },
+          { search_by: "InspectionDate", value: enteredDate },
+          { search_by: "EnteredDate", value: inspectionResults },
         ],
       })
     }
@@ -192,17 +204,15 @@ const workOrderInspections = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>
-            Directory Names | Skote - React Admin & Dashboard Template
-          </title>
+          <title>WO Inspect | NINETRAX | Quality Management</title>
         </MetaTags>
         <Container fluid>
-          <Breadcrumbs title="DN" breadcrumbItem="DN" />
+          <Breadcrumbs title="WO Inspect" breadcrumbItem="WO Inspect" />
           <Row>
             <Col xs="12">
               <Card>
                 <CardBody>
-                  <CardTitle className="h4"> Directory Names</CardTitle>
+                  <CardTitle className="h4"> </CardTitle>
 
                   <div className="d-flex flex-wrap">
                     <div className="btn-group">
@@ -243,7 +253,7 @@ const workOrderInspections = props => {
                       <button
                         type="button"
                         className="btn btn-sm btn-outline-danger ml-2"
-                        onClick={e => onImportFromMAXIMODialog()}
+                        //onClick={e => onImportFromMAXIMODialog()}
                         data-toggle="modal"
                         data-target=".bs-example-modal-center"
                       >
@@ -266,9 +276,22 @@ const workOrderInspections = props => {
                     <thead>
                       <tr>
                         <th>Id</th>
-                        <th>Name</th>
+                        <th>Annex</th>
+                        <th>SpecItem</th>
                         <th>Title</th>
-                        <th>Base Operation</th>
+                        <th>WorkOrder</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Asset</th>
+                        <th>Crew</th>
+                        <th>Lead</th>
+                        <th>WorkType</th>
+                        <th>SubWorkType</th>
+                        <th>ActualFinish</th>
+                        <th>QC Inspector</th>
+                        <th>Inspection Date</th>
+                        <th>Entered Date</th>
+                        <th>Inspection Results</th>
                         <th></th>
                       </tr>
                       <tr>
@@ -276,10 +299,10 @@ const workOrderInspections = props => {
                           {" "}
                           <input
                             type="text"
-                            placeholder="Id Search"
-                            name="searchById"
-                            id="searchById"
-                            onChange={e => setSearchId(e.target.value)}
+                            placeholder="Id"
+                            name="sId"
+                            id="sId"
+                            onChange={e => setId(e.target.value)}
                             onKeyUp={handlePressEnter}
                           />
                         </th>
@@ -287,10 +310,10 @@ const workOrderInspections = props => {
                           {" "}
                           <input
                             type="text"
-                            placeholder="Person Name Search"
-                            name="searchByPersonName"
-                            id="searchByPersonName"
-                            onChange={e => setPersonName(e.target.value)}
+                            placeholder="Annex"
+                            name="sAnnex"
+                            id="sAnnex"
+                            onChange={e => setAnnex(e.target.value)}
                             onKeyUp={handlePressEnter}
                           />
                         </th>
@@ -298,10 +321,10 @@ const workOrderInspections = props => {
                           {" "}
                           <input
                             type="text"
-                            placeholder="Person Title Search"
-                            name="searchByPersonTitle"
-                            id="searchByPersonTitle"
-                            onChange={e => setPersonTitle(e.target.value)}
+                            placeholder="Spec Item"
+                            name="sSpecItem"
+                            id="sSpecItem"
+                            onChange={e => setSpecItem(e.target.value)}
                             onKeyUp={handlePressEnter}
                           />
                         </th>
@@ -309,10 +332,142 @@ const workOrderInspections = props => {
                           {" "}
                           <input
                             type="text"
-                            placeholder="Base Operation Search"
-                            name="searchByBaseOfOperation"
-                            id="searchByBa"
-                            onChange={e => setBaseOfOperation(e.target.value)}
+                            placeholder="Work Order"
+                            name="sWorkOrder"
+                            id="sWorkOrder"
+                            onChange={e => setWorkOrder(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Description"
+                            name="sDescription"
+                            id="sDescription"
+                            onChange={e => setDescription(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Location"
+                            name="sLocation"
+                            id="sLocation"
+                            onChange={e => setLocation(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Asset"
+                            name="sAsset"
+                            id="sAsset"
+                            onChange={e => setAsset(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Crew"
+                            name="sCrew"
+                            id="sCrew"
+                            onChange={e => setCrew(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Lead"
+                            name="sLead"
+                            id="sLead"
+                            onChange={e => setLead(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Work Type"
+                            name="sWorkType"
+                            id="sWorkType"
+                            onChange={e => setWorkType(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="SubWork Type"
+                            name="sSubWorkType"
+                            id="sSubWorkType"
+                            onChange={e => setSubWorkType(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Actual Finish"
+                            name="sActualFinish"
+                            id="sActualFinish"
+                            onChange={e => setActualFinish(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="QC Inspector"
+                            name="sQcInspector"
+                            id="sQcInspector"
+                            onChange={e => setQcInspector(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Inspection Results"
+                            name="sInspectionResults"
+                            id="sInspectionResults"
+                            onChange={e => setInspectionResults(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Inspection Date"
+                            name="sInspectionDate"
+                            id="sInspectionDate"
+                            onChange={e => setInspectionDate(e.target.value)}
+                            onKeyUp={handlePressEnter}
+                          />
+                        </th>
+                        <th>
+                          {" "}
+                          <input
+                            type="text"
+                            placeholder="Entered Date"
+                            name="sEnteredDate"
+                            id="sEnteredDate"
+                            onChange={e => setEnteredDate(e.target.value)}
                             onKeyUp={handlePressEnter}
                           />
                         </th>
@@ -320,14 +475,28 @@ const workOrderInspections = props => {
                       </tr>
                     </thead>
                     <tbody>
-                      {directoryNamesTbl.data &&
-                        directoryNamesTbl.data.map((item, index) => {
+                      {workOrderInspectionTbl.data &&
+                        workOrderInspectionTbl.data.map((item, index) => {
                           return (
                             <tr key={index}>
                               <td>{item.id}</td>
-                              <td>{item.personName}</td>
-                              <td>{item.personTitle}</td>
-                              <td>{item.baseOfOperation}</td>
+                              <td>{item.annex}</td>
+                              <td>{item.specItem}</td>
+                              <td>{item.title}</td>
+                              <td>{item.workOrder}</td>
+                              <td>{item.description}</td>
+                              <td>{item.location}</td>
+                              <td>{item.asset}</td>
+                              <td>{item.crew}</td>
+                              <td>{item.lead}</td>
+                              <td>{item.workType}</td>
+                              <td>{item.subWorkType}</td>
+                              <td>{item.actualFinish}</td>
+                              <td>{item.qcInspector}</td>
+                              <td>{item.inspectionDate}</td>
+                              <td>{item.enteredDate}</td>
+                              <td>{item.inspectionResults}</td>
+
                               <td>
                                 <button
                                   type="button"
@@ -367,7 +536,7 @@ const workOrderInspections = props => {
                       breakClassName={"page-item"}
                       breakLinkClassName={"page-link"}
                       pageCount={Math.ceil(
-                        directoryNamesTbl.totalRecords / +postData.length
+                        workOrderInspectionTbl.totalRecords / +postData.length
                       )}
                       marginPagesDisplayed={2}
                       pageRangeDisplayed={3}
@@ -385,7 +554,7 @@ const workOrderInspections = props => {
 
                   <Modal isOpen={modal} toggle={toggle}>
                     <ModalHeader toggle={toggle} tag="h4">
-                      {isEdit ? "Edit Directory Name" : "Add Directory Name"}
+                      {isEdit ? "Edit WO Inspect" : "Add WO Inspect"}
                     </ModalHeader>
                     <ModalBody>
                       <Form
@@ -395,7 +564,7 @@ const workOrderInspections = props => {
                           return false
                         }}
                       >
-                        <Row form>
+                        {/* <Row form>
                           <Col className="col-12">
                             <div className="mb-3">
                               <Label className="form-label">personName</Label>
@@ -480,7 +649,7 @@ const workOrderInspections = props => {
                               </button>
                             </div>
                           </Col>
-                        </Row>
+                        </Row> */}
                       </Form>
                     </ModalBody>
                   </Modal>
@@ -491,11 +660,11 @@ const workOrderInspections = props => {
                     onCloseClick={() => setDeleteModal(false)}
                   />
 
-                  <ImportFromMaximoModal
+                  {/* <ImportFromMaximoModal
                     show={importMaximoModal}
                     onImportClick={() => handleImportMaximo}
                     onCloseClick={() => setImportMaximoModal(false)}
-                  />
+                  /> */}
                 </CardBody>
               </Card>
             </Col>

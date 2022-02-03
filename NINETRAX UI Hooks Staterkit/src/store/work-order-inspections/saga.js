@@ -6,17 +6,17 @@ import * as action from "./actions"
 import * as httpMethod from "../../helpers/backend_helper"
 import * as url from "../../helpers/url_helper"
 
-function* fetchWorkOrderInspectionView({ payload: data }) {
+function* workOrderInspectionApi({ payload: data }) {
   try {
     let response = yield call(
       httpMethod.postMethod,
-      url.GET_ATbNasinspections_VIEW_URL,
+      "/d/ATbNasinspections/GetATbNasinspectionsView",
       data
     )
-    console.log("Saga success---> ", response)
+    console.log("Saga wo success---> ", response)
     yield put(action.getWorkOrderInspectionsViewSuccess(response))
   } catch (error) {
-    console.log("Saga failed---> ", error.data)
+    console.log("Saga wo failed---> ", error.data)
     yield put(action.getWorkOrderInspectionsViewFail(error.data))
   }
 }
@@ -66,7 +66,7 @@ function* fetchWorkOrderInspectionView({ payload: data }) {
 function* watchWorkOrderInspection() {
   yield takeEvery(
     actionType.GET_WORKORDER_INSPECTIONS_VIEW,
-    fetchWorkOrderInspectionView
+    workOrderInspectionApi
   )
   // yield takeEvery(actionType.ADD_NEW_DIRECTORYNAME, onAddNewDirectoryName)
   // yield takeEvery(actionType.UPDATE_DIRECTORYNAME, onUpdateDirectoryName)

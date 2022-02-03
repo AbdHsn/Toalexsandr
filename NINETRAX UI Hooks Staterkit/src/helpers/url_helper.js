@@ -14,7 +14,7 @@ export const IMPORT_FROM_MAXIMO_URL =
 
 //ATbNasinspections
 export const GET_ATbNasinspections_VIEW_URL =
-  "/d​/ATbNasinspections​/GetATbNasinspectionsView"
+  "/d/ATbNasinspections/GetATbNasinspectionsView"
 export const GET_All_ATbNasinspections_URL = "/d​/ATbNasinspections"
 export const ADD_NEW_ATbNasinspections_URL = "/d/ATbNasinspections"
 export const GET_ONLY_ATbNasinspections_URL = "/d​/ATbNasinspections/"

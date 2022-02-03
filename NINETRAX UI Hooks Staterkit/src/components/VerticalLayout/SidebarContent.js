@@ -113,7 +113,7 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/wo-inspect" className="">
                 <i className="bx bx-check"></i>
                 <span>{props.t("Select Inspections")}</span>
               </Link>

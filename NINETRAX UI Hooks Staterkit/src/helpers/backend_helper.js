@@ -9,8 +9,8 @@ const header = {
   headers: {
     Authorization: "Bearer " + token,
     timeout: 30000,
-    //"Content-Type": undefined,
-    "Content-Type": "multipart/form-data",
+    "Content-Type": "application/json",
+    //"Content-Type": "multipart/form-data",
     Accept: "*/*",
     // Authorization:
     //   "Bearer " + JSON.parse(sessionStorage.getItem("token")).token,
