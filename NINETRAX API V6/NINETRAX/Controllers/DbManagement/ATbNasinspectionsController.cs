@@ -35,7 +35,7 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
-        {
+        {  
             _ATbNasinspectionContext = ATbNasinspectionContext;
             _heSrv = heSrv;
             _context = context;
@@ -125,8 +125,8 @@ namespace NINETRAX.Controllers.DbManagement
                 #endregion database query code
 
                 response.data = dataGrid;
-                response.recordsTotal = dataGridCount.TotalRecord;
-                response.recordsFiltered = dataGridCount.TotalRecord;
+                response.totalRecords = dataGridCount.TotalRecord;
+                response.totalFilteredRecords = dataGridCount.TotalRecord;
 
                 return StatusCode(200, response);
             }

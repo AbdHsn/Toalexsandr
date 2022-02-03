@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataLayer.Models.EntityModels
+namespace DataLayer.Models.ExcelModels
 {
-    public partial class ATbNasinspectionsImport
+    public partial class ImportFromMaximo
     {
-        public int Id { get; set; }
         public string? WorkOrder { get; set; }
         public string? Description { get; set; }
         public string? Long_Description { get; set; }
@@ -23,10 +22,10 @@ namespace DataLayer.Models.EntityModels
         public string? Duration { get; set; }
         //public string? Priority { get; set; }
        // public string? GlAccount { get; set; }
-        public DateTime? TargetStart { get; set; }
-        public DateTime? TargetFinish { get; set; }
-        public DateTime? ActualStart { get; set; }
-        public DateTime? ActualFinish { get; set; }
-        public DateTime? StatusDate { get; set; }
+        public string? TargetStart { get; set; }
+        public string? TargetFinish { get; set; }
+        public string? ActualStart { get; set; }
+        public string? ActualFinish { get; set; }
+        public string? StatusDate { get; set; }
     }
 }

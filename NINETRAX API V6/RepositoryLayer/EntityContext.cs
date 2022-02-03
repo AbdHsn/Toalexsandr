@@ -24,6 +24,17 @@ namespace RepositoryLayer
             //    entity.HasNoKey();
             //});
 
+            modelBuilder.Entity<ATbNasinspectionsView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            
+            modelBuilder.Entity<object>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+
             modelBuilder.Entity<TbDirectoryNamesView>(entity =>
             {
                 entity.HasNoKey();
@@ -454,9 +465,13 @@ namespace RepositoryLayer
                 entity.ToTable("A_tb_NASInspectionsImport");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("ID");
 
+                entity.Property(e => e.OnBehalfOf)
+                    .HasMaxLength(255)
+                    .HasColumnName("On Behalf Of");
+                
                 entity.Property(e => e.ActualFinish)
                     .HasColumnType("datetime")
                     .HasColumnName("Actual Finish");
@@ -481,10 +496,10 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.GlAccount)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("GL Account");
+                //entity.Property(e => e.GlAccount)
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false)
+                //    .HasColumnName("GL Account");
 
                 entity.Property(e => e.Lead)
                     .HasMaxLength(255)
@@ -494,9 +509,9 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Priority)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                //entity.Property(e => e.Priority)
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(255)

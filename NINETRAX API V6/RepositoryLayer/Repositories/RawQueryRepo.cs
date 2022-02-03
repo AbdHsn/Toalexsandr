@@ -1,5 +1,8 @@
 ﻿using DataLayer.Models.GlobalModels;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
@@ -149,6 +152,24 @@ namespace RepositoryLayer
             return list;
         }
         #endregion "Get Methods Implementation"
+
+        #region CAll SP Functions
+        public async Task<int> ExecuteStoreProcedure(string storeProcedure)
+        {
+            try
+            {
+                string s = $"CALL {storeProcedure}";
+                var callSP = await _context.Database.ExecuteSqlRawAsync($"CALL {storeProcedure}");
+                return callSP;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        
+        }
+
+        #endregion
 
     }
 }

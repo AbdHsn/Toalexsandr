@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using RepositoryLayer;
 
 var builder = WebApplication.CreateBuilder(args);
-
+string CorsPolicy = "CorsPolicy";
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -10,36 +12,34 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<EntityContext>(options =>
 {
     //options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
-     options.UseMySql(builder.Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+    options.UseMySql(builder.Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddCors();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "NINETRAX", Description = "API end point testing UI", Version = "v1" });
+});
 
 #region DI
 builder.Services.AddScoped(typeof(IEntityRepo<>), typeof(EntityRepo<>));
 builder.Services.AddScoped(typeof(IRawQueryRepo<>), typeof(RawQueryRepo<>));
 #endregion
 
-builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+builder.Services.AddCors(options => options.AddPolicy(name: CorsPolicy,
     builder =>
     {
         builder.AllowAnyHeader()
                .AllowAnyMethod()
-               .SetIsOriginAllowed((host) => true)
+               //.SetIsOriginAllowed((host) => true)
                .WithOrigins(
-                    "http://adminui.abdullahbinhasan.xyz/",
-                    "http://18.130.24.90",
-                    "http://localhost:3000",
-                    "https://localhost:3000",
-                    "http://admin.digitalrideglobal.com",
-                    "https://admin.digitalrideglobal.com",
-                    "http://ec2-35-178-178-171.eu-west-2.compute.amazonaws.com",
-                    "https://ec2-35-178-178-171.eu-west-2.compute.amazonaws.com"
-                )
-               .AllowCredentials();
+                                "http://localhost:3000",
+                                "https://localhost:3000"
+                            ).WithMethods("POST", "GET", "PUT", "DELETE")
+                            .WithHeaders(HeaderNames.ContentType)
+                           .AllowCredentials();
     }));
 
 
@@ -54,10 +54,15 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseCors(s => s.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.UseHttpsRedirection();
+app.UseCors(CorsPolicy);
+//app.UseHttpsRedirection();
 app.UseAuthorization();
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//});
+
 app.MapControllerRoute(name: "default",
-    pattern: "{controller=WeatherForecast}/{action=Get}/{id?}");
+    pattern: "{controller=APIWorking}/{action=Get}/{id?}");
 
 app.Run();
