@@ -47,6 +47,7 @@ import directoryNameReducer from "./directory-name/reducer"
 
 //Import from maximo
 import importFromMaximoReducer from "./import-from-maximo/reducer"
+import woInspectionReducer from "./work-order-inspections/reducer"
 
 const rootReducer = combineReducers({
   // public
@@ -68,6 +69,7 @@ const rootReducer = combineReducers({
   DashboardSaas,
   directoryNameData: directoryNameReducer,
   importFromMaximoData: importFromMaximoReducer,
+  woInspectionData: woInspectionReducer,
 })
 
 export default rootReducer

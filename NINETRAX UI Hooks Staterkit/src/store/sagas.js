@@ -19,6 +19,7 @@ import dashboardSaga from "./dashboard/saga"
 import dashboardSaasSaga from "./dashboard-saas/saga"
 import directoryNameSaga from "./directory-name/saga"
 import importFromMaximoSaga from "./import-from-maximo/saga"
+import workOrderInspectionsSaga from "./work-order-inspections/saga"
 
 export default function* rootSaga() {
   yield all([
@@ -41,5 +42,6 @@ export default function* rootSaga() {
     fork(dashboardSaasSaga),
     fork(directoryNameSaga),
     fork(importFromMaximoSaga),
+    fork(workOrderInspectionsSaga),
   ])
 }

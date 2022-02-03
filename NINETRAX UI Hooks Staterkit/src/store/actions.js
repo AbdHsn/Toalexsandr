@@ -44,3 +44,6 @@ export * from "./directory-name/actions"
 
 //import from maximo
 export * from "./import-from-maximo/actions"
+
+//import from wo-inspections
+export * from "./work-order-inspections/actions"
