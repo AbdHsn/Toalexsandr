@@ -35,7 +35,7 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
-        {
+        {  
             _ATbNasinspectionContext = ATbNasinspectionContext;
             _heSrv = heSrv;
             _context = context;

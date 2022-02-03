@@ -28,6 +28,11 @@ namespace RepositoryLayer
             {
                 entity.HasNoKey();
             });
+            
+            modelBuilder.Entity<object>(entity =>
+            {
+                entity.HasNoKey();
+            });
 
 
             modelBuilder.Entity<TbDirectoryNamesView>(entity =>

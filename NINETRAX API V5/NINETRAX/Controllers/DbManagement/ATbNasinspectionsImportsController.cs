@@ -27,7 +27,8 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IRawQueryRepo<ATbNasinspectionsImport> _ATbNasinspectionsImportContext;
         private readonly IRawQueryRepo<ATbNasinspectionsImportsView> _getATbNasinspectionsImportsView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
-        private readonly IRawQueryRepo<Object> _getAllByLike;
+        private readonly IRawQueryRepo<object> _getAllByLike;
+        private readonly IRawQueryRepo<object> _callSP;
         #endregion
 
         #region Constructor
@@ -37,7 +38,8 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<ATbNasinspectionsImport> ATbNasinspectionsImportContext,
             IRawQueryRepo<ATbNasinspectionsImportsView> getATbNasinspectionsImportsView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
-            IRawQueryRepo<Object> getAllByLike
+            IRawQueryRepo<Object> getAllByLike,
+            IRawQueryRepo<Object> callSP
         )
         {
             _ATbNasinspectionsImportContext = ATbNasinspectionsImportContext;
@@ -46,6 +48,7 @@ namespace NINETRAX.Controllers.DbManagement
             _getATbNasinspectionsImportsView = getATbNasinspectionsImportsView;
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
+            _callSP = callSP;
         }
         #endregion
 
@@ -328,11 +331,11 @@ namespace NINETRAX.Controllers.DbManagement
                                         OnBehalfOf = reader.GetValue(12)?.ToString(),
                                         Phone = reader.GetValue(13).ToString(),
                                         Duration = reader.GetValue(14).ToString(),
-                                        TargetStart = reader.GetValue(15) != null ?  DateTime.Parse(reader.GetValue(15).ToString()) : null,
+                                        TargetStart = reader.GetValue(15) != null ? DateTime.Parse(reader.GetValue(15).ToString()) : null,
                                         TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null,
-                                        ActualStart = reader.GetValue(17) != null ?  DateTime.Parse(reader.GetValue(17).ToString()) : null,
-                                        ActualFinish =reader.GetValue(18) != null ?  DateTime.Parse(reader.GetValue(18).ToString()) : null,
-                                        StatusDate = reader.GetValue(19) != null ?  DateTime.Parse(reader.GetValue(19).ToString()) : null
+                                        ActualStart = reader.GetValue(17) != null ? DateTime.Parse(reader.GetValue(17).ToString()) : null,
+                                        ActualFinish = reader.GetValue(18) != null ? DateTime.Parse(reader.GetValue(18).ToString()) : null,
+                                        StatusDate = reader.GetValue(19) != null ? DateTime.Parse(reader.GetValue(19).ToString()) : null
                                     });
                                     count++;
                                 }
@@ -349,10 +352,19 @@ namespace NINETRAX.Controllers.DbManagement
                             //Don't forget to revert changes
                             _context.ChangeTracker.AutoDetectChangesEnabled = true;
 
-                            return StatusCode(200, _context.ATbNasinspectionsImports);
+                            int importedCount = await _context.Database.ExecuteSqlRawAsync($"CALL InspectionsImportMatchAppend()");
 
+                            if (importedCount > 0)
+                            {
+                                //clean temporary imported data
+                                int deletedCount = await _context.Database.ExecuteSqlRawAsync($"DELETE FROM A_tb_NASInspectionsImport");
+                                return StatusCode(200, $"{importedCount} Data successfully imported.");
+                            }
+                            else
+                                return StatusCode(200, "No data imported.");
                         }
-                        else {
+                        else
+                        {
                             return StatusCode(404, "No data found to procceed.");
                         }
                     }

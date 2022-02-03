@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import * as Yup from "yup"
-import { useFormik } from "formik"
+import { useFormik, Formik } from "formik"
 import {
   Col,
   Row,
@@ -12,11 +12,11 @@ import {
   Label,
   Form,
 } from "reactstrap"
-import { addNewImportFromMaximo as onImportFromMaximo } from "store/import-from-maximo/actions"
+import * as action from "store/import-from-maximo/actions"
 import { useSelector, useDispatch } from "react-redux"
 
-const ImportFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
-  //const [importFile, setImportFile] = useState(null)
+const importFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
+  const [importableFile, setImportableFile] = useState(null)
   const dispatch = useDispatch()
   const SUPPORTED_FORMATS = [
     "application/csv",
@@ -29,30 +29,28 @@ const ImportFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
     enableReinitialize: true,
 
     initialValues: {
-      importFile: null,
+      importableFile: null,
     },
     // validationSchema: Yup.object().shape({
-    //   importFile: Yup.mixed()
+    //   importableFile: Yup.mixed()
     //     //.nullable()
     //     // .notRequired()
     //     .required("File is required")
     //     .test(
-    //       "fileFormat",
+    //       "FILE_FORMAT",
     //       "File format is not supported",
     //       value => value && SUPPORTED_FORMATS.includes(value.type)
     //     ),
     // }),
 
     onSubmit: values => {
-      // let formData = new FormData();
-      // formData.append('file', values.importFile);
+      console.log("Filessss", importableFile)
 
-      const create = {
-        importFile: values["importFile"],
-      }
-      dispatch(onImportFromMaximo(create))
-      validation.resetForm()
-      console.log("values", values)
+      let formData = new FormData()
+      formData.append("importFile", importableFile, importableFile.name)
+
+      dispatch(action.importFromMaximo(formData))
+      // validation.resetForm()
     },
   })
 
@@ -77,6 +75,9 @@ const ImportFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
                     type="file"
                     title="Upload Excel File"
                     accept=".xlsx, .xls, .csv"
+                    onChange={event => {
+                      setImportableFile(event.target.files[0])
+                    }}
                     // onChange={validation.handleChange}
                     //onBlur={validation.handleBlur}
                     // invalid={
@@ -134,10 +135,10 @@ const ImportFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
   )
 }
 
-ImportFromMaximoModal.propTypes = {
+importFromMaximoModal.propTypes = {
   onCloseClick: PropTypes.func,
   onImportClick: PropTypes.func,
   show: PropTypes.any,
 }
 
-export default ImportFromMaximoModal
+export default importFromMaximoModal

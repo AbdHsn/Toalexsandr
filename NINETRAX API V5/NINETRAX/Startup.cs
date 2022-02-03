@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer;
 using System;
@@ -52,11 +53,12 @@ namespace NINETRAX
                 {
                     builder.AllowAnyHeader()
                            .AllowAnyMethod()
-                           .SetIsOriginAllowed((host) => true)
+                           //.SetIsOriginAllowed((host) => true)
                            .WithOrigins(
                                 "http://localhost:3000",
                                 "https://localhost:3000"
-                            )
+                            ).WithMethods("POST", "GET", "PUT", "DELETE")
+                            .WithHeaders(HeaderNames.ContentType)
                            .AllowCredentials();
                 }));
 

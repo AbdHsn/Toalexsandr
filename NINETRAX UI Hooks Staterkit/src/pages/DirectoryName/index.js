@@ -31,7 +31,7 @@ import {
   Table,
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
-import ImportFromMaximoModal from "../../pages/ImportFromMaximo"
+import ImportFromMaximoModal from "../import-from-maximo"
 import {
   getDirectoryNamesView as onGetDirectoryNamesView,
   addNewDirectoryName as onAddNewDirectoryName,
