@@ -97,7 +97,8 @@ namespace NINETRAX.Controllers.DbManagement
                         //}
                         //else 
                         if (!string.IsNullOrEmpty(item.value))
-                            whereConditionStatement += item.search_by + " = '" + item.value + "' AND ";
+                            //whereConditionStatement += item.search_by + " = '" + item.value + "' AND ";
+                            whereConditionStatement += $"`{item.search_by}` = '{item.value}' AND ";
                     }
                     if (!string.IsNullOrEmpty(whereConditionStatement))
                     {

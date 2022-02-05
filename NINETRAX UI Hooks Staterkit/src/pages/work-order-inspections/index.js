@@ -3,9 +3,12 @@ import MetaTags from "react-meta-tags"
 import ReactPaginate from "react-paginate"
 import { useSelector, useDispatch } from "react-redux"
 import { isEmpty } from "lodash"
+import * as moment from "moment"
 import PropTypes from "prop-types"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import classnames from "classnames"
+
 import {
   Button,
   Card,
@@ -22,10 +25,12 @@ import {
   Input,
   FormFeedback,
   Label,
+  Collapse,
   Form,
   CardTitle,
   ButtonDropdown,
   Table,
+  Accordion,
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
 import * as action from "store/work-order-inspections/actions"
@@ -173,6 +178,23 @@ const workOrderInspections = props => {
     // },
   })
 
+  const [filterOptions, setfilterOptions] = useState(false)
+
+  const toggleFilterOptions = () => {
+    setfilterOptions(!filterOptions)
+  }
+  const t_col2 = () => {
+    setcol2(!col2)
+    setcol1(false)
+    setcol3(false)
+  }
+
+  const t_col3 = () => {
+    setcol3(!col3)
+    setcol1(false)
+    setcol2(false)
+  }
+
   const handlePressEnter = e => {
     if (e.key === "Enter") {
       setPostData({
@@ -272,256 +294,338 @@ const workOrderInspections = props => {
                     </>
                   )} */}
 
-                  <Table className="table table-sm m-0">
-                    <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Annex</th>
-                        <th>SpecItem</th>
-                        <th>Title</th>
-                        <th>WorkOrder</th>
-                        <th>Description</th>
-                        <th>Location</th>
-                        <th>Asset</th>
-                        <th>Crew</th>
-                        <th>Lead</th>
-                        <th>WorkType</th>
-                        <th>SubWorkType</th>
-                        <th>ActualFinish</th>
-                        <th>QC Inspector</th>
-                        <th>Inspection Date</th>
-                        <th>Entered Date</th>
-                        <th>Inspection Results</th>
-                        <th></th>
-                      </tr>
-                      <tr>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Id"
-                            name="sId"
-                            id="sId"
-                            onChange={e => setId(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Annex"
-                            name="sAnnex"
-                            id="sAnnex"
-                            onChange={e => setAnnex(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Spec Item"
-                            name="sSpecItem"
-                            id="sSpecItem"
-                            onChange={e => setSpecItem(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Work Order"
-                            name="sWorkOrder"
-                            id="sWorkOrder"
-                            onChange={e => setWorkOrder(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Description"
-                            name="sDescription"
-                            id="sDescription"
-                            onChange={e => setDescription(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Location"
-                            name="sLocation"
-                            id="sLocation"
-                            onChange={e => setLocation(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Asset"
-                            name="sAsset"
-                            id="sAsset"
-                            onChange={e => setAsset(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Crew"
-                            name="sCrew"
-                            id="sCrew"
-                            onChange={e => setCrew(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Lead"
-                            name="sLead"
-                            id="sLead"
-                            onChange={e => setLead(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Work Type"
-                            name="sWorkType"
-                            id="sWorkType"
-                            onChange={e => setWorkType(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="SubWork Type"
-                            name="sSubWorkType"
-                            id="sSubWorkType"
-                            onChange={e => setSubWorkType(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Actual Finish"
-                            name="sActualFinish"
-                            id="sActualFinish"
-                            onChange={e => setActualFinish(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="QC Inspector"
-                            name="sQcInspector"
-                            id="sQcInspector"
-                            onChange={e => setQcInspector(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Inspection Results"
-                            name="sInspectionResults"
-                            id="sInspectionResults"
-                            onChange={e => setInspectionResults(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Inspection Date"
-                            name="sInspectionDate"
-                            id="sInspectionDate"
-                            onChange={e => setInspectionDate(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th>
-                          {" "}
-                          <input
-                            type="text"
-                            placeholder="Entered Date"
-                            name="sEnteredDate"
-                            id="sEnteredDate"
-                            onChange={e => setEnteredDate(e.target.value)}
-                            onKeyUp={handlePressEnter}
-                          />
-                        </th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {workOrderInspectionTbl.data &&
-                        workOrderInspectionTbl.data.map((item, index) => {
-                          return (
-                            <tr key={index}>
-                              <td>{item.id}</td>
-                              <td>{item.annex}</td>
-                              <td>{item.specItem}</td>
-                              <td>{item.title}</td>
-                              <td>{item.workOrder}</td>
-                              <td>{item.description}</td>
-                              <td>{item.location}</td>
-                              <td>{item.asset}</td>
-                              <td>{item.crew}</td>
-                              <td>{item.lead}</td>
-                              <td>{item.workType}</td>
-                              <td>{item.subWorkType}</td>
-                              <td>{item.actualFinish}</td>
-                              <td>{item.qcInspector}</td>
-                              <td>{item.inspectionDate}</td>
-                              <td>{item.enteredDate}</td>
-                              <td>{item.inspectionResults}</td>
+                  <Row className="my-2">
+                    <div className="accordion-flush" id="accordion">
+                      <div className="accordion-item">
+                        <h2 className="accordion-header" id="headingOne">
+                          <button
+                            className={classnames(
+                              "accordion-button",
+                              "fw-medium",
+                              { collapsed: !filterOptions }
+                            )}
+                            type="button"
+                            onClick={toggleFilterOptions}
+                            style={{ cursor: "pointer" }}
+                          >
+                            Additional Options
+                          </button>
+                        </h2>
 
-                              <td>
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-outline-primary ml-2"
-                                  onClick={e => handleEdit(item)}
-                                  data-toggle="modal"
-                                  data-target=".bs-example-modal-center"
-                                >
-                                  <i className="far fa-edit"></i> Edit
-                                </button>{" "}
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-outline-danger ml-2"
-                                  onClick={e => onDeleteConfirmation(item.id)}
-                                  data-toggle="modal"
-                                  data-target=".bs-example-modal-center"
-                                >
-                                  <i className="far fa-trash-alt"></i> Delete
-                                </button>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                    </tbody>
-                  </Table>
+                        <Collapse
+                          isOpen={filterOptions}
+                          className="accordion-collapse"
+                        >
+                          <div className="accordion-body">
+                            <div className="text-muted">
+                              <strong className="text-dark">
+                                This is the first item&apos;s accordion body.
+                              </strong>{" "}
+                              It is hidden by default, until the collapse plugin
+                              adds the appropriate classes that we use to style
+                              each element. These classes control the overall
+                              appearance, as well as the showing and hiding via
+                              CSS transitions. You can modify any of this with
+                              custom CSS or overriding our default variables.
+                              It&apos;s also worth noting that just about any
+                              HTML can go within the{" "}
+                              <code>.accordion-body</code>, though the
+                              transition does limit overflow.
+                            </div>
+                          </div>
+                        </Collapse>
+                      </div>
+                    </div>
+                  </Row>
+
+                  <div className="table-responsive">
+                    <Table className="table table-sm m-0">
+                      <thead>
+                        <tr>
+                          {/* <th>Id</th> */}
+                          <th>Annex</th>
+                          <th>Spec Item</th>
+                          <th>Title</th>
+                          <th>Work Order</th>
+                          <th>Description</th>
+                          <th>Location</th>
+                          <th>Asset</th>
+                          <th>Crew</th>
+                          <th>Lead</th>
+                          <th>WorkType</th>
+                          <th>SubWork Type</th>
+                          <th>Actual Finish</th>
+                          <th>QC Inspector</th>
+                          <th>Ins. Results</th>
+                          <th>Inspection Date</th>
+                          <th>Record Date</th>
+                          <th></th>
+                        </tr>
+                        <tr>
+                          {/* <th>
+                            {" "}
+                            <input
+                              type="text"
+                              placeholder="Id"
+                              name="sId"
+                              id="sId"
+                              onChange={e => setId(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th> */}
+                          <th>
+                            {" "}
+                            <input
+                              style={{ width: "80px" }}
+                              type="text"
+                              placeholder="Annex"
+                              name="sAnnex"
+                              id="sAnnex"
+                              onChange={e => setAnnex(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              style={{ width: "100px" }}
+                              type="text"
+                              placeholder="Spec Item"
+                              name="sSpecItem"
+                              id="sSpecItem"
+                              onChange={e => setSpecItem(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              style={{ width: "100px" }}
+                              type="text"
+                              placeholder="Title"
+                              name="sTitle"
+                              id="sTitle"
+                              onChange={e => setTitle(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              style={{ width: "80px" }}
+                              type="text"
+                              placeholder="Work Order"
+                              name="sWorkOrder"
+                              id="sWorkOrder"
+                              onChange={e => setWorkOrder(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "250px" }}
+                              placeholder="Description"
+                              name="sDescription"
+                              id="sDescription"
+                              onChange={e => setDescription(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "120px" }}
+                              placeholder="Location"
+                              name="sLocation"
+                              id="sLocation"
+                              onChange={e => setLocation(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "80px" }}
+                              placeholder="Asset"
+                              name="sAsset"
+                              id="sAsset"
+                              onChange={e => setAsset(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "80px" }}
+                              placeholder="Crew"
+                              name="sCrew"
+                              id="sCrew"
+                              onChange={e => setCrew(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "80px" }}
+                              placeholder="Lead"
+                              name="sLead"
+                              id="sLead"
+                              onChange={e => setLead(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "80px" }}
+                              placeholder="Work Type"
+                              name="sWorkType"
+                              id="sWorkType"
+                              onChange={e => setWorkType(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "100px" }}
+                              placeholder="SubWork Type"
+                              name="sSubWorkType"
+                              id="sSubWorkType"
+                              onChange={e => setSubWorkType(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="date"
+                              style={{ width: "140px" }}
+                              placeholder="Actual Finish"
+                              name="sActualFinish"
+                              id="sActualFinish"
+                              pattern="\d{4}-\d{2}-\d{2}"
+                              onChange={e => setActualFinish(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "100px" }}
+                              placeholder="QC Inspector"
+                              name="sQcInspector"
+                              id="sQcInspector"
+                              onChange={e => setQcInspector(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="text"
+                              style={{ width: "100px" }}
+                              placeholder="Inspection Results"
+                              name="sInspectionResults"
+                              id="sInspectionResults"
+                              onChange={e =>
+                                setInspectionResults(e.target.value)
+                              }
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="date"
+                              style={{ width: "140px" }}
+                              placeholder="Inspection Date"
+                              name="sInspectionDate"
+                              id="sInspectionDate"
+                              pattern="\d{4}-\d{2}-\d{2}"
+                              onChange={e => setInspectionDate(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th>
+                            {" "}
+                            <input
+                              type="date"
+                              style={{ width: "140px" }}
+                              placeholder="Record Date"
+                              name="sEnteredDate"
+                              id="sEnteredDate"
+                              pattern="\d{4}-\d{2}-\d{2}"
+                              onChange={e => setEnteredDate(e.target.value)}
+                              onKeyUp={handlePressEnter}
+                            />
+                          </th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {workOrderInspectionTbl.data &&
+                          workOrderInspectionTbl.data.map((item, index) => {
+                            return (
+                              <tr key={index}>
+                                {/* <td>{item.id}</td> */}
+                                <td>{item.annex}</td>
+                                <td>{item.specItem}</td>
+                                <td>{item.title}</td>
+                                <td>{item.workOrder}</td>
+                                <td>{item.description}</td>
+                                <td>{item.location}</td>
+                                <td>{item.asset}</td>
+                                <td>{item.crew}</td>
+                                <td>{item.lead}</td>
+                                <td>{item.workType}</td>
+                                <td>{item.subWorkType}</td>
+                                <td>
+                                  {moment(item.actualFinish).format(
+                                    "MM/DD/YYYY"
+                                  )}
+                                </td>
+                                <td>{item.qcInspector}</td>
+                                <td>{item.inspectionResults}</td>
+                                <td>{item.inspectionDate}</td>
+                                <td>{item.enteredDate}</td>
+
+                                <td>
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-primary ml-2"
+                                    onClick={e => handleEdit(item)}
+                                    data-toggle="modal"
+                                    data-target=".bs-example-modal-center"
+                                  >
+                                    <i className="far fa-edit"></i> Edit
+                                  </button>{" "}
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger ml-2"
+                                    onClick={e => onDeleteConfirmation(item.id)}
+                                    data-toggle="modal"
+                                    data-target=".bs-example-modal-center"
+                                  >
+                                    <i className="far fa-trash-alt"></i> Delete
+                                  </button>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                      </tbody>
+                    </Table>
+                  </div>
 
                   <div className="mt-2">
                     <ReactPaginate
