@@ -35,7 +35,7 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
-        {  
+        {
             _ATbNasinspectionContext = ATbNasinspectionContext;
             _heSrv = heSrv;
             _context = context;
@@ -90,14 +90,20 @@ namespace NINETRAX.Controllers.DbManagement
                 {
                     foreach (var item in datatableGLB.searches)
                     {
-                        //if (a.search_by == "CreatedDate")
-                        //{
-                        //    if (!string.IsNullOrEmpty(a.fromdate) && !string.IsNullOrEmpty(a.todate))
-                        //        whereConditionStatement += "DATE_FORMAT(CreatedDate, '%Y-%m-%d') >= '" + DateTime.Parse(a.fromdate).Date.ToString("yyyy-MM-dd") + "' AND DATE_FORMAT(CreatedDate,'%Y-%m-%d') <= '" + DateTime.Parse(a.todate).Date.ToString("yyyy-MM-dd") + "' and ";
-                        //}
-                        //else 
-                        if (!string.IsNullOrEmpty(item.value))
-                            //whereConditionStatement += item.search_by + " = '" + item.value + "' AND ";
+
+                        if (item.search_by == "ActualFinishDateRange")
+                        {
+                            if (!string.IsNullOrEmpty(item.fromdate) && !string.IsNullOrEmpty(item.todate))
+                                whereConditionStatement += "DATE_FORMAT(ActualFinish, '%Y-%m-%d') >= '" + DateTime.Parse(item.fromdate).Date.ToString("yyyy-MM-dd") + "' AND DATE_FORMAT(ActualFinish,'%Y-%m-%d') <= '" + DateTime.Parse(item.todate).Date.ToString("yyyy-MM-dd") + "' AND ";
+                        }
+                        else if (item.search_by == "MultipleWorkOrder")
+                        {
+                            if (!string.IsNullOrEmpty(item.value))
+                            {
+                                whereConditionStatement += $"`WorkOrder` IN ({item.value}) AND ";
+                            }
+                        }
+                        else if (!string.IsNullOrEmpty(item.value))
                             whereConditionStatement += $"`{item.search_by}` = '{item.value}' AND ";
                     }
                     if (!string.IsNullOrEmpty(whereConditionStatement))

@@ -82,6 +82,9 @@ const workOrderInspections = props => {
   const [workType, setWorkType] = useState("")
   const [subWorkType, setSubWorkType] = useState("")
   const [actualFinish, setActualFinish] = useState("")
+  const [actualFinishFromDate, setActualFinishFromDate] = useState("")
+  const [actualFinishToDate, setActualFinishToDate] = useState("")
+  const [multipleWorkOrder, setMultipleWorkOrder] = useState("")
   const [qcInspector, setQcInspector] = useState("")
   const [inspectionResults, setInspectionResults] = useState("")
   const [inspectionDate, setInspectionDate] = useState("")
@@ -183,17 +186,6 @@ const workOrderInspections = props => {
   const toggleFilterOptions = () => {
     setfilterOptions(!filterOptions)
   }
-  const t_col2 = () => {
-    setcol2(!col2)
-    setcol1(false)
-    setcol3(false)
-  }
-
-  const t_col3 = () => {
-    setcol3(!col3)
-    setcol1(false)
-    setcol2(false)
-  }
 
   const handlePressEnter = e => {
     if (e.key === "Enter") {
@@ -217,9 +209,96 @@ const workOrderInspections = props => {
           { search_by: "InspectionResults", value: inspectionDate },
           { search_by: "InspectionDate", value: enteredDate },
           { search_by: "EnteredDate", value: inspectionResults },
+          { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
         ],
       })
     }
+  }
+
+  // const handleActualFinishSearchDateRange = () => {
+  //   if (moment(actualFinishToDate).diff(moment(actualFinishFromDate)) >= 0) {
+  //     console.log("actualFinishToDate executed...")
+
+  //     const itemIndex = postData.searches.findIndex(
+  //       item => item.search_by === "ActualFinishDateRange"
+  //     )
+  //     if (itemIndex > -1)
+  //       postData.searches[itemIndex] = {
+  //         search_by: "ActualFinishDateRange",
+  //         fromdate: actualFinishFromDate,
+  //         todate: actualFinishToDate,
+  //       }
+  //     else
+  //       postData.searches.push({
+  //         search_by: "ActualFinishDateRange",
+  //         fromdate: actualFinishFromDate,
+  //         todate: actualFinishToDate,
+  //       })
+  //   } else {
+  //     console.log("actualFinishToDate not executed...")
+  //   }
+  // }
+
+  const handleActualFinishDateRangeCriteria = e => {
+    switch (e.target.value) {
+      case "Last2Days":
+        setActualFinishFromDate(moment().subtract(2, "d").format("YYYY-MM-DD"))
+        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        break
+      case "Last1Week":
+        setActualFinishFromDate(moment().subtract(1, "w").format("YYYY-MM-DD"))
+        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        break
+      case "Last2Weeks":
+        setActualFinishFromDate(moment().subtract(2, "w").format("YYYY-MM-DD"))
+        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        break
+      case "Last30Days":
+        setActualFinishFromDate(moment().subtract(30, "d").format("YYYY-MM-DD"))
+        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        break
+      case "Last90Days":
+        setActualFinishFromDate(moment().subtract(90, "d").format("YYYY-MM-DD"))
+        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        break
+      case "Last6Months":
+        setActualFinishFromDate(
+          moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        )
+        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        break
+      default:
+        break
+    }
+
+    setPostData({
+      ...postData,
+      searches: [
+        { search_by: "Id", value: id },
+        { search_by: "Annex", value: annex },
+        { search_by: "SpecItem", value: specItem },
+        { search_by: "Title", value: title },
+        { search_by: "WorkOrder", value: workOrder },
+        { search_by: "Description", value: description },
+        { search_by: "Location", value: location },
+        { search_by: "Asset", value: asset },
+        { search_by: "Crew", value: crew },
+        { search_by: "Lead", value: lead },
+        { search_by: "WorkType", value: workType },
+        { search_by: "SubWorkType", value: subWorkType },
+        { search_by: "ActualFinish", value: actualFinish },
+        { search_by: "QcInspector", value: qcInspector },
+        { search_by: "InspectionResults", value: inspectionDate },
+        { search_by: "InspectionDate", value: enteredDate },
+        { search_by: "EnteredDate", value: inspectionResults },
+        {
+          search_by: "ActualFinishDateRange",
+          fromdate: actualFinishFromDate,
+          todate: actualFinishToDate,
+        },
+        { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
+      ],
+    })
   }
 
   return (
@@ -308,7 +387,7 @@ const workOrderInspections = props => {
                             onClick={toggleFilterOptions}
                             style={{ cursor: "pointer" }}
                           >
-                            Additional Options
+                            Additional Filter Options
                           </button>
                         </h2>
 
@@ -317,21 +396,94 @@ const workOrderInspections = props => {
                           className="accordion-collapse"
                         >
                           <div className="accordion-body">
-                            <div className="text-muted">
-                              <strong className="text-dark">
-                                This is the first item&apos;s accordion body.
-                              </strong>{" "}
-                              It is hidden by default, until the collapse plugin
-                              adds the appropriate classes that we use to style
-                              each element. These classes control the overall
-                              appearance, as well as the showing and hiding via
-                              CSS transitions. You can modify any of this with
-                              custom CSS or overriding our default variables.
-                              It&apos;s also worth noting that just about any
-                              HTML can go within the{" "}
-                              <code>.accordion-body</code>, though the
-                              transition does limit overflow.
-                            </div>
+                            <Row>
+                              <Col xl={4}>
+                                <div className="row">
+                                  <label className="p-0">
+                                    Seach WO by finish dates
+                                  </label>
+
+                                  <input
+                                    type="date"
+                                    style={{ width: "50%" }}
+                                    placeholder="Start Date"
+                                    name="sActualFinishFromDate"
+                                    id="sActualFinishFromDate"
+                                    pattern="\d{4}-\d{2}-\d{2}"
+                                    value={actualFinishFromDate}
+                                    onChange={e =>
+                                      setActualFinishFromDate(e.target.value)
+                                    }
+                                    onKeyUp={handlePressEnter}
+                                  />
+                                  <input
+                                    type="date"
+                                    style={{ width: "50%" }}
+                                    placeholder="End Date"
+                                    name="sActualFinishToDate"
+                                    id="sActualFinishToDate"
+                                    pattern="\d{4}-\d{2}-\d{2}"
+                                    value={actualFinishToDate}
+                                    onChange={e =>
+                                      setActualFinishToDate(e.target.value)
+                                    }
+                                    onKeyUp={handlePressEnter}
+                                  />
+                                </div>
+                                <div className="row">
+                                  <label className="p-0">
+                                    Choose date criteria{" "}
+                                  </label>
+                                  <select
+                                    name="dateRangeCriteria"
+                                    id="dateRangeCriteria"
+                                    onChange={
+                                      handleActualFinishDateRangeCriteria
+                                    }
+                                  >
+                                    <option value="null">
+                                      Date Range Criteria
+                                    </option>
+                                    <option value="Last2Days">
+                                      Last 2 days
+                                    </option>
+                                    <option value="Last1Week">
+                                      Last 1 week
+                                    </option>
+                                    <option value="Last2Weeks">
+                                      Last 2 weeks
+                                    </option>
+                                    <option value="Last30Days">
+                                      Last 30 days
+                                    </option>
+                                    <option value="Last90Days">
+                                      Last 90 days
+                                    </option>
+                                    <option value="Last6Months">
+                                      Last 6 months
+                                    </option>
+                                  </select>
+                                </div>
+                                <div className="row">
+                                  <label className="p-0">
+                                    **Multiple WO Search
+                                  </label>
+                                  <input
+                                    type="text"
+                                    style={{ width: "100%" }}
+                                    placeholder="Multi Work Order"
+                                    name="sMultipleWorkOrder"
+                                    id="sMultipleWorkOrder"
+                                    onChange={e =>
+                                      setMultipleWorkOrder(e.target.value)
+                                    }
+                                    onKeyUp={handlePressEnter}
+                                  />
+                                </div>
+                              </Col>
+                              <Col xl={6}>xx2</Col>
+                              <Col xl={2}>xx33</Col>
+                            </Row>
                           </div>
                         </Collapse>
                       </div>
