@@ -187,32 +187,41 @@ const workOrderInspections = props => {
     setfilterOptions(!filterOptions)
   }
 
-  const handlePressEnter = e => {
+  const handlePressEnter = async e => {
     if (e.key === "Enter") {
-      setPostData({
-        ...postData,
-        searches: [
-          { search_by: "Id", value: id },
-          { search_by: "Annex", value: annex },
-          { search_by: "SpecItem", value: specItem },
-          { search_by: "Title", value: title },
-          { search_by: "WorkOrder", value: workOrder },
-          { search_by: "Description", value: description },
-          { search_by: "Location", value: location },
-          { search_by: "Asset", value: asset },
-          { search_by: "Crew", value: crew },
-          { search_by: "Lead", value: lead },
-          { search_by: "WorkType", value: workType },
-          { search_by: "SubWorkType", value: subWorkType },
-          { search_by: "ActualFinish", value: actualFinish },
-          { search_by: "QcInspector", value: qcInspector },
-          { search_by: "InspectionResults", value: inspectionDate },
-          { search_by: "InspectionDate", value: enteredDate },
-          { search_by: "EnteredDate", value: inspectionResults },
-          { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
-        ],
-      })
+      await updateSearchValues()
     }
+  }
+
+  const updateSearchValues = async () => {
+    setPostData({
+      ...postData,
+      searches: [
+        { search_by: "Id", value: id },
+        { search_by: "Annex", value: annex },
+        { search_by: "SpecItem", value: specItem },
+        { search_by: "Title", value: title },
+        { search_by: "WorkOrder", value: workOrder },
+        { search_by: "Description", value: description },
+        { search_by: "Location", value: location },
+        { search_by: "Asset", value: asset },
+        { search_by: "Crew", value: crew },
+        { search_by: "Lead", value: lead },
+        { search_by: "WorkType", value: workType },
+        { search_by: "SubWorkType", value: subWorkType },
+        { search_by: "ActualFinish", value: actualFinish },
+        { search_by: "QcInspector", value: qcInspector },
+        { search_by: "InspectionResults", value: inspectionDate },
+        { search_by: "InspectionDate", value: enteredDate },
+        { search_by: "EnteredDate", value: inspectionResults },
+        { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
+        {
+          search_by: "ActualFinishDateRange",
+          fromdate: actualFinishFromDate,
+          todate: actualFinishToDate,
+        },
+      ],
+    })
   }
 
   // const handleActualFinishSearchDateRange = () => {
@@ -239,7 +248,7 @@ const workOrderInspections = props => {
   //   }
   // }
 
-  const handleActualFinishDateRangeCriteria = e => {
+  const handleActualFinishDateRangeCriteria = async e => {
     switch (e.target.value) {
       case "Last2Days":
         setActualFinishFromDate(moment().subtract(2, "d").format("YYYY-MM-DD"))
@@ -268,37 +277,15 @@ const workOrderInspections = props => {
         setActualFinishToDate(moment().format("YYYY-MM-DD"))
         break
       default:
+        if (e.target.name === "setActualFinishFromDate") {
+          setActualFinishFromDate(e.target.value)
+        }
+        if (e.target.name === "setActualFinishToDate") {
+          setActualFinishToDate(e.target.value)
+        }
         break
     }
-
-    setPostData({
-      ...postData,
-      searches: [
-        { search_by: "Id", value: id },
-        { search_by: "Annex", value: annex },
-        { search_by: "SpecItem", value: specItem },
-        { search_by: "Title", value: title },
-        { search_by: "WorkOrder", value: workOrder },
-        { search_by: "Description", value: description },
-        { search_by: "Location", value: location },
-        { search_by: "Asset", value: asset },
-        { search_by: "Crew", value: crew },
-        { search_by: "Lead", value: lead },
-        { search_by: "WorkType", value: workType },
-        { search_by: "SubWorkType", value: subWorkType },
-        { search_by: "ActualFinish", value: actualFinish },
-        { search_by: "QcInspector", value: qcInspector },
-        { search_by: "InspectionResults", value: inspectionDate },
-        { search_by: "InspectionDate", value: enteredDate },
-        { search_by: "EnteredDate", value: inspectionResults },
-        {
-          search_by: "ActualFinishDateRange",
-          fromdate: actualFinishFromDate,
-          todate: actualFinishToDate,
-        },
-        { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
-      ],
-    })
+    updateSearchValues()
   }
 
   return (
@@ -411,8 +398,8 @@ const workOrderInspections = props => {
                                     id="sActualFinishFromDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishFromDate}
-                                    onChange={e =>
-                                      setActualFinishFromDate(e.target.value)
+                                    onChange={
+                                      handleActualFinishDateRangeCriteria
                                     }
                                     onKeyUp={handlePressEnter}
                                   />
@@ -424,8 +411,8 @@ const workOrderInspections = props => {
                                     id="sActualFinishToDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishToDate}
-                                    onChange={e =>
-                                      setActualFinishToDate(e.target.value)
+                                    onChange={
+                                      handleActualFinishDateRangeCriteria
                                     }
                                     onKeyUp={handlePressEnter}
                                   />
