@@ -82,8 +82,8 @@ const workOrderInspections = props => {
   const [workType, setWorkType] = useState("")
   const [subWorkType, setSubWorkType] = useState("")
   const [actualFinish, setActualFinish] = useState("")
-  const [actualFinishFromDate, setActualFinishFromDate] = useState(undefined)
-  const [actualFinishToDate, setActualFinishToDate] = useState(undefined)
+  const [actualFinishFromDate, setActualFinishFromDate] = useState("")
+  const [actualFinishToDate, setActualFinishToDate] = useState("")
   const [multipleWorkOrder, setMultipleWorkOrder] = useState("")
   const [qcInspector, setQcInspector] = useState("")
   const [inspectionResults, setInspectionResults] = useState("")
@@ -247,10 +247,11 @@ const workOrderInspections = props => {
   //   }
   // }
 
-  const handleActualFinishDateRangeCriteria = async (e, inputProperty) => {
-    console.log("handleActualFinishDateRangeCriteria", e, inputProperty)
-    let fromdate = null
-    let todate = null
+  const handleActualFinishDateRangeCriteria = async e => {
+    console.log("handleActualFinishDateRangeCriteria", e)
+
+    let fromdate = actualFinishFromDate || null
+    let todate = actualFinishToDate || null
 
     switch (e.target.value) {
       case "Last2Days":
@@ -277,25 +278,30 @@ const workOrderInspections = props => {
         fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "":
-        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "setActualFinishToDate":
-        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
+      case "-1":
+        fromdate = ""
+        todate = ""
         break
       default:
         break
     }
 
-    if(inputProperty === "setActualFinishFromDate")
-       fromdate = 
+    if (e.target.name === "sActualFinishFromDate") fromdate = e.target.value
 
-    if (fromdate && todate && moment(todate).diff(moment(fromdate)) >= 0) {
-      console.log("Can be executed...")
+    if (e.target.name === "sActualFinishToDate") todate = e.target.value
+
+    setActualFinishFromDate(fromdate)
+    setActualFinishToDate(todate)
+
+    if (
+      actualFinishFromDate &&
+      actualFinishToDate &&
+      moment(actualFinishToDate).diff(moment(actualFinishFromDate)) >= 0
+    ) {
+      console.log("Can be executed...", fromdate, todate)
+      await updateSearchValues(fromdate, todate)
     } else {
-      console.log("Can not be executed...")
+      console.log("Can not be executed...", fromdate, todate)
     }
   }
 
@@ -412,10 +418,13 @@ const workOrderInspections = props => {
                                     name="sActualFinishFromDate"
                                     id="sActualFinishFromDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
-                                    value={actualFinishFromDate}
-                                    onKeyUp={e =>
+                                    value={actualFinishFromDate || ""}
+                                    onChange={e =>
                                       handleActualFinishDateRangeCriteria(e)
                                     }
+                                    // onKeyUp={e =>
+                                    //   handleActualFinishDateRangeCriteria(e)
+                                    // }
                                   />
                                   <input
                                     type="date"
@@ -424,11 +433,8 @@ const workOrderInspections = props => {
                                     name="sActualFinishToDate"
                                     id="sActualFinishToDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
-                                    value={actualFinishToDate}
-                                    // onChange={
-
-                                    // }
-                                    onKeyUp={e =>
+                                    value={actualFinishToDate || ""}
+                                    onChange={e =>
                                       handleActualFinishDateRangeCriteria(e)
                                     }
                                   />
@@ -444,7 +450,7 @@ const workOrderInspections = props => {
                                       handleActualFinishDateRangeCriteria
                                     }
                                   >
-                                    <option value="null">
+                                    <option value="-1">
                                       Date Range Criteria
                                     </option>
                                     <option value="Last2Days">
