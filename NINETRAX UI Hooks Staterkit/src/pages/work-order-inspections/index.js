@@ -82,8 +82,8 @@ const workOrderInspections = props => {
   const [workType, setWorkType] = useState("")
   const [subWorkType, setSubWorkType] = useState("")
   const [actualFinish, setActualFinish] = useState("")
-  const [actualFinishFromDate, setActualFinishFromDate] = useState("")
-  const [actualFinishToDate, setActualFinishToDate] = useState("")
+  const [actualFinishFromDate, setActualFinishFromDate] = useState(undefined)
+  const [actualFinishToDate, setActualFinishToDate] = useState(undefined)
   const [multipleWorkOrder, setMultipleWorkOrder] = useState("")
   const [qcInspector, setQcInspector] = useState("")
   const [inspectionResults, setInspectionResults] = useState("")
@@ -91,7 +91,6 @@ const workOrderInspections = props => {
   const [enteredDate, setEnteredDate] = useState("")
 
   useEffect(() => {
-    //dispatch(onGetDirectoryNamesView(postData))
     dispatch(action.getWorkOrderInspectionsView(postData))
   }, [postData])
 
@@ -193,7 +192,7 @@ const workOrderInspections = props => {
     }
   }
 
-  const updateSearchValues = async () => {
+  const updateSearchValues = async (fromDate, toDate) => {
     setPostData({
       ...postData,
       searches: [
@@ -217,8 +216,8 @@ const workOrderInspections = props => {
         { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
         {
           search_by: "ActualFinishDateRange",
-          fromdate: actualFinishFromDate,
-          todate: actualFinishToDate,
+          fromdate: fromDate || null,
+          todate: toDate || null,
         },
       ],
     })
@@ -248,44 +247,56 @@ const workOrderInspections = props => {
   //   }
   // }
 
-  const handleActualFinishDateRangeCriteria = async e => {
+  const handleActualFinishDateRangeCriteria = async (e, inputProperty) => {
+    console.log("handleActualFinishDateRangeCriteria", e, inputProperty)
+    let fromdate = null
+    let todate = null
+
     switch (e.target.value) {
       case "Last2Days":
-        setActualFinishFromDate(moment().subtract(2, "d").format("YYYY-MM-DD"))
-        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        fromdate = moment().subtract(2, "d").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
         break
       case "Last1Week":
-        setActualFinishFromDate(moment().subtract(1, "w").format("YYYY-MM-DD"))
-        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        fromdate = moment().subtract(1, "w").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
         break
       case "Last2Weeks":
-        setActualFinishFromDate(moment().subtract(2, "w").format("YYYY-MM-DD"))
-        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        fromdate = moment().subtract(2, "w").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
         break
       case "Last30Days":
-        setActualFinishFromDate(moment().subtract(30, "d").format("YYYY-MM-DD"))
-        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        fromdate = moment().subtract(30, "d").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
         break
       case "Last90Days":
-        setActualFinishFromDate(moment().subtract(90, "d").format("YYYY-MM-DD"))
-        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        fromdate = moment().subtract(90, "d").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
         break
       case "Last6Months":
-        setActualFinishFromDate(
-          moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        )
-        setActualFinishToDate(moment().format("YYYY-MM-DD"))
+        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "":
+        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "setActualFinishToDate":
+        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
         break
       default:
-        if (e.target.name === "setActualFinishFromDate") {
-          setActualFinishFromDate(e.target.value)
-        }
-        if (e.target.name === "setActualFinishToDate") {
-          setActualFinishToDate(e.target.value)
-        }
         break
     }
-    updateSearchValues()
+
+    if(inputProperty === "setActualFinishFromDate")
+       fromdate = 
+
+    if (fromdate && todate && moment(todate).diff(moment(fromdate)) >= 0) {
+      console.log("Can be executed...")
+    } else {
+      console.log("Can not be executed...")
+    }
   }
 
   return (
@@ -333,19 +344,23 @@ const workOrderInspections = props => {
                       <button
                         type="button"
                         className="btn btn-outline-secondary w-xs"
-                        onClick={onAddDirectoryName}
+                        //onClick={onAddDirectoryName}
                       >
                         <i className="bx bx-plus"></i> New
                       </button>
-
                       <button
                         type="button"
-                        className="btn btn-sm btn-outline-danger ml-2"
-                        //onClick={e => onImportFromMAXIMODialog()}
-                        data-toggle="modal"
-                        data-target=".bs-example-modal-center"
+                        className="btn btn-outline-secondary w-xs"
+                        //onClick={onAddDirectoryName}
                       >
-                        <i className="far fa-trash-alt"></i> Import MAXIMO
+                        <i className="bx bx-file"></i> Export
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger w-xs"
+                        //onClick={onAddDirectoryName}
+                      >
+                        <i className="bx bx-trash"></i> Bulk Delete
                       </button>
                     </div>
                   </div>
@@ -398,10 +413,9 @@ const workOrderInspections = props => {
                                     id="sActualFinishFromDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishFromDate}
-                                    onChange={
-                                      handleActualFinishDateRangeCriteria
+                                    onKeyUp={e =>
+                                      handleActualFinishDateRangeCriteria(e)
                                     }
-                                    onKeyUp={handlePressEnter}
                                   />
                                   <input
                                     type="date"
@@ -411,10 +425,12 @@ const workOrderInspections = props => {
                                     id="sActualFinishToDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishToDate}
-                                    onChange={
-                                      handleActualFinishDateRangeCriteria
+                                    // onChange={
+
+                                    // }
+                                    onKeyUp={e =>
+                                      handleActualFinishDateRangeCriteria(e)
                                     }
-                                    onKeyUp={handlePressEnter}
                                   />
                                 </div>
                                 <div className="row">
@@ -468,8 +484,169 @@ const workOrderInspections = props => {
                                   />
                                 </div>
                               </Col>
-                              <Col xl={6}>xx2</Col>
-                              <Col xl={2}>xx33</Col>
+                              <Col xl={8}>
+                                <div className="row">
+                                  <Col xs={3}>
+                                    <label>Select Base Site</label>
+                                    <div className="border border-primary p-2 py-3">
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name="baseSite"
+                                          id="radioAll"
+                                          value="all"
+                                          defaultChecked
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="radioAll"
+                                        >
+                                          All
+                                        </label>
+                                      </div>
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name="baseSite"
+                                          id="notIncludeBMD"
+                                          value="notIncludeBMD"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="notIncludeBMD"
+                                        >
+                                          Do not include BMD
+                                        </label>
+                                      </div>
+                                      <div className="form-check">
+                                        <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name="baseSite"
+                                          id="onlyMBD"
+                                          value="onlyMBD"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="onlyMBD"
+                                        >
+                                          Only BMD
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                  <Col xs={6}>
+                                    <label>Select Frequency</label>
+                                    <div className="row border border-primary p-2 py-3">
+                                      <Col xs="6">
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="rdoFrequency"
+                                            id="frequencyAll"
+                                            value="all"
+                                            defaultChecked
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="frequencyAll"
+                                          >
+                                            All
+                                          </label>
+                                        </div>
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="rdoFrequency"
+                                            id="SemiA"
+                                            value="SemiA"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="SemiA"
+                                          >
+                                            Semi/A
+                                          </label>
+                                        </div>
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="rdoFrequency"
+                                            id="monthly"
+                                            value="monthly"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="monthly"
+                                          >
+                                            Monthly
+                                          </label>
+                                        </div>
+                                      </Col>
+                                      <Col xs="6">
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="rdoFrequency"
+                                            id="Anually"
+                                            value="Anually"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="Anually"
+                                          >
+                                            Anually
+                                          </label>
+                                        </div>
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="rdoFrequency"
+                                            id="quarterly"
+                                            value="quarterly"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="quarterly"
+                                          >
+                                            Quarterly
+                                          </label>
+                                        </div>
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="rdoFrequency"
+                                            id="weekly"
+                                            value="weekly"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="weekly"
+                                          >
+                                            Weekly
+                                          </label>
+                                        </div>
+                                      </Col>
+                                    </div>
+                                  </Col>
+                                  <Col xs={3}>
+                                    <label>Work Orders Copies</label>
+                                    <textarea
+                                      className="form-control text-primary"
+                                      id="workOrdersCopies"
+                                      rows="4"
+                                    ></textarea>
+                                  </Col>
+                                </div>
+                              </Col>
                             </Row>
                           </div>
                         </Collapse>
