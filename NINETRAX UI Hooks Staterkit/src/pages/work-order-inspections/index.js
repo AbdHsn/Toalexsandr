@@ -89,96 +89,11 @@ const workOrderInspections = props => {
   const [inspectionResults, setInspectionResults] = useState("")
   const [inspectionDate, setInspectionDate] = useState("")
   const [enteredDate, setEnteredDate] = useState("")
+  const [duration, setDuration] = useState("")
 
   useEffect(() => {
     dispatch(action.getWorkOrderInspectionsView(postData))
   }, [postData])
-
-  const onDeleteConfirmation = id => {
-    if (id > 0) {
-      setWOInspection({
-        id: id,
-      })
-      setDeleteModal(true)
-    }
-  }
-
-  // const onImportFromMAXIMODialog = () => {
-  //   setImportMaximoModal(true)
-  // }
-
-  // const handleImportMaximo = () => {
-  //   setImportMaximoModal(false)
-  // }
-
-  const handleDelete = () => {
-    // if (directoryName.id > 0) {
-    //   dispatch(onDeleteDirectoryName(directoryName.id))
-    //   //onPaginationPageChange(1)
-    //   setDeleteModal(false)
-    // }
-  }
-  const handleEdit = item => {
-    // setDirectoryName(item)
-    // setIsEdit(true)
-    // toggle()
-  }
-
-  // const handlePaginationChange = data => {
-  //   console.log("dddd", data)
-  // }
-
-  const toggle = () => {
-    // if (modal) {
-    //   setModal(false)
-    //   setDirectoryName(null)
-    // } else {
-    //   setModal(true)
-    // }
-  }
-
-  const onAddDirectoryName = () => {
-    // setIsEdit(false)
-    // toggle()
-  }
-
-  const validation = useFormik({
-    // // enableReinitialize : use this flag when initial values needs to be changed
-    // enableReinitialize: true,
-    // initialValues: {
-    //   personName: (directoryName && directoryName.personName) || "",
-    //   personTitle: (directoryName && directoryName.personTitle) || "",
-    //   baseOfOperation: (directoryName && directoryName.baseOfOperation) || "",
-    // },
-    // validationSchema: Yup.object({
-    //   personName: Yup.string().required("Please Enter Person Name"),
-    //   personTitle: Yup.string().required("Please Enter Person Title"),
-    //   baseOfOperation: Yup.string().required("Please Enter Base of Operation"),
-    // }),
-    // onSubmit: values => {
-    //   if (isEdit) {
-    //     const update = {
-    //       id: directoryName ? directoryName.id : 0,
-    //       personName: values.personName,
-    //       personTitle: values.personTitle,
-    //       baseOfOperation: values.baseOfOperation,
-    //     }
-    //     // update function
-    //     dispatch(onUpdateDirectoryName(update))
-    //     validation.resetForm()
-    //   } else {
-    //     const create = {
-    //       personName: values["personName"],
-    //       personTitle: values["personTitle"],
-    //       baseOfOperation: values["baseOfOperation"],
-    //     }
-    //     // save new function
-    //     dispatch(onAddNewDirectoryName(create))
-    //     validation.resetForm()
-    //   }
-    //   toggle()
-    // },
-  })
 
   const [filterOptions, setfilterOptions] = useState(false)
 
@@ -214,6 +129,7 @@ const workOrderInspections = props => {
         { search_by: "InspectionDate", value: enteredDate },
         { search_by: "EnteredDate", value: inspectionResults },
         { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
+        { search_by: "Duration", value: duration },
         {
           search_by: "ActualFinishDateRange",
           fromdate: fromDate || null,
@@ -223,32 +139,8 @@ const workOrderInspections = props => {
     })
   }
 
-  // const handleActualFinishSearchDateRange = () => {
-  //   if (moment(actualFinishToDate).diff(moment(actualFinishFromDate)) >= 0) {
-  //     console.log("actualFinishToDate executed...")
-
-  //     const itemIndex = postData.searches.findIndex(
-  //       item => item.search_by === "ActualFinishDateRange"
-  //     )
-  //     if (itemIndex > -1)
-  //       postData.searches[itemIndex] = {
-  //         search_by: "ActualFinishDateRange",
-  //         fromdate: actualFinishFromDate,
-  //         todate: actualFinishToDate,
-  //       }
-  //     else
-  //       postData.searches.push({
-  //         search_by: "ActualFinishDateRange",
-  //         fromdate: actualFinishFromDate,
-  //         todate: actualFinishToDate,
-  //       })
-  //   } else {
-  //     console.log("actualFinishToDate not executed...")
-  //   }
-  // }
-
-  const handleActualFinishDateRangeCriteria = async e => {
-    console.log("handleActualFinishDateRangeCriteria", e)
+  const handleActualFinishDateRangeCriteria = async (e, inputType) => {
+    console.log("handleActualFinishDateRangeCriteria", e, inputType)
 
     let fromdate = actualFinishFromDate || null
     let todate = actualFinishToDate || null
@@ -286,18 +178,16 @@ const workOrderInspections = props => {
         break
     }
 
-    if (e.target.name === "sActualFinishFromDate") fromdate = e.target.value
+    if (inputType === "sActualFinishFromDate") fromdate = e.target.value
 
-    if (e.target.name === "sActualFinishToDate") todate = e.target.value
+    if (inputType === "sActualFinishToDate") todate = e.target.value
 
     setActualFinishFromDate(fromdate)
     setActualFinishToDate(todate)
 
-    if (
-      actualFinishFromDate &&
-      actualFinishToDate &&
-      moment(actualFinishToDate).diff(moment(actualFinishFromDate)) >= 0
-    ) {
+    //setTimeout(() => console.log("time executed..!"), 3000)
+
+    if (fromdate && todate && moment(todate).diff(moment(fromdate)) >= 0) {
       console.log("Can be executed...", fromdate, todate)
       await updateSearchValues(fromdate, todate)
     } else {
@@ -420,7 +310,10 @@ const workOrderInspections = props => {
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishFromDate || ""}
                                     onChange={e =>
-                                      handleActualFinishDateRangeCriteria(e)
+                                      handleActualFinishDateRangeCriteria(
+                                        e,
+                                        "sActualFinishFromDate"
+                                      )
                                     }
                                     // onKeyUp={e =>
                                     //   handleActualFinishDateRangeCriteria(e)
@@ -435,7 +328,10 @@ const workOrderInspections = props => {
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishToDate || ""}
                                     onChange={e =>
-                                      handleActualFinishDateRangeCriteria(e)
+                                      handleActualFinishDateRangeCriteria(
+                                        e,
+                                        "sActualFinishToDate"
+                                      )
                                     }
                                   />
                                 </div>
@@ -555,6 +451,7 @@ const workOrderInspections = props => {
                                             id="frequencyAll"
                                             value="all"
                                             defaultChecked
+                                            onChange={e => setDuration("")}
                                           />
                                           <label
                                             className="form-check-label"
@@ -570,6 +467,9 @@ const workOrderInspections = props => {
                                             name="rdoFrequency"
                                             id="SemiA"
                                             value="SemiA"
+                                            onChange={e =>
+                                              setDuration("960:00")
+                                            }
                                           />
                                           <label
                                             className="form-check-label"
@@ -585,6 +485,9 @@ const workOrderInspections = props => {
                                             name="rdoFrequency"
                                             id="monthly"
                                             value="monthly"
+                                            onChange={e =>
+                                              setDuration("720:00")
+                                            }
                                           />
                                           <label
                                             className="form-check-label"
@@ -602,6 +505,9 @@ const workOrderInspections = props => {
                                             name="rdoFrequency"
                                             id="Anually"
                                             value="Anually"
+                                            onChange={e =>
+                                              setDuration("1440:00")
+                                            }
                                           />
                                           <label
                                             className="form-check-label"
@@ -617,6 +523,9 @@ const workOrderInspections = props => {
                                             name="rdoFrequency"
                                             id="quarterly"
                                             value="quarterly"
+                                            onChange={e =>
+                                              setDuration("480:00")
+                                            }
                                           />
                                           <label
                                             className="form-check-label"
@@ -632,6 +541,11 @@ const workOrderInspections = props => {
                                             name="rdoFrequency"
                                             id="weekly"
                                             value="weekly"
+                                            onClick={e => {
+                                              setDuration("168:00", () => {
+                                                updateSearchValues()
+                                              })
+                                            }}
                                           />
                                           <label
                                             className="form-check-label"
@@ -923,7 +837,7 @@ const workOrderInspections = props => {
                                 <td>{item.enteredDate}</td>
 
                                 <td>
-                                  <button
+                                  {/* <button
                                     type="button"
                                     className="btn btn-sm btn-outline-primary ml-2"
                                     onClick={e => handleEdit(item)}
@@ -940,7 +854,7 @@ const workOrderInspections = props => {
                                     data-target=".bs-example-modal-center"
                                   >
                                     <i className="far fa-trash-alt"></i> Delete
-                                  </button>
+                                  </button> */}
                                 </td>
                               </tr>
                             )
@@ -978,7 +892,7 @@ const workOrderInspections = props => {
                     />
                   </div>
 
-                  <Modal isOpen={modal} toggle={toggle}>
+                  {/* <Modal isOpen={modal} toggle={toggle}>
                     <ModalHeader toggle={toggle} tag="h4">
                       {isEdit ? "Edit WO Inspect" : "Add WO Inspect"}
                     </ModalHeader>
@@ -990,101 +904,16 @@ const workOrderInspections = props => {
                           return false
                         }}
                       >
-                        {/* <Row form>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">personName</Label>
-                              <Input
-                                name="personName"
-                                type="text"
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                value={validation.values.personName || ""}
-                                invalid={
-                                  validation.touched.personName &&
-                                  validation.errors.personName
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validation.touched.personName &&
-                              validation.errors.personName ? (
-                                <FormFeedback type="invalid">
-                                  {validation.errors.personName}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-
-                            <div className="mb-3">
-                              <Label className="form-label">Person Title</Label>
-                              <Input
-                                name="personTitle"
-                                type="text"
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                value={validation.values.personTitle || ""}
-                                invalid={
-                                  validation.touched.personTitle &&
-                                  validation.errors.personTitle
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validation.touched.personTitle &&
-                              validation.errors.personTitle ? (
-                                <FormFeedback type="invalid">
-                                  {validation.errors.personTitle}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-
-                            <div className="mb-3">
-                              <Label className="form-label">
-                                Base Of Operation
-                              </Label>
-                              <Input
-                                name="baseOfOperation"
-                                type="text"
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                value={validation.values.baseOfOperation || ""}
-                                invalid={
-                                  validation.touched.baseOfOperation &&
-                                  validation.errors.baseOfOperation
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validation.touched.baseOfOperation &&
-                              validation.errors.baseOfOperation ? (
-                                <FormFeedback type="invalid">
-                                  {validation.errors.baseOfOperation}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <div className="text-end">
-                              <button
-                                type="submit"
-                                className="btn btn-success save-customer"
-                              >
-                                Save
-                              </button>
-                            </div>
-                          </Col>
-                        </Row> */}
+                      
                       </Form>
                     </ModalBody>
-                  </Modal>
+                  </Modal> */}
 
-                  <DeleteModal
+                  {/* <DeleteModal
                     show={deleteModal}
                     onDeleteClick={handleDelete}
                     onCloseClick={() => setDeleteModal(false)}
-                  />
+                  /> */}
 
                   {/* <ImportFromMaximoModal
                     show={importMaximoModal}

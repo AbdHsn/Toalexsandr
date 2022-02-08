@@ -29,6 +29,7 @@ namespace DataLayer.Models.EntityModels
         public string? QcInspector { get; set; }
         public DateTime? InspectionDate { get; set; }
         public DateTime? EnteredDate { get; set; }
+        public string? Duration { get; set; }
         public string? InspectionResults { get; set; }
        // public string? UnsatFindings { get; set; }
        // public string? CauseCode { get; set; }
