@@ -35,6 +35,11 @@ builder.Services.AddCors(options => options.AddPolicy(name: CorsPolicy,
                .AllowAnyMethod()
                //.SetIsOriginAllowed((host) => true)
                .WithOrigins(
+                                "http://54.144.69.10/",
+                                "https://54.144.69.10/",
+                                "http://54.144.69.10:81",
+                                "https://54.144.69.10:81",
+                                "http://3.129.206.72",
                                 "http://3.129.206.72",
                                 "https://3.129.206.72",
                                 "http://3.129.206.72:81",
