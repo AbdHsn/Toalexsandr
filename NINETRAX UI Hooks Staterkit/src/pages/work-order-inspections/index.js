@@ -34,15 +34,18 @@ import {
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
 import * as action from "store/work-order-inspections/actions"
+//import fetchViews from "../../services/wo-inspect-service"
+import { fetchTableView, fetchViews1 } from "../../services/wo-inspect-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
-
+import axios from "axios"
 const workOrderInspections = props => {
   const dispatch = useDispatch()
 
-  const { workOrderInspectionTbl } = useSelector(state => ({
-    workOrderInspectionTbl: state.woInspectionData.workOrderInspectionTbl,
-  }))
+  // const { workOrderInspectionTbl } = useSelector(state => ({
+  //   workOrderInspectionTbl: state.woInspectionData.workOrderInspectionTbl,
+  // }))
+
   const { rowSizeDdl } = useSelector(state => ({
     rowSizeDdl: state.woInspectionData.rowSizeDdl,
   }))
@@ -62,12 +65,14 @@ const workOrderInspections = props => {
   }
   const [postData, setPostData] = useState(ini_PostingData)
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
+  const [workOrderInspectionTbl, setWorkOrderInspectionTbl] = useState({})
 
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [importMaximoModal, setImportMaximoModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
 
+  const [tbl, setTbl] = useState({})
   const [wOInspection, setWOInspection] = useState({})
   const [id, setId] = useState("")
   const [annex, setAnnex] = useState("")
@@ -91,9 +96,34 @@ const workOrderInspections = props => {
   const [enteredDate, setEnteredDate] = useState("")
   const [duration, setDuration] = useState("")
 
+  // useEffect(() => {
+  //   dispatch(
+  //     action.getWorkOrderInspectionsView(postData)
+  //   )
+  // }, [postData])
+
   useEffect(() => {
-    dispatch(action.getWorkOrderInspectionsView(postData))
+    loadView()
   }, [postData])
+
+  const loadView = () => {
+    console.log("posting Data", postData)
+
+    //working...
+    // axios
+    //   .post(
+    //     "http://localhost:7074/api/d/ATbNasinspections/GetATbNasinspectionsView",
+    //     postData
+    //   )
+    //   .then(res => {
+    //     console.log("res", res)
+    //   })
+
+    fetchTableView(postData).then(res => {
+      setWorkOrderInspectionTbl(res.data)
+      console.log("result: ", res)
+    })
+  }
 
   const [filterOptions, setfilterOptions] = useState(false)
 
