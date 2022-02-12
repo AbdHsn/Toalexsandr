@@ -27,10 +27,6 @@ import "./assets/scss/theme.scss"
 //fakeBackend()
 
 export const envConfigurations = {
-  // baseUrl: process.env.REACT_APP_BASE_URL.substring(
-  //   1,
-  //   process.env.REACT_APP_BASE_URL.length - 2
-  // ),
   baseUrl: process.env.REACT_APP_BASE_URL,
 }
 
