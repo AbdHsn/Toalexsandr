@@ -9,6 +9,9 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 import classnames from "classnames"
 
+import toastr from "toastr"
+import "toastr/build/toastr.min.css"
+
 import {
   Button,
   Card,
@@ -31,6 +34,7 @@ import {
   ButtonDropdown,
   Table,
   Accordion,
+  Spinner,
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
 import * as action from "store/work-order-inspections/actions"
@@ -38,7 +42,7 @@ import * as action from "store/work-order-inspections/actions"
 import { fetchTableView, fetchViews1 } from "../../services/wo-inspect-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
-import axios from "axios"
+
 const workOrderInspections = props => {
   const dispatch = useDispatch()
 
@@ -95,34 +99,28 @@ const workOrderInspections = props => {
   const [inspectionDate, setInspectionDate] = useState("")
   const [enteredDate, setEnteredDate] = useState("")
   const [duration, setDuration] = useState("")
-
-  // useEffect(() => {
-  //   dispatch(
-  //     action.getWorkOrderInspectionsView(postData)
-  //   )
-  // }, [postData])
+  const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
     loadView()
   }, [postData])
 
   const loadView = () => {
-    console.log("posting Data", postData)
-
-    //working...
-    // axios
-    //   .post(
-    //     "http://localhost:7074/api/d/ATbNasinspections/GetATbNasinspectionsView",
-    //     postData
-    //   )
-    //   .then(res => {
-    //     console.log("res", res)
-    //   })
-
-    fetchTableView(postData).then(res => {
-      setWorkOrderInspectionTbl(res.data)
-      console.log("result: ", res)
-    })
+    setIsFetching(true)
+    fetchTableView(postData)
+      .then(res => {
+        setWorkOrderInspectionTbl(res.data)
+        if (res.data.data.length <= 0) {
+          setIsFetching(false)
+          toastr.warning("No data found")
+        } else {
+          setIsFetching(false)
+        }
+      })
+      .catch(error => {
+        setIsFetching(false)
+        toastr.error("Failed to fetch data.", "NINETRAX")
+      })
   }
 
   const [filterOptions, setfilterOptions] = useState(false)
@@ -290,16 +288,6 @@ const workOrderInspections = props => {
                       </button>
                     </div>
                   </div>
-
-                  {/* {isLoading && (
-                    <>
-                      <div className="m-auto text-warning">
-                        {" "}
-                        <Spinner animation="border" size="sm" />
-                        Loading...
-                      </div>
-                    </>
-                  )} */}
 
                   <Row className="my-2">
                     <div className="accordion-flush" id="accordion">
@@ -840,6 +828,12 @@ const workOrderInspections = props => {
                         </tr>
                       </thead>
                       <tbody>
+                        {/* {isFetching && (
+                          <tr>
+                            <td colSpan="100%"></td>
+                          </tr>
+                        )} */}
+
                         {workOrderInspectionTbl.data &&
                           workOrderInspectionTbl.data.map((item, index) => {
                             return (
@@ -889,6 +883,18 @@ const workOrderInspections = props => {
                               </tr>
                             )
                           })}
+
+                        {workOrderInspectionTbl.data &&
+                          workOrderInspectionTbl.data.length === 0 && (
+                            <tr>
+                              <td
+                                colSpan="100%"
+                                className="text-center text-danger font-weight-bold"
+                              >
+                                No data found
+                              </td>
+                            </tr>
+                          )}
                       </tbody>
                     </Table>
                   </div>

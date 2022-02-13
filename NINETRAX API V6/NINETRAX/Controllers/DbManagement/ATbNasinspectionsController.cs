@@ -49,6 +49,9 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost("GetATbNasinspectionsView")]
         public async Task<ActionResult<DatatableResponseGLB>> GetATbNasinspectionsView(DatatableGLB datatableGLB)
         {
+
+           // return StatusCode(404, "No data found.");
+
             DatatableResponseGLB response = new DatatableResponseGLB();
             try
             {
