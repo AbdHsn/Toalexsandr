@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import MetaTags from "react-meta-tags"
 import ReactPaginate from "react-paginate"
 import { useSelector, useDispatch } from "react-redux"
@@ -37,9 +37,11 @@ import {
   Spinner,
 } from "reactstrap"
 import DeleteModal from "../../components/Common/DeleteModal"
+import Loader from "../../components/Common/Loader"
 import * as action from "store/work-order-inspections/actions"
-//import fetchViews from "../../services/wo-inspect-service"
+
 import { fetchTableView, fetchViews1 } from "../../services/wo-inspect-service"
+import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
 
@@ -50,9 +52,9 @@ const workOrderInspections = props => {
   //   workOrderInspectionTbl: state.woInspectionData.workOrderInspectionTbl,
   // }))
 
-  const { rowSizeDdl } = useSelector(state => ({
-    rowSizeDdl: state.woInspectionData.rowSizeDdl,
-  }))
+  // const { rowSizeDdl } = useSelector(state => ({
+  //   rowSizeDdl: state.woInspectionData.rowSizeDdl,
+  // }))
 
   const ini_PostingData = {
     start: 0,
@@ -98,7 +100,7 @@ const workOrderInspections = props => {
   const [inspectionResults, setInspectionResults] = useState("")
   const [inspectionDate, setInspectionDate] = useState("")
   const [enteredDate, setEnteredDate] = useState("")
-  const [duration, setDuration] = useState("")
+  const duration = useRef("")
   const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
@@ -112,7 +114,7 @@ const workOrderInspections = props => {
         setWorkOrderInspectionTbl(res.data)
         if (res.data.data.length <= 0) {
           setIsFetching(false)
-          toastr.warning("No data found")
+          toastr.warning("No data found", "NINETRAX")
         } else {
           setIsFetching(false)
         }
@@ -138,6 +140,7 @@ const workOrderInspections = props => {
   const updateSearchValues = async (fromDate, toDate) => {
     setPostData({
       ...postData,
+      start: 0,
       searches: [
         { search_by: "Id", value: id },
         { search_by: "Annex", value: annex },
@@ -213,13 +216,10 @@ const workOrderInspections = props => {
     setActualFinishFromDate(fromdate)
     setActualFinishToDate(todate)
 
-    //setTimeout(() => console.log("time executed..!"), 3000)
-
     if (fromdate && todate && moment(todate).diff(moment(fromdate)) >= 0) {
-      console.log("Can be executed...", fromdate, todate)
       await updateSearchValues(fromdate, todate)
     } else {
-      console.log("Can not be executed...", fromdate, todate)
+      //toastr.warning("Invalid date range.", "NINETRAX")
     }
   }
 
@@ -828,11 +828,13 @@ const workOrderInspections = props => {
                         </tr>
                       </thead>
                       <tbody>
-                        {/* {isFetching && (
+                        {isFetching === true ? (
                           <tr>
-                            <td colSpan="100%"></td>
+                            <td colSpan={100}>
+                              <Loader isLoading={isFetching} />
+                            </td>
                           </tr>
-                        )} */}
+                        ) : null}
 
                         {workOrderInspectionTbl.data &&
                           workOrderInspectionTbl.data.map((item, index) => {
@@ -891,7 +893,7 @@ const workOrderInspections = props => {
                                 colSpan="100%"
                                 className="text-center text-danger font-weight-bold"
                               >
-                                No data found
+                                No data
                               </td>
                             </tr>
                           )}
