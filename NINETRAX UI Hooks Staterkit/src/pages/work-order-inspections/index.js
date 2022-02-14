@@ -160,7 +160,7 @@ const workOrderInspections = props => {
         { search_by: "InspectionDate", value: enteredDate },
         { search_by: "EnteredDate", value: inspectionResults },
         { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
-        { search_by: "Duration", value: duration },
+        { search_by: "Duration", value: duration.current },
         {
           search_by: "ActualFinishDateRange",
           fromdate: fromDate || null,
@@ -486,7 +486,8 @@ const workOrderInspections = props => {
                                             id="SemiA"
                                             value="SemiA"
                                             onChange={e =>
-                                              setDuration("960:00")
+                                              // setDuration("960:00")
+                                              (duration.current = "960:00")
                                             }
                                           />
                                           <label
