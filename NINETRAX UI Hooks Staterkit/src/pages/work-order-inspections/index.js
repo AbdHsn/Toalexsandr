@@ -46,30 +46,6 @@ import { rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
 
 const workOrderInspections = props => {
-  const dispatch = useDispatch()
-
-  // const { workOrderInspectionTbl } = useSelector(state => ({
-  //   workOrderInspectionTbl: state.woInspectionData.workOrderInspectionTbl,
-  // }))
-
-  // const { rowSizeDdl } = useSelector(state => ({
-  //   rowSizeDdl: state.woInspectionData.rowSizeDdl,
-  // }))
-
-  const ini_PostingData = {
-    start: 0,
-    length: "10",
-    search: {},
-    columns: [],
-    searches: [],
-    orders: [
-      {
-        column: "Id",
-        order_by: "DESC",
-      },
-    ],
-  }
-  const [postData, setPostData] = useState(ini_PostingData)
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
   const [workOrderInspectionTbl, setWorkOrderInspectionTbl] = useState({})
 
@@ -77,39 +53,147 @@ const workOrderInspections = props => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [importMaximoModal, setImportMaximoModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
-
-  const [tbl, setTbl] = useState({})
-  const [wOInspection, setWOInspection] = useState({})
-  const [id, setId] = useState("")
-  const [annex, setAnnex] = useState("")
-  const [specItem, setSpecItem] = useState("")
-  const [title, setTitle] = useState("")
-  const [workOrder, setWorkOrder] = useState("")
-  const [description, setDescription] = useState("")
-  const [location, setLocation] = useState("")
-  const [asset, setAsset] = useState("")
-  const [crew, setCrew] = useState("")
-  const [lead, setLead] = useState("")
-  const [workType, setWorkType] = useState("")
-  const [subWorkType, setSubWorkType] = useState("")
-  const [actualFinish, setActualFinish] = useState("")
-  const [actualFinishFromDate, setActualFinishFromDate] = useState("")
-  const [actualFinishToDate, setActualFinishToDate] = useState("")
-  const [multipleWorkOrder, setMultipleWorkOrder] = useState("")
-  const [qcInspector, setQcInspector] = useState("")
-  const [inspectionResults, setInspectionResults] = useState("")
-  const [inspectionDate, setInspectionDate] = useState("")
-  const [enteredDate, setEnteredDate] = useState("")
-  const duration = useRef("")
   const [isFetching, setIsFetching] = useState(false)
+
+  const start = useRef(0)
+  const length = useRef("10")
+
+  const id = useRef("")
+  const annex = useRef("")
+  const specItem = useRef("")
+  const title = useRef("")
+  const workOrder = useRef("")
+  const description = useRef("")
+  const location = useRef("")
+  const asset = useRef("")
+  const crew = useRef("")
+  const lead = useRef("")
+  const workType = useRef("")
+  const subWorkType = useRef("")
+  const actualFinish = useRef("")
+  const qcInspector = useRef("")
+  const inspectionResults = useRef("")
+  const inspectionDate = useRef("")
+  const enteredDate = useRef("")
+
+  const duration = useRef("")
+  const actualFinishFromDate = useRef("")
+  const actualFinishToDate = useRef("")
+  const multipleWorkOrder = useRef("")
+
+  const updateColumnSearchValues = (column, value) => {
+    start.current = 0
+    switch (column) {
+      case "id":
+        id.current = value
+        break
+      case "annex":
+        annex.current = value
+        break
+      case "specItem":
+        specItem.current = value
+        break
+      case "title":
+        title.current = value
+        break
+      case "workOrder":
+        workOrder.current = value
+        break
+      case "description":
+        description.current = value
+        break
+      case "location":
+        location.current = value
+        break
+      case "asset":
+        asset.current = value
+        break
+      case "crew":
+        crew.current = value
+        break
+      case "lead":
+        lead.current = value
+        break
+      case "workType":
+        workType.current = value
+        break
+      case "subWorkType":
+        subWorkType.current = value
+        break
+      case "actualFinish":
+        actualFinish.current = value
+        break
+      case "qcInspector":
+        qcInspector.current = value
+        break
+      case "inspectionResults":
+        inspectionResults.current = value
+        break
+      case "inspectionDate":
+        inspectionDate.current = value
+        break
+      case "enteredDate":
+        enteredDate.current = value
+        break
+      case "multipleWorkOrder":
+        multipleWorkOrder.current = value
+        break
+      case "duration":
+        duration.current = value
+        start.current = 0
+        loadView()
+        break
+      default:
+        break
+    }
+  }
 
   useEffect(() => {
     loadView()
-  }, [postData])
+  }, [])
 
   const loadView = () => {
+    let preparePostData = {
+      columns: [],
+      orders: [
+        {
+          column: "Id",
+          order_by: "DESC",
+        },
+      ],
+      start: start.current,
+      length: length.current,
+      search: {},
+      searches: [
+        { search_by: "Id", value: id.current },
+        { search_by: "Annex", value: annex.current },
+        { search_by: "SpecItem", value: specItem.current },
+        { search_by: "Title", value: title.current },
+        { search_by: "WorkOrder", value: workOrder.current },
+        { search_by: "Description", value: description.current },
+        { search_by: "Location", value: location.current },
+        { search_by: "Asset", value: asset.current },
+        { search_by: "Crew", value: crew.current },
+        { search_by: "Lead", value: lead.current },
+        { search_by: "WorkType", value: workType.current },
+        { search_by: "SubWorkType", value: subWorkType.current },
+        { search_by: "ActualFinish", value: actualFinish.current },
+        { search_by: "QcInspector", value: qcInspector.current },
+        { search_by: "InspectionResults", value: inspectionDate.current },
+        { search_by: "InspectionDate", value: enteredDate.current },
+        { search_by: "EnteredDate", value: inspectionResults.current },
+        { search_by: "MultipleWorkOrder", value: multipleWorkOrder.current },
+        { search_by: "Duration", value: duration.current },
+        {
+          search_by: "ActualFinishDateRange",
+          fromdate: actualFinishFromDate.current || null,
+          todate: actualFinishToDate.current || null,
+        },
+      ],
+    }
+
     setIsFetching(true)
-    fetchTableView(postData)
+    fetchTableView(preparePostData)
       .then(res => {
         setWorkOrderInspectionTbl(res.data)
         if (res.data.data.length <= 0) {
@@ -133,48 +217,14 @@ const workOrderInspections = props => {
 
   const handlePressEnter = async e => {
     if (e.key === "Enter") {
-      await updateSearchValues()
+      start.current = 0
+      loadView()
     }
   }
 
-  const updateSearchValues = async (fromDate, toDate) => {
-    setPostData({
-      ...postData,
-      start: 0,
-      searches: [
-        { search_by: "Id", value: id },
-        { search_by: "Annex", value: annex },
-        { search_by: "SpecItem", value: specItem },
-        { search_by: "Title", value: title },
-        { search_by: "WorkOrder", value: workOrder },
-        { search_by: "Description", value: description },
-        { search_by: "Location", value: location },
-        { search_by: "Asset", value: asset },
-        { search_by: "Crew", value: crew },
-        { search_by: "Lead", value: lead },
-        { search_by: "WorkType", value: workType },
-        { search_by: "SubWorkType", value: subWorkType },
-        { search_by: "ActualFinish", value: actualFinish },
-        { search_by: "QcInspector", value: qcInspector },
-        { search_by: "InspectionResults", value: inspectionDate },
-        { search_by: "InspectionDate", value: enteredDate },
-        { search_by: "EnteredDate", value: inspectionResults },
-        { search_by: "MultipleWorkOrder", value: multipleWorkOrder },
-        { search_by: "Duration", value: duration.current },
-        {
-          search_by: "ActualFinishDateRange",
-          fromdate: fromDate || null,
-          todate: toDate || null,
-        },
-      ],
-    })
-  }
-
   const handleActualFinishDateRangeCriteria = async (e, inputType) => {
-    console.log("handleActualFinishDateRangeCriteria", e, inputType)
-
-    let fromdate = actualFinishFromDate || null
-    let todate = actualFinishToDate || null
+    let fromdate = actualFinishFromDate.current || null
+    let todate = actualFinishToDate.current || null
 
     switch (e.target.value) {
       case "Last2Days":
@@ -213,11 +263,18 @@ const workOrderInspections = props => {
 
     if (inputType === "sActualFinishToDate") todate = e.target.value
 
-    setActualFinishFromDate(fromdate)
-    setActualFinishToDate(todate)
+    actualFinishFromDate.current = fromdate
+    actualFinishToDate.current = todate
 
-    if (fromdate && todate && moment(todate).diff(moment(fromdate)) >= 0) {
-      await updateSearchValues(fromdate, todate)
+    if (
+      actualFinishFromDate.current &&
+      actualFinishToDate.current &&
+      moment(actualFinishToDate.current).diff(
+        moment(actualFinishFromDate.current)
+      ) >= 0
+    ) {
+      start.current = 0
+      loadView()
     } else {
       //toastr.warning("Invalid date range.", "NINETRAX")
     }
@@ -244,7 +301,7 @@ const workOrderInspections = props => {
                         toggle={() => setPageSizeDrp(!pageSizeDrp)}
                       >
                         <Button id="caret" color="info" disabled>
-                          Row Size: {postData.length}
+                          Row Size: {length.current}
                         </Button>
                         <DropdownToggle caret color="info">
                           <i className="mdi mdi-chevron-down" />
@@ -254,9 +311,10 @@ const workOrderInspections = props => {
                             return (
                               <DropdownItem
                                 key={index}
-                                onClick={e =>
-                                  setPostData({ ...postData, length: item })
-                                }
+                                onClick={e => {
+                                  length.current = item
+                                  loadView()
+                                }}
                               >
                                 {item}
                               </DropdownItem>
@@ -326,16 +384,13 @@ const workOrderInspections = props => {
                                     name="sActualFinishFromDate"
                                     id="sActualFinishFromDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
-                                    value={actualFinishFromDate || ""}
+                                    value={actualFinishFromDate.current || ""}
                                     onChange={e =>
                                       handleActualFinishDateRangeCriteria(
                                         e,
                                         "sActualFinishFromDate"
                                       )
                                     }
-                                    // onKeyUp={e =>
-                                    //   handleActualFinishDateRangeCriteria(e)
-                                    // }
                                   />
                                   <input
                                     type="date"
@@ -344,7 +399,7 @@ const workOrderInspections = props => {
                                     name="sActualFinishToDate"
                                     id="sActualFinishToDate"
                                     pattern="\d{4}-\d{2}-\d{2}"
-                                    value={actualFinishToDate || ""}
+                                    value={actualFinishToDate.current || ""}
                                     onChange={e =>
                                       handleActualFinishDateRangeCriteria(
                                         e,
@@ -398,7 +453,10 @@ const workOrderInspections = props => {
                                     name="sMultipleWorkOrder"
                                     id="sMultipleWorkOrder"
                                     onChange={e =>
-                                      setMultipleWorkOrder(e.target.value)
+                                      updateColumnSearchValues(
+                                        "multipleWorkOrder",
+                                        e.target.value
+                                      )
                                     }
                                     onKeyUp={handlePressEnter}
                                   />
@@ -469,7 +527,12 @@ const workOrderInspections = props => {
                                             id="frequencyAll"
                                             value="all"
                                             defaultChecked
-                                            onChange={e => setDuration("")}
+                                            onChange={e =>
+                                              updateColumnSearchValues(
+                                                "duration",
+                                                ""
+                                              )
+                                            }
                                           />
                                           <label
                                             className="form-check-label"
@@ -486,8 +549,10 @@ const workOrderInspections = props => {
                                             id="SemiA"
                                             value="SemiA"
                                             onChange={e =>
-                                              // setDuration("960:00")
-                                              (duration.current = "960:00")
+                                              updateColumnSearchValues(
+                                                "duration",
+                                                "960:00"
+                                              )
                                             }
                                           />
                                           <label
@@ -505,7 +570,10 @@ const workOrderInspections = props => {
                                             id="monthly"
                                             value="monthly"
                                             onChange={e =>
-                                              setDuration("720:00")
+                                              updateColumnSearchValues(
+                                                "duration",
+                                                "720:00"
+                                              )
                                             }
                                           />
                                           <label
@@ -525,7 +593,10 @@ const workOrderInspections = props => {
                                             id="Anually"
                                             value="Anually"
                                             onChange={e =>
-                                              setDuration("1440:00")
+                                              updateColumnSearchValues(
+                                                "duration",
+                                                "1440:00"
+                                              )
                                             }
                                           />
                                           <label
@@ -543,7 +614,10 @@ const workOrderInspections = props => {
                                             id="quarterly"
                                             value="quarterly"
                                             onChange={e =>
-                                              setDuration("480:00")
+                                              updateColumnSearchValues(
+                                                "duration",
+                                                "480:00"
+                                              )
                                             }
                                           />
                                           <label
@@ -560,11 +634,12 @@ const workOrderInspections = props => {
                                             name="rdoFrequency"
                                             id="weekly"
                                             value="weekly"
-                                            onClick={e => {
-                                              setDuration("168:00", () => {
-                                                updateSearchValues()
-                                              })
-                                            }}
+                                            onClick={e =>
+                                              updateColumnSearchValues(
+                                                "duration",
+                                                "168:00"
+                                              )
+                                            }
                                           />
                                           <label
                                             className="form-check-label"
@@ -636,7 +711,13 @@ const workOrderInspections = props => {
                               placeholder="Annex"
                               name="sAnnex"
                               id="sAnnex"
-                              onChange={e => setAnnex(e.target.value)}
+                              onChange={e =>
+                                //setAnnex(e.target.value)
+                                updateColumnSearchValues(
+                                  "annex",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -648,7 +729,12 @@ const workOrderInspections = props => {
                               placeholder="Spec Item"
                               name="sSpecItem"
                               id="sSpecItem"
-                              onChange={e => setSpecItem(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "specItem",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -660,7 +746,12 @@ const workOrderInspections = props => {
                               placeholder="Title"
                               name="sTitle"
                               id="sTitle"
-                              onChange={e => setTitle(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "title",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -672,7 +763,12 @@ const workOrderInspections = props => {
                               placeholder="Work Order"
                               name="sWorkOrder"
                               id="sWorkOrder"
-                              onChange={e => setWorkOrder(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "workOrder",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -684,7 +780,12 @@ const workOrderInspections = props => {
                               placeholder="Description"
                               name="sDescription"
                               id="sDescription"
-                              onChange={e => setDescription(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "description",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -696,7 +797,12 @@ const workOrderInspections = props => {
                               placeholder="Location"
                               name="sLocation"
                               id="sLocation"
-                              onChange={e => setLocation(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "location",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -708,7 +814,12 @@ const workOrderInspections = props => {
                               placeholder="Asset"
                               name="sAsset"
                               id="sAsset"
-                              onChange={e => setAsset(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "asset",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -720,7 +831,9 @@ const workOrderInspections = props => {
                               placeholder="Crew"
                               name="sCrew"
                               id="sCrew"
-                              onChange={e => setCrew(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues("crew", e.target.value)
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -732,7 +845,9 @@ const workOrderInspections = props => {
                               placeholder="Lead"
                               name="sLead"
                               id="sLead"
-                              onChange={e => setLead(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues("lead", e.target.value)
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -744,7 +859,12 @@ const workOrderInspections = props => {
                               placeholder="Work Type"
                               name="sWorkType"
                               id="sWorkType"
-                              onChange={e => setWorkType(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "workType",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -756,7 +876,12 @@ const workOrderInspections = props => {
                               placeholder="SubWork Type"
                               name="sSubWorkType"
                               id="sSubWorkType"
-                              onChange={e => setSubWorkType(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "subWorkType",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -769,7 +894,12 @@ const workOrderInspections = props => {
                               name="sActualFinish"
                               id="sActualFinish"
                               pattern="\d{4}-\d{2}-\d{2}"
-                              onChange={e => setActualFinish(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "actualFinish",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -781,7 +911,12 @@ const workOrderInspections = props => {
                               placeholder="QC Inspector"
                               name="sQcInspector"
                               id="sQcInspector"
-                              onChange={e => setQcInspector(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "qcInspector",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -794,7 +929,10 @@ const workOrderInspections = props => {
                               name="sInspectionResults"
                               id="sInspectionResults"
                               onChange={e =>
-                                setInspectionResults(e.target.value)
+                                updateColumnSearchValues(
+                                  "inspectionResults",
+                                  e.target.value
+                                )
                               }
                               onKeyUp={handlePressEnter}
                             />
@@ -808,7 +946,12 @@ const workOrderInspections = props => {
                               name="sInspectionDate"
                               id="sInspectionDate"
                               pattern="\d{4}-\d{2}-\d{2}"
-                              onChange={e => setInspectionDate(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "inspectionDate",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -821,7 +964,12 @@ const workOrderInspections = props => {
                               name="sEnteredDate"
                               id="sEnteredDate"
                               pattern="\d{4}-\d{2}-\d{2}"
-                              onChange={e => setEnteredDate(e.target.value)}
+                              onChange={e =>
+                                updateColumnSearchValues(
+                                  "enteredDate",
+                                  e.target.value
+                                )
+                              }
                               onKeyUp={handlePressEnter}
                             />
                           </th>
@@ -915,16 +1063,14 @@ const workOrderInspections = props => {
                       breakClassName={"page-item"}
                       breakLinkClassName={"page-link"}
                       pageCount={Math.ceil(
-                        workOrderInspectionTbl.totalRecords / +postData.length
+                        workOrderInspectionTbl.totalRecords / +length.current
                       )}
                       marginPagesDisplayed={2}
                       pageRangeDisplayed={3}
-                      onPageChange={e =>
-                        setPostData({
-                          ...postData,
-                          start: e.selected * postData.length,
-                        })
-                      }
+                      onPageChange={e => {
+                        ;(start.current = e.selected * length.current),
+                          loadView()
+                      }}
                       pageClassName={"page-item"}
                       pageLinkClassName={"page-link"}
                       activeClassName={"active"}
