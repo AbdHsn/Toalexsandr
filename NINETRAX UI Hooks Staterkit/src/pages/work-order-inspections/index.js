@@ -22,6 +22,7 @@ import {
   Table,
 } from "reactstrap"
 import Loader from "../../components/Common/Loader"
+import BtnExporting from "../../components/Common/BtnExporting"
 import {
   fetchTableView,
   exportTableView,
@@ -39,6 +40,7 @@ const workOrderInspections = props => {
   const [importMaximoModal, setImportMaximoModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
 
   const start = useRef(0)
   const length = useRef("10")
@@ -194,11 +196,7 @@ const workOrderInspections = props => {
       })
   }
 
-  const [filterOptions, setfilterOptions] = useState(false)
-
-  const toggleFilterOptions = () => {
-    setfilterOptions(!filterOptions)
-  }
+  const [filterOptions, setFilterOptions] = useState(false)
 
   const handlePressEnter = async e => {
     if (e.key === "Enter") {
@@ -252,17 +250,9 @@ const workOrderInspections = props => {
       ],
     }
 
-    setIsFetching(true)
+    setIsExporting(true)
     exportTableView(preparePostData)
       .then(res => {
-        // setWorkOrderInspectionTbl(res.data)
-        // if (res.data.data.length <= 0) {
-        //   setIsFetching(false)
-        //   toastr.warning("No data found", "NINETRAX")
-        // } else {
-        //   setIsFetching(false)
-        // }
-
         let downloadLink = document.createElement("a")
         downloadLink.href = window.URL.createObjectURL(
           new Blob([res.data], {
@@ -270,21 +260,15 @@ const workOrderInspections = props => {
           })
         )
 
-        downloadLink.setAttribute("download", "test.xlsx")
+        downloadLink.setAttribute("download", "WorkOrderInspect.xlsx")
         document.body.appendChild(downloadLink)
         downloadLink.click()
 
-        // saveAs(
-        //   new Blob([res.data.fileContents], {
-        //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        //   }),
-        //   "myExcel.xlsx"
-        // )
-
-        console.log("export response: ", res, res.data.fileContents)
+        setIsExporting(false)
+        toastr.success("Export succeeded.", "NINETRAX")
       })
       .catch(error => {
-        setIsFetching(false)
+        setIsExporting(false)
         toastr.error("Failed to export data.", "NINETRAX")
       })
   }
@@ -351,7 +335,7 @@ const workOrderInspections = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>WO Inspect | NINETRAX | Quality Management</title>
+          <title>Work Order Inspect | NINETRAX | QC Management</title>
         </MetaTags>
         <Container fluid>
           <Breadcrumbs title="WO Inspect" breadcrumbItem="WO Inspect" />
@@ -397,13 +381,17 @@ const workOrderInspections = props => {
                       >
                         <i className="bx bx-plus"></i> New
                       </button>
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary w-xs"
-                        onClick={onExportClick}
-                      >
-                        <i className="bx bx-file"></i> Export
-                      </button>
+                      {isExporting === true ? (
+                        <BtnExporting isExporting={isExporting} />
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary w-xs"
+                          onClick={onExportClick}
+                        >
+                          <i className="bx bx-file"></i> Export
+                        </button>
+                      )}
                       <button
                         type="button"
                         className="btn btn-outline-danger w-xs"
@@ -425,7 +413,7 @@ const workOrderInspections = props => {
                               { collapsed: !filterOptions }
                             )}
                             type="button"
-                            onClick={toggleFilterOptions}
+                            onClick={() => setFilterOptions(!filterOptions)}
                             style={{ cursor: "pointer" }}
                           >
                             Additional Filter Options
@@ -1129,13 +1117,15 @@ const workOrderInspections = props => {
                       breakLabel={"..."}
                       breakClassName={"page-item"}
                       breakLinkClassName={"page-link"}
-                      pageCount={Math.ceil(
+                      pageCount={Math.floor(
                         workOrderInspectionTbl.totalRecords / +length.current
                       )}
                       marginPagesDisplayed={2}
                       pageRangeDisplayed={3}
                       onPageChange={e => {
-                        ;(start.current = e.selected * length.current),
+                        ;(start.current = Math.floor(
+                          e.selected * length.current
+                        )),
                           loadView()
                       }}
                       pageClassName={"page-item"}

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NINETRAX.Globals;
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using RepositoryLayer;
@@ -282,11 +281,10 @@ namespace NINETRAX.Controllers.DbManagement
 
         #region Export
         [HttpPost("[action]")]
-       // public async Task<FileStreamResult> ExportToExcel(DatatableGLB datatableGLB)
+        // public async Task<FileStreamResult> ExportToExcel(DatatableGLB datatableGLB)
         public async Task<IActionResult> ExportToExcel(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
-            byte[] buffer = new byte[1024 * 5];
             try
             {
                 int rowSize = 0;
@@ -357,104 +355,77 @@ namespace NINETRAX.Controllers.DbManagement
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                 });
+
                 #endregion database query code
 
-                #region Export Code
+                #region Excel data manipulating
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet excelSheet = workbook.CreateSheet("Sheet-01");
+                XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
+                style.WrapText = true;
+                //defining font...
+                IFont boldFont = workbook.CreateFont();
+                boldFont.Boldweight = (short)FontBoldWeight.Bold;
+                ICellStyle boldStyle = workbook.CreateCellStyle();
+                boldStyle.SetFont(boldFont);
 
-                if (string.IsNullOrWhiteSpace(_heSrv.WebRootPath))
+                //defining color...
+                boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
+                boldStyle.FillPattern = FillPattern.SolidForeground;
+
+                //defining column names
+                List<string> columnNames = new List<string>() { "Annex", "Spect Item", "Title" };
+
+                //drawing header columns into excel
+                IRow row = excelSheet.CreateRow(0);
+
+                foreach (var column in columnNames)
                 {
-                    _heSrv.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    var cell = row.CreateCell(columnNames.IndexOf(column));
+                    cell.SetCellValue(column);
+                    cell.CellStyle = boldStyle;
                 }
-                string sWebRootFolder = _heSrv.WebRootPath;
+                //set header column width
+                excelSheet.SetColumnWidth(0, 3400);
+                excelSheet.SetColumnWidth(1, 2600);
+                excelSheet.SetColumnWidth(2, 6600);
 
-
-                string sFileName = Guid.NewGuid().ToString() + @".xlsx";
-                string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
-                FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
-                var memory = new MemoryStream();
-                byte[] fileContents = null;
-                //using (var fs = new FileStream(Path.Combine(sWebRootFolder, sFileName), FileMode.Create, FileAccess.Write))
-                using (memory = new MemoryStream())
+                //drawing cell data into excel
+                foreach (var item in dataGrid)
                 {
+                    row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
 
-                    IWorkbook workbook = new XSSFWorkbook();
-                    ISheet excelSheet = workbook.CreateSheet("page1");
-                    XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
-                    style.WrapText = true;
-                    //defining font...
-                    IFont boldFont = workbook.CreateFont();
-                    boldFont.Boldweight = (short)FontBoldWeight.Bold;
-                    ICellStyle boldStyle = workbook.CreateCellStyle();
-                    boldStyle.SetFont(boldFont);
+                    //normal cell defining...
+                    row.CreateCell(0).SetCellValue(item.Annex);
+                    row.CreateCell(1).SetCellValue(item.SpecItem);
+                    row.CreateCell(2).SetCellValue(item.Title);
 
-                    //defining color...
-                    boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
-                    boldStyle.FillPattern = FillPattern.SolidForeground;
+                    ////define cell with special criteria
+                    //var cell3 = row.CreateCell(3, CellType.String);
+                    //cell3.SetCellValue(item.VehicleName);
+                    ////cell3.CellStyle= style;
 
-                    //defining column names
-                    List<string> columnNames = new List<string>() { "Annex", "Spect Item", "Title"};
+                    //row.CreateCell(4).SetCellValue(item.NumberOfRide);
+                    //row.CreateCell(5).SetCellValue(Convert.ToDouble(item.RideAmount));
+                    //row.CreateCell(6).SetCellValue(item.MaximumNumberOfReferral);
+                    //row.CreateCell(7).SetCellValue(Convert.ToDouble(item.Amount));
+                    //row.CreateCell(8).SetCellValue(item.Status);
+                    //row.CreateCell(9).SetCellValue(item.InsertDate.ToString());
 
-                    //drawing header columns into excel
-                    IRow row = excelSheet.CreateRow(0);
-
-                    foreach (var column in columnNames)
-                    {
-                        var cell = row.CreateCell(columnNames.IndexOf(column));
-                        cell.SetCellValue(column);
-                        cell.CellStyle = boldStyle;
-                    }
-                    //set header column width
-                    excelSheet.SetColumnWidth(0, 3400);
-                    excelSheet.SetColumnWidth(1, 2600);
-                    excelSheet.SetColumnWidth(2, 6600);
-
-                    //drawing cell data into excel
-                    foreach (var item in dataGrid)
-                    {
-                        row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
-
-                        //normal cell defining...
-                        row.CreateCell(0).SetCellValue(item.Annex);
-                        row.CreateCell(1).SetCellValue(item.SpecItem);
-                        row.CreateCell(2).SetCellValue(item.Title);
-
-                        ////define cell with special criteria
-                        //var cell3 = row.CreateCell(3, CellType.String);
-                        //cell3.SetCellValue(item.VehicleName);
-                        ////cell3.CellStyle= style;
-
-                        //row.CreateCell(4).SetCellValue(item.NumberOfRide);
-                        //row.CreateCell(5).SetCellValue(Convert.ToDouble(item.RideAmount));
-                        //row.CreateCell(6).SetCellValue(item.MaximumNumberOfReferral);
-                        //row.CreateCell(7).SetCellValue(Convert.ToDouble(item.Amount));
-                        //row.CreateCell(8).SetCellValue(item.Status);
-                        //row.CreateCell(9).SetCellValue(item.InsertDate.ToString());
-
-
-                    }
-
-                    workbook.Write(memory);
                 }
-                //using (var stream = new FileStream(Path.Combine(sWebRootFolder, sFileName), FileMode.Open))
-                //{
-                //    await stream.CopyToAsync(memory);
-                //}
-                //memory.Position = 0;
-                //file.Delete();
-                memory.Position = 0;
-                //return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
-                return StatusCode(200, memory);
                 #endregion
+                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
 
+                if (prepareExcelData != null)
+                    return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "File.xlsx");
+                else
+                    return StatusCode(400, "Export data is empty");
             }
             catch (Exception ex)
             {
-               return StatusCode(400, "Failed to export.");
-               // return null;
+                return StatusCode(400, "Failed to export.");
+                // return null;
             }
-
-            //return null;
-            return StatusCode(400, "Failed to export.");
         }
 
         #endregion
