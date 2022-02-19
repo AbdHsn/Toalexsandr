@@ -14,4 +14,18 @@ export const fetchTableView = async postData => {
     })
 }
 
+export const exportTableView = async postData => {
+  console.log("export data is fetching...", postData, appSettings.BASE_URL)
+  return http
+    .post(
+      appSettings.BASE_URL + "/d/ATbNasinspections/ExportToExcel",
+      postData,
+      { responseType: "blob" }
+    )
+    .catch(error => {
+      console.log("export postData error", error.response)
+      throw error.response.data
+    })
+}
+
 export const fetchViews1 = async postData => {}

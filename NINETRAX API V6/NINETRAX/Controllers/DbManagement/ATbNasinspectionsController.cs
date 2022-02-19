@@ -4,6 +4,10 @@ using DataLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NINETRAX.Globals;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using RepositoryLayer;
 using System;
 using System.Collections.Generic;
@@ -24,6 +28,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IRawQueryRepo<ATbNasinspectionsView> _getATbNasinspectionsView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
+
         #endregion
 
         #region Constructor
@@ -271,6 +276,185 @@ namespace NINETRAX.Controllers.DbManagement
             await _context.SaveChangesAsync();
 
             return StatusCode(200, true);
+        }
+
+        #endregion
+
+        #region Export
+        [HttpPost("[action]")]
+       // public async Task<FileStreamResult> ExportToExcel(DatatableGLB datatableGLB)
+        public async Task<IActionResult> ExportToExcel(DatatableGLB datatableGLB)
+        {
+            DatatableResponseGLB response = new DatatableResponseGLB();
+            byte[] buffer = new byte[1024 * 5];
+            try
+            {
+                int rowSize = 0;
+                if (datatableGLB.length == "All")
+                {
+                    rowSize = 0;
+                }
+                else
+                {
+                    rowSize = int.Parse(datatableGLB.length);
+                }
+
+                string searchText = default(string);
+                if (datatableGLB.search != null)
+                {
+                    searchText = datatableGLB.search.value;
+                }
+
+                #region single sort gathering code
+                string sortInformation = null;
+                if (datatableGLB.orders != null && datatableGLB.orders.Count > 0)
+                {
+                    var getSort = datatableGLB.orders.FirstOrDefault();
+                    sortInformation = getSort.column + " " + getSort.order_by;
+                }
+                else
+                {
+                    //assign default sort info base on column
+                    sortInformation = "Id DESC";
+                }
+
+
+                #endregion single sort code
+
+                #region where-condition gathering code
+                string whereConditionStatement = null;
+                if (datatableGLB != null && datatableGLB.searches.Count() > 0)
+                {
+                    foreach (var item in datatableGLB.searches)
+                    {
+
+                        if (item.search_by == "ActualFinishDateRange")
+                        {
+                            if (!string.IsNullOrEmpty(item.fromdate) && !string.IsNullOrEmpty(item.todate))
+                                whereConditionStatement += "DATE_FORMAT(ActualFinish, '%Y-%m-%d') >= '" + DateTime.Parse(item.fromdate).Date.ToString("yyyy-MM-dd") + "' AND DATE_FORMAT(ActualFinish,'%Y-%m-%d') <= '" + DateTime.Parse(item.todate).Date.ToString("yyyy-MM-dd") + "' AND ";
+                        }
+                        else if (item.search_by == "MultipleWorkOrder")
+                        {
+                            if (!string.IsNullOrEmpty(item.value))
+                            {
+                                whereConditionStatement += $"`WorkOrder` IN ({item.value}) AND ";
+                            }
+                        }
+                        else if (!string.IsNullOrEmpty(item.value))
+                            whereConditionStatement += $"`{item.search_by}` = '{item.value}' AND ";
+                    }
+                    if (!string.IsNullOrEmpty(whereConditionStatement))
+                    {
+                        whereConditionStatement = whereConditionStatement.Substring(0, whereConditionStatement.Length - 4);
+                    }
+                }
+                #endregion where-condition gathering code
+
+                #region database query code 
+                var dataGrid = await _getATbNasinspectionsView.ExportAllByWhere(new ExportAllByWhereGLB()
+                {
+                    TableOrViewName = "ATbNasinspectionsView",
+                    SortColumn = sortInformation,
+                    WhereConditions = whereConditionStatement,
+                });
+                #endregion database query code
+
+                #region Export Code
+
+                if (string.IsNullOrWhiteSpace(_heSrv.WebRootPath))
+                {
+                    _heSrv.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                }
+                string sWebRootFolder = _heSrv.WebRootPath;
+
+
+                string sFileName = Guid.NewGuid().ToString() + @".xlsx";
+                string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
+                FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+                var memory = new MemoryStream();
+                byte[] fileContents = null;
+                //using (var fs = new FileStream(Path.Combine(sWebRootFolder, sFileName), FileMode.Create, FileAccess.Write))
+                using (memory = new MemoryStream())
+                {
+
+                    IWorkbook workbook = new XSSFWorkbook();
+                    ISheet excelSheet = workbook.CreateSheet("page1");
+                    XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
+                    style.WrapText = true;
+                    //defining font...
+                    IFont boldFont = workbook.CreateFont();
+                    boldFont.Boldweight = (short)FontBoldWeight.Bold;
+                    ICellStyle boldStyle = workbook.CreateCellStyle();
+                    boldStyle.SetFont(boldFont);
+
+                    //defining color...
+                    boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
+                    boldStyle.FillPattern = FillPattern.SolidForeground;
+
+                    //defining column names
+                    List<string> columnNames = new List<string>() { "Annex", "Spect Item", "Title"};
+
+                    //drawing header columns into excel
+                    IRow row = excelSheet.CreateRow(0);
+
+                    foreach (var column in columnNames)
+                    {
+                        var cell = row.CreateCell(columnNames.IndexOf(column));
+                        cell.SetCellValue(column);
+                        cell.CellStyle = boldStyle;
+                    }
+                    //set header column width
+                    excelSheet.SetColumnWidth(0, 3400);
+                    excelSheet.SetColumnWidth(1, 2600);
+                    excelSheet.SetColumnWidth(2, 6600);
+
+                    //drawing cell data into excel
+                    foreach (var item in dataGrid)
+                    {
+                        row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
+
+                        //normal cell defining...
+                        row.CreateCell(0).SetCellValue(item.Annex);
+                        row.CreateCell(1).SetCellValue(item.SpecItem);
+                        row.CreateCell(2).SetCellValue(item.Title);
+
+                        ////define cell with special criteria
+                        //var cell3 = row.CreateCell(3, CellType.String);
+                        //cell3.SetCellValue(item.VehicleName);
+                        ////cell3.CellStyle= style;
+
+                        //row.CreateCell(4).SetCellValue(item.NumberOfRide);
+                        //row.CreateCell(5).SetCellValue(Convert.ToDouble(item.RideAmount));
+                        //row.CreateCell(6).SetCellValue(item.MaximumNumberOfReferral);
+                        //row.CreateCell(7).SetCellValue(Convert.ToDouble(item.Amount));
+                        //row.CreateCell(8).SetCellValue(item.Status);
+                        //row.CreateCell(9).SetCellValue(item.InsertDate.ToString());
+
+
+                    }
+
+                    workbook.Write(memory);
+                }
+                //using (var stream = new FileStream(Path.Combine(sWebRootFolder, sFileName), FileMode.Open))
+                //{
+                //    await stream.CopyToAsync(memory);
+                //}
+                //memory.Position = 0;
+                //file.Delete();
+                memory.Position = 0;
+                //return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
+                return StatusCode(200, memory);
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+               return StatusCode(400, "Failed to export.");
+               // return null;
+            }
+
+            //return null;
+            return StatusCode(400, "Failed to export.");
         }
 
         #endregion

@@ -1,14 +1,8 @@
 import React, { useEffect, useRef, useState } from "react"
 import MetaTags from "react-meta-tags"
 import ReactPaginate from "react-paginate"
-import { useSelector, useDispatch } from "react-redux"
-import { isEmpty } from "lodash"
 import * as moment from "moment"
-import PropTypes from "prop-types"
-import { useFormik } from "formik"
-import * as Yup from "yup"
 import classnames from "classnames"
-
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 
@@ -22,25 +16,16 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Input,
-  FormFeedback,
-  Label,
   Collapse,
-  Form,
   CardTitle,
   ButtonDropdown,
   Table,
-  Accordion,
-  Spinner,
 } from "reactstrap"
-import DeleteModal from "../../components/Common/DeleteModal"
 import Loader from "../../components/Common/Loader"
-import * as action from "store/work-order-inspections/actions"
-
-import { fetchTableView, fetchViews1 } from "../../services/wo-inspect-service"
+import {
+  fetchTableView,
+  exportTableView,
+} from "../../services/wo-inspect-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -222,6 +207,88 @@ const workOrderInspections = props => {
     }
   }
 
+  const onExportClick = () => {
+    console.log("export")
+
+    let preparePostData = {
+      columns: [],
+      orders: [
+        {
+          column: "Id",
+          order_by: "DESC",
+        },
+      ],
+      start: start.current,
+      length: length.current,
+      search: {},
+      searches: [
+        { search_by: "Id", value: id.current },
+        { search_by: "Annex", value: annex.current },
+        { search_by: "SpecItem", value: specItem.current },
+        { search_by: "Title", value: title.current },
+        { search_by: "WorkOrder", value: workOrder.current },
+        { search_by: "Description", value: description.current },
+        { search_by: "Location", value: location.current },
+        { search_by: "Asset", value: asset.current },
+        { search_by: "Crew", value: crew.current },
+        { search_by: "Lead", value: lead.current },
+        { search_by: "WorkType", value: workType.current },
+        { search_by: "SubWorkType", value: subWorkType.current },
+        { search_by: "ActualFinish", value: actualFinish.current },
+        { search_by: "QcInspector", value: qcInspector.current },
+        { search_by: "InspectionResults", value: inspectionDate.current },
+        { search_by: "InspectionDate", value: enteredDate.current },
+        { search_by: "EnteredDate", value: inspectionResults.current },
+        {
+          search_by: "MultipleWorkOrder",
+          value: multipleWorkOrder.current,
+        },
+        { search_by: "Duration", value: duration.current },
+        {
+          search_by: "ActualFinishDateRange",
+          fromdate: actualFinishFromDate.current || null,
+          todate: actualFinishToDate.current || null,
+        },
+      ],
+    }
+
+    setIsFetching(true)
+    exportTableView(preparePostData)
+      .then(res => {
+        // setWorkOrderInspectionTbl(res.data)
+        // if (res.data.data.length <= 0) {
+        //   setIsFetching(false)
+        //   toastr.warning("No data found", "NINETRAX")
+        // } else {
+        //   setIsFetching(false)
+        // }
+
+        let downloadLink = document.createElement("a")
+        downloadLink.href = window.URL.createObjectURL(
+          new Blob([res.data], {
+            type: "application/vnd.ms-excel",
+          })
+        )
+
+        downloadLink.setAttribute("download", "test.xlsx")
+        document.body.appendChild(downloadLink)
+        downloadLink.click()
+
+        // saveAs(
+        //   new Blob([res.data.fileContents], {
+        //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        //   }),
+        //   "myExcel.xlsx"
+        // )
+
+        console.log("export response: ", res, res.data.fileContents)
+      })
+      .catch(error => {
+        setIsFetching(false)
+        toastr.error("Failed to export data.", "NINETRAX")
+      })
+  }
+
   const handleActualFinishDateRangeCriteria = async (e, inputType) => {
     let fromdate = actualFinishFromDate.current || null
     let todate = actualFinishToDate.current || null
@@ -333,7 +400,7 @@ const workOrderInspections = props => {
                       <button
                         type="button"
                         className="btn btn-outline-secondary w-xs"
-                        //onClick={onAddDirectoryName}
+                        onClick={onExportClick}
                       >
                         <i className="bx bx-file"></i> Export
                       </button>
