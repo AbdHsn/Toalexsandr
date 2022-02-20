@@ -281,7 +281,6 @@ namespace NINETRAX.Controllers.DbManagement
 
         #region Export
         [HttpPost("[action]")]
-        // public async Task<FileStreamResult> ExportToExcel(DatatableGLB datatableGLB)
         public async Task<IActionResult> ExportToExcel(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
@@ -414,6 +413,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 }
                 #endregion
+
                 var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
 
                 if (prepareExcelData != null)

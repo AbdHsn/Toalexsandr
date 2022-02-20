@@ -32,15 +32,12 @@ import { rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
 
 const workOrderInspections = props => {
-  const [pageSizeDrp, setPageSizeDrp] = useState(false)
   const [workOrderInspectionTbl, setWorkOrderInspectionTbl] = useState({})
+  const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
-  const [modal, setModal] = useState(false)
-  const [deleteModal, setDeleteModal] = useState(false)
-  const [importMaximoModal, setImportMaximoModal] = useState(false)
-  const [isEdit, setIsEdit] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
+  const [filterOptions, setFilterOptions] = useState(false)
 
   const start = useRef(0)
   const length = useRef("10")
@@ -62,11 +59,14 @@ const workOrderInspections = props => {
   const inspectionResults = useRef("")
   const inspectionDate = useRef("")
   const enteredDate = useRef("")
-
   const duration = useRef("")
   const actualFinishFromDate = useRef("")
   const actualFinishToDate = useRef("")
   const multipleWorkOrder = useRef("")
+
+  useEffect(() => {
+    loadView()
+  }, [])
 
   const updateColumnSearchValues = (column, value) => {
     start.current = 0
@@ -135,10 +135,6 @@ const workOrderInspections = props => {
     }
   }
 
-  useEffect(() => {
-    loadView()
-  }, [])
-
   const loadView = () => {
     let preparePostData = {
       columns: [],
@@ -196,8 +192,6 @@ const workOrderInspections = props => {
       })
   }
 
-  const [filterOptions, setFilterOptions] = useState(false)
-
   const handlePressEnter = async e => {
     if (e.key === "Enter") {
       start.current = 0
@@ -206,8 +200,6 @@ const workOrderInspections = props => {
   }
 
   const onExportClick = () => {
-    console.log("export")
-
     let preparePostData = {
       columns: [],
       orders: [
@@ -337,8 +329,10 @@ const workOrderInspections = props => {
         <MetaTags>
           <title>Work Order Inspect | NINETRAX | QC Management</title>
         </MetaTags>
+
         <Container fluid>
-          <Breadcrumbs title="WO Inspect" breadcrumbItem="WO Inspect" />
+          <Breadcrumbs title="Work Order Inspect" breadcrumbItem="WO Inspect" />
+
           <Row>
             <Col xs="12">
               <Card>
@@ -362,7 +356,7 @@ const workOrderInspections = props => {
                             return (
                               <DropdownItem
                                 key={index}
-                                onClick={e => {
+                                onClick={() => {
                                   length.current = item
                                   loadView()
                                 }}
@@ -374,13 +368,6 @@ const workOrderInspections = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary w-xs"
-                        //onClick={onAddDirectoryName}
-                      >
-                        <i className="bx bx-plus"></i> New
-                      </button>
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
@@ -392,13 +379,13 @@ const workOrderInspections = props => {
                           <i className="bx bx-file"></i> Export
                         </button>
                       )}
-                      <button
+                      {/* <button
                         type="button"
                         className="btn btn-outline-danger w-xs"
-                        //onClick={onAddDirectoryName}
+                        //onClick={onBulkDeleteClick}
                       >
                         <i className="bx bx-trash"></i> Bulk Delete
-                      </button>
+                      </button> */}
                     </div>
                   </div>
 
@@ -409,6 +396,7 @@ const workOrderInspections = props => {
                           <button
                             className={classnames(
                               "accordion-button",
+                              "p-1 py-3",
                               "fw-medium",
                               { collapsed: !filterOptions }
                             )}
@@ -428,7 +416,7 @@ const workOrderInspections = props => {
                             <Row>
                               <Col xl={4}>
                                 <div className="row">
-                                  <label className="p-0">
+                                  <label className="mb-0 mt-2 p-0">
                                     Seach WO by finish dates
                                   </label>
 
@@ -464,7 +452,7 @@ const workOrderInspections = props => {
                                   />
                                 </div>
                                 <div className="row">
-                                  <label className="p-0">
+                                  <label className="mb-0 mt-2 p-0">
                                     Choose date criteria{" "}
                                   </label>
                                   <select
@@ -498,7 +486,7 @@ const workOrderInspections = props => {
                                   </select>
                                 </div>
                                 <div className="row">
-                                  <label className="p-0">
+                                  <label className="mb-0 mt-2 p-0">
                                     **Multiple WO Search
                                   </label>
                                   <input
@@ -767,7 +755,6 @@ const workOrderInspections = props => {
                               name="sAnnex"
                               id="sAnnex"
                               onChange={e =>
-                                //setAnnex(e.target.value)
                                 updateColumnSearchValues(
                                   "annex",
                                   e.target.value
