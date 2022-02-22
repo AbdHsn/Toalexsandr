@@ -393,6 +393,7 @@ const workOrderInspections = props => {
                                     ? "Not recommended on large data"
                                     : ``
                                 }
+                                className={item === "All" ? `text-warning` : ``}
                               >
                                 {item}
                               </DropdownItem>
