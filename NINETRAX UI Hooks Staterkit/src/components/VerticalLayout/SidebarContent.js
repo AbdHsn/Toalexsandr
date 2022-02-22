@@ -101,10 +101,10 @@ const SidebarContent = props => {
 
             <li className="menu-title">{props.t("Inspections")} </li>
             <li>
-              <Link to="/directory-name-list" className="">
+              {/* <Link to="/directory-name-list" className="">
                 <i className="bx bx-list-ul"></i>
                 <span>{props.t("Directory Names")}</span>
-              </Link>
+              </Link> */}
             </li>
             <li>
               <Link to="#" className="">

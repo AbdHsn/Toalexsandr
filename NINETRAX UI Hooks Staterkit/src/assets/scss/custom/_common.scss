@@ -1,0 +1,30 @@
+// 
+// Chat.scss
+//
+
+// .chat-leftsidebar{
+//   @media (min-width: 992px) {
+//     min-width: 260px;
+//   }
+
+//   @media (min-width: 1200px) {
+//     min-width: 380px;
+//   }
+
+//   .chat-leftsidebar-nav{
+//     .nav{
+//       background-color: $card-bg;
+//     }
+
+//     .tab-content{
+//       min-height: 488px;
+//     }
+//   }
+// }
+
+.custom-pointer{
+  cursor: pointer;
+  &:hover{
+    color: rgb(43, 198, 226);
+  }
+}

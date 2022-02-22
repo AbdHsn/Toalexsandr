@@ -5,6 +5,7 @@ import * as moment from "moment"
 import classnames from "classnames"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
+import "../../assets/scss/custom/_common.scss"
 
 import {
   Button,
@@ -40,6 +41,10 @@ const workOrderInspections = props => {
   const [filterOptions, setFilterOptions] = useState(false)
 
   const start = useRef(0)
+  const orderColumn = useRef({
+    column: "Id",
+    order_by: "DESC",
+  })
   const length = useRef("10")
 
   const id = useRef("")
@@ -68,7 +73,7 @@ const workOrderInspections = props => {
     loadView()
   }, [])
 
-  const updateColumnSearchValues = (column, value) => {
+  const onUpdateSearchFilter = (column, value) => {
     start.current = 0
     switch (column) {
       case "id":
@@ -138,12 +143,7 @@ const workOrderInspections = props => {
   const loadView = () => {
     let preparePostData = {
       columns: [],
-      orders: [
-        {
-          column: "Id",
-          order_by: "DESC",
-        },
-      ],
+      orders: [orderColumn.current],
       start: start.current,
       length: length.current,
       search: {},
@@ -192,7 +192,7 @@ const workOrderInspections = props => {
       })
   }
 
-  const handlePressEnter = async e => {
+  const onPressEnter = async e => {
     if (e.key === "Enter") {
       start.current = 0
       loadView()
@@ -265,7 +265,7 @@ const workOrderInspections = props => {
       })
   }
 
-  const handleActualFinishDateRangeCriteria = async (e, inputType) => {
+  const onChangeActualFinishDateRangeCriteria = async (e, inputType) => {
     let fromdate = actualFinishFromDate.current || null
     let todate = actualFinishToDate.current || null
 
@@ -323,6 +323,34 @@ const workOrderInspections = props => {
     }
   }
 
+  const onOrderByClick = columnName => {
+    console.log(
+      "old selected column: ",
+      orderColumn.current,
+      orderColumn.current.column,
+      orderColumn.current.order_by,
+      columnName
+    )
+
+    if (orderColumn.current.column === columnName) {
+      if (orderColumn.current.order_by === "DESC")
+        orderColumn.current.order_by = "ASC"
+      else orderColumn.current.order_by = "DESC"
+    } else {
+      orderColumn.current.column = columnName
+      orderColumn.current.order_by = orderColumn.current.order_by
+    }
+
+    console.log(
+      "latest selected column: ",
+      orderColumn.current,
+      orderColumn.current.column,
+      orderColumn.current.order_by,
+      columnName
+    )
+    loadView()
+  }
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -360,6 +388,11 @@ const workOrderInspections = props => {
                                   length.current = item
                                   loadView()
                                 }}
+                                title={
+                                  item === "All"
+                                    ? "Not recommended on large data"
+                                    : ``
+                                }
                               >
                                 {item}
                               </DropdownItem>
@@ -429,7 +462,7 @@ const workOrderInspections = props => {
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishFromDate.current || ""}
                                     onChange={e =>
-                                      handleActualFinishDateRangeCriteria(
+                                      onChangeActualFinishDateRangeCriteria(
                                         e,
                                         "sActualFinishFromDate"
                                       )
@@ -444,7 +477,7 @@ const workOrderInspections = props => {
                                     pattern="\d{4}-\d{2}-\d{2}"
                                     value={actualFinishToDate.current || ""}
                                     onChange={e =>
-                                      handleActualFinishDateRangeCriteria(
+                                      onChangeActualFinishDateRangeCriteria(
                                         e,
                                         "sActualFinishToDate"
                                       )
@@ -459,7 +492,7 @@ const workOrderInspections = props => {
                                     name="dateRangeCriteria"
                                     id="dateRangeCriteria"
                                     onChange={
-                                      handleActualFinishDateRangeCriteria
+                                      onChangeActualFinishDateRangeCriteria
                                     }
                                   >
                                     <option value="-1">
@@ -496,12 +529,12 @@ const workOrderInspections = props => {
                                     name="sMultipleWorkOrder"
                                     id="sMultipleWorkOrder"
                                     onChange={e =>
-                                      updateColumnSearchValues(
+                                      onUpdateSearchFilter(
                                         "multipleWorkOrder",
                                         e.target.value
                                       )
                                     }
-                                    onKeyUp={handlePressEnter}
+                                    onKeyUp={onPressEnter}
                                   />
                                 </div>
                               </Col>
@@ -571,7 +604,7 @@ const workOrderInspections = props => {
                                             value="all"
                                             defaultChecked
                                             onChange={e =>
-                                              updateColumnSearchValues(
+                                              onUpdateSearchFilter(
                                                 "duration",
                                                 ""
                                               )
@@ -592,7 +625,7 @@ const workOrderInspections = props => {
                                             id="SemiA"
                                             value="SemiA"
                                             onChange={e =>
-                                              updateColumnSearchValues(
+                                              onUpdateSearchFilter(
                                                 "duration",
                                                 "960:00"
                                               )
@@ -613,7 +646,7 @@ const workOrderInspections = props => {
                                             id="monthly"
                                             value="monthly"
                                             onChange={e =>
-                                              updateColumnSearchValues(
+                                              onUpdateSearchFilter(
                                                 "duration",
                                                 "720:00"
                                               )
@@ -636,7 +669,7 @@ const workOrderInspections = props => {
                                             id="Anually"
                                             value="Anually"
                                             onChange={e =>
-                                              updateColumnSearchValues(
+                                              onUpdateSearchFilter(
                                                 "duration",
                                                 "1440:00"
                                               )
@@ -657,7 +690,7 @@ const workOrderInspections = props => {
                                             id="quarterly"
                                             value="quarterly"
                                             onChange={e =>
-                                              updateColumnSearchValues(
+                                              onUpdateSearchFilter(
                                                 "duration",
                                                 "480:00"
                                               )
@@ -678,7 +711,7 @@ const workOrderInspections = props => {
                                             id="weekly"
                                             value="weekly"
                                             onClick={e =>
-                                              updateColumnSearchValues(
+                                              onUpdateSearchFilter(
                                                 "duration",
                                                 "168:00"
                                               )
@@ -711,31 +744,264 @@ const workOrderInspections = props => {
                     </div>
                   </Row>
 
-                  <div className="table-responsive">
-                    <Table className="table table-sm m-0">
-                      <thead>
-                        <tr>
-                          {/* <th>Id</th> */}
-                          <th>Annex</th>
-                          <th>Spec Item</th>
-                          <th>Title</th>
-                          <th>Work Order</th>
-                          <th>Description</th>
-                          <th>Location</th>
-                          <th>Asset</th>
-                          <th>Crew</th>
-                          <th>Lead</th>
-                          <th>WorkType</th>
-                          <th>SubWork Type</th>
-                          <th>Actual Finish</th>
-                          <th>QC Inspector</th>
-                          <th>Ins. Results</th>
-                          <th>Inspection Date</th>
-                          <th>Record Date</th>
-                          <th></th>
-                        </tr>
-                        <tr>
-                          {/* <th>
+                  <Row>
+                    <div className="table-responsive">
+                      <Table
+                        data-simplebar={true}
+                        className="table table-sm m-0"
+                      >
+                        <thead>
+                          <tr>
+                            {/* <th>Id</th> */}
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Annex")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Annex"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Annex
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("SpecItem")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "SpecItem"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Spec Item
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Title")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Title"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Title
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("WorkOrder")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "WorkOrder"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Work Order
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Description")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Description"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Description
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Location")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Location"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Location
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Asset")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Asset"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Asset
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Crew")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Crew"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Crew
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("Lead")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "Lead"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Lead
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("WorkType")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "WorkType"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Work Type
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("SubWorkType")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "SubWorkType"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Sub WorkType
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("ActualFinish")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "ActualFinish"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Actual Finish
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("QcInspector")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "QcInspector"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              QC Inspector
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() =>
+                                onOrderByClick("InspectionResults")
+                              }
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column ===
+                                  "InspectionResults"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Inspection Results
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("InspectionDate")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column ===
+                                  "InspectionDate"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Inspection Date
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("EnteredDate")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "EnteredDate"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Entered Date
+                            </th>
+
+                            <th></th>
+                          </tr>
+                          <tr>
+                            {/* <th>
                             {" "}
                             <input
                               type="text"
@@ -743,318 +1009,321 @@ const workOrderInspections = props => {
                               name="sId"
                               id="sId"
                               onChange={e => setId(e.target.value)}
-                              onKeyUp={handlePressEnter}
+                              onKeyUp={onPressEnter}
                             />
                           </th> */}
-                          <th>
-                            {" "}
-                            <input
-                              style={{ width: "80px" }}
-                              type="text"
-                              placeholder="Annex"
-                              name="sAnnex"
-                              id="sAnnex"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "annex",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              style={{ width: "100px" }}
-                              type="text"
-                              placeholder="Spec Item"
-                              name="sSpecItem"
-                              id="sSpecItem"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "specItem",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              style={{ width: "100px" }}
-                              type="text"
-                              placeholder="Title"
-                              name="sTitle"
-                              id="sTitle"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "title",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              style={{ width: "80px" }}
-                              type="text"
-                              placeholder="Work Order"
-                              name="sWorkOrder"
-                              id="sWorkOrder"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "workOrder",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "250px" }}
-                              placeholder="Description"
-                              name="sDescription"
-                              id="sDescription"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "description",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "120px" }}
-                              placeholder="Location"
-                              name="sLocation"
-                              id="sLocation"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "location",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "80px" }}
-                              placeholder="Asset"
-                              name="sAsset"
-                              id="sAsset"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "asset",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "80px" }}
-                              placeholder="Crew"
-                              name="sCrew"
-                              id="sCrew"
-                              onChange={e =>
-                                updateColumnSearchValues("crew", e.target.value)
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "80px" }}
-                              placeholder="Lead"
-                              name="sLead"
-                              id="sLead"
-                              onChange={e =>
-                                updateColumnSearchValues("lead", e.target.value)
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "80px" }}
-                              placeholder="Work Type"
-                              name="sWorkType"
-                              id="sWorkType"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "workType",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "100px" }}
-                              placeholder="SubWork Type"
-                              name="sSubWorkType"
-                              id="sSubWorkType"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "subWorkType",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="date"
-                              style={{ width: "140px" }}
-                              placeholder="Actual Finish"
-                              name="sActualFinish"
-                              id="sActualFinish"
-                              pattern="\d{4}-\d{2}-\d{2}"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "actualFinish",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "100px" }}
-                              placeholder="QC Inspector"
-                              name="sQcInspector"
-                              id="sQcInspector"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "qcInspector",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="text"
-                              style={{ width: "100px" }}
-                              placeholder="Inspection Results"
-                              name="sInspectionResults"
-                              id="sInspectionResults"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "inspectionResults",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="date"
-                              style={{ width: "140px" }}
-                              placeholder="Inspection Date"
-                              name="sInspectionDate"
-                              id="sInspectionDate"
-                              pattern="\d{4}-\d{2}-\d{2}"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "inspectionDate",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th>
-                            {" "}
-                            <input
-                              type="date"
-                              style={{ width: "140px" }}
-                              placeholder="Record Date"
-                              name="sEnteredDate"
-                              id="sEnteredDate"
-                              pattern="\d{4}-\d{2}-\d{2}"
-                              onChange={e =>
-                                updateColumnSearchValues(
-                                  "enteredDate",
-                                  e.target.value
-                                )
-                              }
-                              onKeyUp={handlePressEnter}
-                            />
-                          </th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {isFetching === true ? (
-                          <tr>
-                            <td colSpan={100}>
-                              <Loader isLoading={isFetching} />
-                            </td>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "80px" }}
+                                type="text"
+                                placeholder="Annex"
+                                name="sAnnex"
+                                id="sAnnex"
+                                onChange={e =>
+                                  onUpdateSearchFilter("annex", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="Spec Item"
+                                name="sSpecItem"
+                                id="sSpecItem"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "specItem",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="Title"
+                                name="sTitle"
+                                id="sTitle"
+                                onChange={e =>
+                                  onUpdateSearchFilter("title", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "80px" }}
+                                type="text"
+                                placeholder="Work Order"
+                                name="sWorkOrder"
+                                id="sWorkOrder"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "workOrder",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "250px" }}
+                                placeholder="Description"
+                                name="sDescription"
+                                id="sDescription"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "description",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "120px" }}
+                                placeholder="Location"
+                                name="sLocation"
+                                id="sLocation"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "location",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "80px" }}
+                                placeholder="Asset"
+                                name="sAsset"
+                                id="sAsset"
+                                onChange={e =>
+                                  onUpdateSearchFilter("asset", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "80px" }}
+                                placeholder="Crew"
+                                name="sCrew"
+                                id="sCrew"
+                                onChange={e =>
+                                  onUpdateSearchFilter("crew", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "80px" }}
+                                placeholder="Lead"
+                                name="sLead"
+                                id="sLead"
+                                onChange={e =>
+                                  onUpdateSearchFilter("lead", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "80px" }}
+                                placeholder="Work Type"
+                                name="sWorkType"
+                                id="sWorkType"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "workType",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "100px" }}
+                                placeholder="SubWork Type"
+                                name="sSubWorkType"
+                                id="sSubWorkType"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "subWorkType",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="date"
+                                style={{ width: "140px" }}
+                                placeholder="Actual Finish"
+                                name="sActualFinish"
+                                id="sActualFinish"
+                                pattern="\d{4}-\d{2}-\d{2}"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "actualFinish",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "100px" }}
+                                placeholder="QC Inspector"
+                                name="sQcInspector"
+                                id="sQcInspector"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "qcInspector",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="text"
+                                style={{ width: "100px" }}
+                                placeholder="Inspection Results"
+                                name="sInspectionResults"
+                                id="sInspectionResults"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "inspectionResults",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="date"
+                                style={{ width: "140px" }}
+                                placeholder="Inspection Date"
+                                name="sInspectionDate"
+                                id="sInspectionDate"
+                                pattern="\d{4}-\d{2}-\d{2}"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "inspectionDate",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                type="date"
+                                style={{ width: "140px" }}
+                                placeholder="Record Date"
+                                name="sEnteredDate"
+                                id="sEnteredDate"
+                                pattern="\d{4}-\d{2}-\d{2}"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "enteredDate",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th></th>
                           </tr>
-                        ) : null}
+                        </thead>
+                        <tbody>
+                          {isFetching === true ? (
+                            <tr>
+                              <td colSpan={100}>
+                                <Loader isLoading={isFetching} />
+                              </td>
+                            </tr>
+                          ) : null}
 
-                        {workOrderInspectionTbl.data &&
-                          workOrderInspectionTbl.data.map((item, index) => {
-                            return (
-                              <tr key={index}>
-                                {/* <td>{item.id}</td> */}
-                                <td>{item.annex}</td>
-                                <td>{item.specItem}</td>
-                                <td>{item.title}</td>
-                                <td>{item.workOrder}</td>
-                                <td>{item.description}</td>
-                                <td>{item.location}</td>
-                                <td>{item.asset}</td>
-                                <td>{item.crew}</td>
-                                <td>{item.lead}</td>
-                                <td>{item.workType}</td>
-                                <td>{item.subWorkType}</td>
-                                <td>
-                                  {moment(item.actualFinish).format(
-                                    "MM/DD/YYYY"
-                                  )}
-                                </td>
-                                <td>{item.qcInspector}</td>
-                                <td>{item.inspectionResults}</td>
-                                <td>{item.inspectionDate}</td>
-                                <td>{item.enteredDate}</td>
+                          {workOrderInspectionTbl.data &&
+                            workOrderInspectionTbl.data.map((item, index) => {
+                              return (
+                                <tr key={index}>
+                                  {/* <td>{item.id}</td> */}
+                                  <td>{item.annex}</td>
+                                  <td>{item.specItem}</td>
+                                  <td>{item.title}</td>
+                                  <td>{item.workOrder}</td>
+                                  <td>{item.description}</td>
+                                  <td>{item.location}</td>
+                                  <td>{item.asset}</td>
+                                  <td>{item.crew}</td>
+                                  <td>{item.lead}</td>
+                                  <td>{item.workType}</td>
+                                  <td>{item.subWorkType}</td>
+                                  <td>
+                                    {moment(item.actualFinish).format(
+                                      "MM/DD/YYYY"
+                                    )}
+                                  </td>
+                                  <td>{item.qcInspector}</td>
+                                  <td>{item.inspectionResults}</td>
+                                  <td>
+                                    {item.inspectionDate
+                                      ? moment(item.inspectionDate).format(
+                                          "MM/DD/YYYY"
+                                        )
+                                      : "No Data"}
+                                  </td>
+                                  <td>
+                                    {item.enteredDate
+                                      ? moment(item.enteredDate).format(
+                                          "MM/DD/YYYY"
+                                        )
+                                      : "No Data"}
+                                  </td>
 
-                                <td>
-                                  {/* <button
+                                  <td>
+                                    {/* <button
                                     type="button"
                                     className="btn btn-sm btn-outline-primary ml-2"
                                     onClick={e => handleEdit(item)}
@@ -1072,82 +1341,70 @@ const workOrderInspections = props => {
                                   >
                                     <i className="far fa-trash-alt"></i> Delete
                                   </button> */}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+
+                          {workOrderInspectionTbl.data &&
+                            workOrderInspectionTbl.data.length === 0 && (
+                              <tr>
+                                <td
+                                  colSpan="100%"
+                                  className="text-center text-danger font-weight-bold"
+                                >
+                                  No data
                                 </td>
                               </tr>
-                            )
-                          })}
+                            )}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
 
-                        {workOrderInspectionTbl.data &&
-                          workOrderInspectionTbl.data.length === 0 && (
-                            <tr>
-                              <td
-                                colSpan="100%"
-                                className="text-center text-danger font-weight-bold"
-                              >
-                                No data
-                              </td>
-                            </tr>
+                  <Row>
+                    <Col className="p-0" xs={12} md={8}>
+                      <div className="mt-2">
+                        <ReactPaginate
+                          containerClassName={"pagination justify-content-left"}
+                          previousLabel={"Previous"}
+                          previousClassName={"page-item"}
+                          previousLinkClassName={"page-link"}
+                          nextLabel={"Next"}
+                          nextClassName={"page-item"}
+                          nextLinkClassName={"page-link"}
+                          breakLabel={"..."}
+                          breakClassName={"page-item"}
+                          breakLinkClassName={"page-link"}
+                          pageCount={Math.floor(
+                            workOrderInspectionTbl.totalRecords /
+                              +length.current
                           )}
-                      </tbody>
-                    </Table>
-                  </div>
-
-                  <div className="mt-2">
-                    <ReactPaginate
-                      containerClassName={"pagination justify-content-left"}
-                      previousLabel={"Previous"}
-                      previousClassName={"page-item"}
-                      previousLinkClassName={"page-link"}
-                      nextLabel={"Next"}
-                      nextClassName={"page-item"}
-                      nextLinkClassName={"page-link"}
-                      breakLabel={"..."}
-                      breakClassName={"page-item"}
-                      breakLinkClassName={"page-link"}
-                      pageCount={Math.floor(
-                        workOrderInspectionTbl.totalRecords / +length.current
-                      )}
-                      marginPagesDisplayed={2}
-                      pageRangeDisplayed={3}
-                      onPageChange={e => {
-                        ;(start.current = Math.floor(
-                          e.selected * length.current
-                        )),
-                          loadView()
-                      }}
-                      pageClassName={"page-item"}
-                      pageLinkClassName={"page-link"}
-                      activeClassName={"active"}
-                    />
-                  </div>
-
-                  {/* <Modal isOpen={modal} toggle={toggle}>
-                    <ModalHeader toggle={toggle} tag="h4">
-                      {isEdit ? "Edit WO Inspect" : "Add WO Inspect"}
-                    </ModalHeader>
-                    <ModalBody>
-                      <Form
-                        onSubmit={e => {
-                          e.preventDefault()
-                          validation.handleSubmit()
-                          return false
-                        }}
-                      >
-                      
-                      </Form>
-                    </ModalBody>
-                  </Modal> */}
+                          marginPagesDisplayed={2}
+                          pageRangeDisplayed={3}
+                          onPageChange={e => {
+                            ;(start.current = Math.floor(
+                              e.selected * length.current
+                            )),
+                              loadView()
+                          }}
+                          pageClassName={"page-item"}
+                          pageLinkClassName={"page-link"}
+                          activeClassName={"active"}
+                        />
+                      </div>
+                    </Col>
+                    <Col className="p-0 mt-2" xs={6} md={4}>
+                      <div className="mt-2 float-end">
+                        Total Records: {workOrderInspectionTbl.totalRecords}
+                      </div>
+                    </Col>
+                  </Row>
 
                   {/* <DeleteModal
                     show={deleteModal}
                     onDeleteClick={handleDelete}
                     onCloseClick={() => setDeleteModal(false)}
-                  /> */}
-
-                  {/* <ImportFromMaximoModal
-                    show={importMaximoModal}
-                    onImportClick={() => handleImportMaximo}
-                    onCloseClick={() => setImportMaximoModal(false)}
                   /> */}
                 </CardBody>
               </Card>
