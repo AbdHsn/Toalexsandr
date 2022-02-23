@@ -33,10 +33,12 @@ builder.Services.AddCors(options => options.AddPolicy(name: CorsPolicy,
     {
         builder.AllowAnyHeader()
                .AllowAnyMethod()
-               //.SetIsOriginAllowed((host) => true)
+               .SetIsOriginAllowed((host) => true)
                .WithOrigins(
-                                "http://54.144.69.10/",
-                                "https://54.144.69.10/",
+                                "http://54.144.69.10",
+                                "https://54.144.69.10",
+                                "http://54.144.69.10:80",
+                                "https://54.144.69.10:80",
                                 "http://54.144.69.10:81",
                                 "https://54.144.69.10:81",
                                 "http://3.129.206.72",
@@ -46,8 +48,9 @@ builder.Services.AddCors(options => options.AddPolicy(name: CorsPolicy,
                                 "https://3.129.206.72:81",
                                 "http://localhost:3000",
                                 "https://localhost:3000"
-                            ).WithMethods("POST", "GET", "PUT", "DELETE")
-                            .WithHeaders(HeaderNames.ContentType)
+                            )
+                           //.WithMethods("POST", "GET", "PUT", "DELETE")
+                           // .WithHeaders(HeaderNames.ContentType)
                            .AllowCredentials();
     }));
 
