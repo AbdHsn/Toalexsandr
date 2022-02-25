@@ -94,11 +94,11 @@ namespace RepositoryLayer
             string sql = default(string);
             if (string.IsNullOrWhiteSpace(countAllByWhereGLB.WhereConditions))
             {
-                sql =  string.Format("SELECT Count(*) AS TotalRecord FROM {0}", countAllByWhereGLB.TableOrViewName);
+                sql =  string.Format("SELECT Count(Id) AS TotalRecord FROM {0}", countAllByWhereGLB.TableOrViewName);
             }
             else
             {
-                sql = string.Format("SELECT Count(*) AS TotalRecord FROM {0} WHERE {1}", countAllByWhereGLB.TableOrViewName, countAllByWhereGLB.WhereConditions);
+                sql = string.Format("SELECT Count(Id) AS TotalRecord FROM {0} WHERE {1}", countAllByWhereGLB.TableOrViewName, countAllByWhereGLB.WhereConditions);
             }
             return await _context.Set<T>().FromSqlRaw(sql).AsNoTracking().FirstOrDefaultAsync();
         }

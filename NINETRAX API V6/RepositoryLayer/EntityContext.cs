@@ -2105,6 +2105,16 @@ namespace RepositoryLayer
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<ATbPdrtrackersView>(a =>
+            {
+                a.ToView("ATbPdrtrackersView");
+            });
+            
+            modelBuilder.Entity<TbIdiqtrackersView>(a =>
+            {
+                a.ToView("TbIdiqtrackersView");
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 
@@ -2158,6 +2168,8 @@ namespace RepositoryLayer
 
         #region ViewEntity
         public DbSet<TbDirectoryNamesView> TbDirectoryNamesView { get; set; }
+        public DbSet<ATbPdrtrackersView> ATbPdrtrackersView { get; set; }
+        public DbSet<TbIdiqtrackersView> TbIdiqtrackersView { get; set; }
         #endregion ViewEntity
 
         #region SPEntity

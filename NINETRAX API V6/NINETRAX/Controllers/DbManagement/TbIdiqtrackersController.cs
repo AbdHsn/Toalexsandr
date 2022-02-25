@@ -1,16 +1,11 @@
-
-
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
-using DataLayer.Models.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NINETRAX.Globals;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -254,19 +249,184 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbIdiqtracker(int id)
         {
-            var objTbIdiqtracker = await _context.TbIdiqtrackers.FindAsync(id);
-            if (objTbIdiqtracker == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var objTbIdiqtracker = await _context.TbIdiqtrackers.FindAsync(id);
+                if (objTbIdiqtracker == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.TbIdiqtrackers.Remove(objTbIdiqtracker);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
             }
 
-            _context.TbIdiqtrackers.Remove(objTbIdiqtracker);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(200, true);
         }
 
         #endregion
 
+        #region Export
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ExportToExcel(DatatableGLB datatableGLB)
+        {
+            DatatableResponseGLB response = new DatatableResponseGLB();
+            try
+            {
+                int rowSize = 0;
+                if (datatableGLB.length == "All")
+                {
+                    rowSize = 0;
+                }
+                else
+                {
+                    rowSize = int.Parse(datatableGLB.length);
+                }
+
+                string searchText = default(string);
+                if (datatableGLB.search != null)
+                {
+                    searchText = datatableGLB.search.value;
+                }
+
+                #region single sort gathering code
+                string sortInformation = null;
+                if (datatableGLB.orders != null && datatableGLB.orders.Count > 0)
+                {
+                    var getSort = datatableGLB.orders.FirstOrDefault();
+                    sortInformation = getSort.column + " " + getSort.order_by;
+                }
+                else
+                {
+                    //assign default sort info base on column
+                    sortInformation = "Id DESC";
+                }
+
+
+                #endregion single sort code
+
+                #region where-condition gathering code
+                string whereConditionStatement = null;
+                if (datatableGLB != null && datatableGLB.searches.Count() > 0)
+                {
+                    foreach (var item in datatableGLB.searches)
+                    {
+
+                        if (!string.IsNullOrEmpty(item.value))
+                            whereConditionStatement += $"`{item.search_by}` = '{item.value}' AND ";
+                    }
+                    if (!string.IsNullOrEmpty(whereConditionStatement))
+                    {
+                        whereConditionStatement = whereConditionStatement.Substring(0, whereConditionStatement.Length - 4);
+                    }
+                }
+                #endregion where-condition gathering code
+
+                #region database query code 
+                var dataGrid = await _getTbIdiqtrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
+                {
+                    TableOrViewName = "TbIdiqtrackersView",
+                    SortColumn = sortInformation,
+                    WhereConditions = whereConditionStatement,
+                });
+
+                #endregion database query code
+
+                #region Excel data manipulating
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet excelSheet = workbook.CreateSheet("Sheet-01");
+                XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
+                style.WrapText = true;
+                //defining font...
+                IFont boldFont = workbook.CreateFont();
+                boldFont.Boldweight = (short)FontBoldWeight.Bold;
+                ICellStyle boldStyle = workbook.CreateCellStyle();
+                boldStyle.SetFont(boldFont);
+
+                //defining color...
+                boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
+                boldStyle.FillPattern = FillPattern.SolidForeground;
+
+                //defining column names
+                List<string> columnNames = new List<string>()
+                {
+                    "WO Number",
+                    "IDIQ SOW Description",
+                    "Location",
+                    "WO Type",
+                    "Estimator",
+                    "Assigned PAR",
+                    "Verified By",
+                    "Inspection Date",
+                    "Date To PAR",
+                    "Date From PAR",
+                    "WO Status",
+                    "Inspection Notes",
+                };
+
+                //drawing header columns into excel
+                IRow row = excelSheet.CreateRow(0);
+
+                foreach (var column in columnNames)
+                {
+                    var cell = row.CreateCell(columnNames.IndexOf(column));
+                    cell.SetCellValue(column);
+                    cell.CellStyle = boldStyle;
+                }
+                //set header column width
+                excelSheet.SetColumnWidth(0, 3400);
+                excelSheet.SetColumnWidth(1, 2600);
+                excelSheet.SetColumnWidth(2, 6600);
+                excelSheet.SetColumnWidth(3, 6600);
+                excelSheet.SetColumnWidth(4, 6600);
+                excelSheet.SetColumnWidth(5, 6600);
+                excelSheet.SetColumnWidth(6, 6600);
+                excelSheet.SetColumnWidth(7, 6600);
+                excelSheet.SetColumnWidth(8, 6600);
+                excelSheet.SetColumnWidth(9, 6600);
+                excelSheet.SetColumnWidth(10, 6600);
+                excelSheet.SetColumnWidth(11, 6600);
+
+                //drawing cell data into excel
+                foreach (var item in dataGrid)
+                {
+                    row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
+
+                    //normal cell defining...
+                    row.CreateCell(0).SetCellValue(item.WONumber);
+                    row.CreateCell(1).SetCellValue(item.IDIQSOWDescription);
+                    row.CreateCell(2).SetCellValue(item.Location);
+                    row.CreateCell(3).SetCellValue(item.WOType);
+                    row.CreateCell(4).SetCellValue(item.Estimator);
+                    row.CreateCell(5).SetCellValue(item.ParAssigned);
+                    row.CreateCell(6).SetCellValue(item.VerifiedBy);
+                    row.CreateCell(7).SetCellValue(item.InspectionDate.HasValue ? item.InspectionDate.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(8).SetCellValue(item.DateToPar.HasValue ? item.DateToPar.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(9).SetCellValue(item.DateFromPar.HasValue ? item.DateFromPar.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(10).SetCellValue(item.WOStatus);
+                    row.CreateCell(11).SetCellValue(item.Comments);
+                }
+                #endregion
+
+                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
+
+                if (prepareExcelData != null)
+                    return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "File.xlsx");
+                else
+                    return StatusCode(400, "Export data is empty");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, "Failed to export.");
+                // return null;
+            }
+        }
+
+        #endregion
     }
 }

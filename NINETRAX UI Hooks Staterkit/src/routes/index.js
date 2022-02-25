@@ -11,6 +11,8 @@ import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
 import DirectoryName from "../pages/DirectoryName/index"
 import woInspect from "../pages/work-order-inspections/index"
+import PDRTrackersView from "../pages/pdr-trackers-view/index"
+import IDIQTrackersView from "../pages/idiq-trackers-view/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -19,6 +21,8 @@ const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/directory-name-list", component: DirectoryName },
   { path: "/wo-inspect", component: woInspect },
+  { path: "/pdr-trackers", component: PDRTrackersView },
+  { path: "/idiq-trackers", component: IDIQTrackersView },
 
   // //profile
   { path: "/profile", component: UserProfile },

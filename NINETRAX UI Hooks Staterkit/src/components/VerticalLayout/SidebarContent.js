@@ -151,13 +151,13 @@ const SidebarContent = props => {
 
             <li className="menu-title">{props.t("Quality Trackers")} </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/idiq-trackers" className="">
                 <i className="bx bx-import"></i>
                 <span>{props.t("IDIQ Indefinite Deliv. indefinite Qty")}</span>
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/pdr-trackers" className="">
                 <i className="bx bx-check"></i>
                 <span>{props.t("PDR Performance Deficiency Report")}</span>
               </Link>

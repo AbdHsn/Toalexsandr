@@ -250,16 +250,23 @@ namespace NINETRAX.Controllers.DbManagement
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete${entity.name}(int id)
 		{
-			var obj${entity.name} = await _context.${entity.name}s.FindAsync(id);
-			if (obj${entity.name} == null)
-			{
-				return StatusCode(404, "Data not found");
-			}
-		
-			_context.${entity.name}s.Remove(obj${entity.name});
-			await _context.SaveChangesAsync();
-		
-			return StatusCode(200, true);
+			try
+            {
+				var obj${entity.name} = await _context.${entity.name}s.FindAsync(id);
+				if (obj${entity.name} == null)
+				{
+					return StatusCode(404, "Data not found");
+				}
+			
+				_context.${entity.name}s.Remove(obj${entity.name});
+				await _context.SaveChangesAsync();
+			
+				return StatusCode(200, true);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
 		}
 		
 		#endregion
