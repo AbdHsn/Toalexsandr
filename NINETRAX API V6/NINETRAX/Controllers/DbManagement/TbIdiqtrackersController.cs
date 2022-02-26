@@ -6,6 +6,7 @@ using RepositoryLayer;
 using NINETRAX.Globals;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using DataLayer.Models.ViewModels;
 
 namespace NINETRAX.Controllers.DbManagement
 {

@@ -35,3 +35,35 @@ title: string;
 validity: string;
 ccrResponse: string;
 }
+
+NCRTrackersView {
+id : long {@Id};
+ncrNumber: string;
+pdrNumber: string;
+woNumber: string;
+dateIssued: date;
+qcInspector: string;
+nonConformanceSummary: string;
+dateCAPDue: date;
+status: string;
+annex: string;
+specItem: string;
+title: string;
+responsiblePerson: string;
+responsibleSub: string;
+}
+
+CDRTrackersView {
+id : long {@Id};
+cdrNumber: string;
+dateReceived: date;
+discrepancy: string;
+functionalManager: string;
+responseDueDate: date;
+memoNumber: string;
+fmResponse: string;
+responseDate: date;
+dateClosed: date;
+status: string;
+notes: string;
+}

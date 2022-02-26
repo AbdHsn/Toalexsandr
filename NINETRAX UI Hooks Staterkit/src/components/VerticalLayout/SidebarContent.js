@@ -152,25 +152,25 @@ const SidebarContent = props => {
             <li className="menu-title">{props.t("Quality Trackers")} </li>
             <li>
               <Link to="/idiq-trackers" className="">
-                <i className="bx bx-import"></i>
+                <i className="bx bxs-report"></i>
                 <span>{props.t("IDIQ Indefinite Deliv. indefinite Qty")}</span>
               </Link>
             </li>
             <li>
               <Link to="/pdr-trackers" className="">
-                <i className="bx bx-check"></i>
+                <i className="bx bxs-report"></i>
                 <span>{props.t("PDR Performance Deficiency Report")}</span>
               </Link>
             </li>
             <li>
               <Link to="/paw-trackers" className="">
-                <i className="bx bx-x"></i>
+                <i className="bx bxs-report"></i>
                 <span>{props.t("PAW Performance Assmnt. Worksheet")}</span>
               </Link>
             </li>
             <li>
               <Link to="/ccr-trackers" className="">
-                <i className="bx bx-edit"></i>
+                <i className="bx bxs-report"></i>
                 <span>{props.t("CCR Customer Comments Report")}</span>
               </Link>
             </li>
@@ -181,7 +181,7 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/cdr-trackers" className="">
                 <i className="bx bxs-report"></i>
                 <span>{props.t("CDR Contract Deficiency Report")}</span>
               </Link>

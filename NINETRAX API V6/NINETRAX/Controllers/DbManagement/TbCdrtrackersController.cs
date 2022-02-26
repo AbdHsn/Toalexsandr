@@ -1,14 +1,12 @@
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
 using DataLayer.Models.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NINETRAX.Globals;
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -21,7 +19,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbCdrtracker> _TbCdrtrackerContext;
-        private readonly IRawQueryRepo<TbCdrtrackersView> _getTbCdrtrackersView;
+        private readonly IRawQueryRepo<CDRTrackersView> _getTbCdrtrackersView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -31,7 +29,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbCdrtracker> TbCdrtrackerContext,
-            IRawQueryRepo<TbCdrtrackersView> getTbCdrtrackersView,
+            IRawQueryRepo<CDRTrackersView> getTbCdrtrackersView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -46,7 +44,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region GetTbCdrtrackerView
-        [HttpPost("GetTbCdrtrackersView")]
+        [HttpPost("GetCDRTrackersView")]
         public async Task<ActionResult<DatatableResponseGLB>> GetTbCdrtrackersView(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
@@ -109,7 +107,7 @@ namespace NINETRAX.Controllers.DbManagement
                 #region database query code 
                 var dataGrid = await _getTbCdrtrackersView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbCdrtrackersView",
+                    TableOrViewName = "CDRTrackersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -118,7 +116,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbCdrtrackersView",
+                    TableOrViewName = "CDRTrackersView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -139,7 +137,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region GetTbCdrtrackerAutoCompletion
-        [HttpGet("GetTbCdrtrackerAutoCompletion")]
+        [HttpGet("GetCDRTrackersViewAutoCompletion")]
         public async Task<ActionResult<IEnumerable<object>>> GetTbCdrtrackerAutoCompleteSuggestion(string column, string value)
         {
             #region Call Repository Function
@@ -155,7 +153,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbCdrtrackersView"
+                    TableOrViewName = "CDRTrackersView"
                 });
 
                 #endregion database query code
@@ -266,5 +264,159 @@ namespace NINETRAX.Controllers.DbManagement
 
         #endregion
 
+        #region Export
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ExportToExcel(DatatableGLB datatableGLB)
+        {
+            DatatableResponseGLB response = new DatatableResponseGLB();
+            try
+            {
+                int rowSize = 0;
+                if (datatableGLB.length == "All")
+                {
+                    rowSize = 0;
+                }
+                else
+                {
+                    rowSize = int.Parse(datatableGLB.length);
+                }
+
+                string searchText = default(string);
+                if (datatableGLB.search != null)
+                {
+                    searchText = datatableGLB.search.value;
+                }
+
+                #region single sort gathering code
+                string sortInformation = null;
+                if (datatableGLB.orders != null && datatableGLB.orders.Count > 0)
+                {
+                    var getSort = datatableGLB.orders.FirstOrDefault();
+                    sortInformation = getSort.column + " " + getSort.order_by;
+                }
+                else
+                {
+                    //assign default sort info base on column
+                    sortInformation = "Id DESC";
+                }
+
+
+                #endregion single sort code
+
+                #region where-condition gathering code
+                string whereConditionStatement = null;
+                if (datatableGLB != null && datatableGLB.searches.Count() > 0)
+                {
+                    foreach (var item in datatableGLB.searches)
+                    {
+
+                        if (!string.IsNullOrEmpty(item.value))
+                            whereConditionStatement += $"`{item.search_by}` = '{item.value}' AND ";
+                    }
+                    if (!string.IsNullOrEmpty(whereConditionStatement))
+                    {
+                        whereConditionStatement = whereConditionStatement.Substring(0, whereConditionStatement.Length - 4);
+                    }
+                }
+                #endregion where-condition gathering code
+
+                #region database query code 
+                var dataGrid = await _getTbCdrtrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
+                {
+                    TableOrViewName = "CDRTrackersView",
+                    SortColumn = sortInformation,
+                    WhereConditions = whereConditionStatement,
+                });
+
+                #endregion database query code
+
+                #region Excel data manipulating
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet excelSheet = workbook.CreateSheet("Sheet-01");
+                XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
+                style.WrapText = true;
+                //defining font...
+                IFont boldFont = workbook.CreateFont();
+                boldFont.Boldweight = (short)FontBoldWeight.Bold;
+                ICellStyle boldStyle = workbook.CreateCellStyle();
+                boldStyle.SetFont(boldFont);
+
+                //defining color...
+                boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
+                boldStyle.FillPattern = FillPattern.SolidForeground;
+
+                //defining column names
+                List<string> columnNames = new List<string>()
+                {
+                    "CDR No",
+                    "Date Received",
+                    "Discrepancy",
+                    "functional Manager",
+                    "Response Due",
+                    "Memo No",
+                    "FM Response",
+                    "Response Date",
+                    "Date Closed",
+                    "Status",
+                    "Notes",
+                };
+
+                //drawing header columns into excel
+                IRow row = excelSheet.CreateRow(0);
+
+                foreach (var column in columnNames)
+                {
+                    var cell = row.CreateCell(columnNames.IndexOf(column));
+                    cell.SetCellValue(column);
+                    cell.CellStyle = boldStyle;
+                }
+                //set header column width
+                excelSheet.SetColumnWidth(0, 3400);
+                excelSheet.SetColumnWidth(1, 2600);
+                excelSheet.SetColumnWidth(2, 12600);
+                excelSheet.SetColumnWidth(3, 6600);
+                excelSheet.SetColumnWidth(4, 6600);
+                excelSheet.SetColumnWidth(5, 6600);
+                excelSheet.SetColumnWidth(6, 6600);
+                excelSheet.SetColumnWidth(7, 6600);
+                excelSheet.SetColumnWidth(8, 6600);
+                excelSheet.SetColumnWidth(9, 6600);
+                excelSheet.SetColumnWidth(10, 6600);
+
+                //drawing cell data into excel
+                foreach (var item in dataGrid)
+                {
+                    row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
+
+                    //normal cell defining...
+                    row.CreateCell(0).SetCellValue(item.CDRNumber);
+                    row.CreateCell(1).SetCellValue(item.DateReceived.HasValue ? item.DateReceived.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(2).SetCellValue(item.Discrepancy);
+                    row.CreateCell(3).SetCellValue(item.FunctionalManager);
+                    row.CreateCell(4).SetCellValue(item.ResponseDueDate.HasValue ? item.ResponseDueDate.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(5).SetCellValue(item.MemoNumber);
+                    row.CreateCell(6).SetCellValue(item.FMResponse);
+                    row.CreateCell(7).SetCellValue(item.ResponseDate.HasValue ? item.ResponseDate.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(8).SetCellValue(item.DateClosed.HasValue ? item.DateClosed.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(9).SetCellValue(item.Status);
+                    row.CreateCell(10).SetCellValue(item.Notes);
+                }
+                #endregion
+
+                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
+
+                if (prepareExcelData != null)
+                    return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "File.xlsx");
+                else
+                    return StatusCode(400, "Export data is empty");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, "Failed to export.");
+                // return null;
+            }
+        }
+
+        #endregion
     }
 }

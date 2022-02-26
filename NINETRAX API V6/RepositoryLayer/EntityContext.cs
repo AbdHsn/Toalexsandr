@@ -2124,6 +2124,16 @@ namespace RepositoryLayer
             {
                 a.ToView("CCRTrackersView");
             });
+            
+            modelBuilder.Entity<NCRTrackersView>(a =>
+            {
+                a.ToView("NCRTrackersView");
+            });
+            
+            modelBuilder.Entity<CDRTrackersView>(a =>
+            {
+                a.ToView("CDRTrackersView");
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }
@@ -2182,6 +2192,8 @@ namespace RepositoryLayer
         public DbSet<IDIQTrackersView> IDIQTrackersView { get; set; }
         public DbSet<PAWTrackersView> PAWTrackersView { get; set; }
         public DbSet<CCRTrackersView> CCRTrackersView { get; set; }
+        public DbSet<NCRTrackersView> NCRTrackersView { get; set; }
+        public DbSet<CDRTrackersView> CDRTrackersView { get; set; }
         #endregion ViewEntity
 
         #region SPEntity

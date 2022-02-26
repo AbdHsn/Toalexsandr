@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataLayer.Models.EntityModels
+namespace DataLayer.Models.ViewModels
 {
     public partial class IDIQTrackersView
     {

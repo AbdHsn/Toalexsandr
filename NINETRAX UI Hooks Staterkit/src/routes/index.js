@@ -15,7 +15,8 @@ import PDRTrackersView from "../pages/pdr-trackers-view/index"
 import IDIQTrackersView from "../pages/idiq-trackers-view/index"
 import PAWTrackersView from "../pages/paw-trackers-view/index"
 import CCRTrackersView from "../pages/ccr-trackers-view/index"
-//import NCRTrackersView from "../pages/ncr-trackers-view/index"
+import NCRTrackersView from "../pages/ncr-trackers-view/index"
+import CDRTrackersView from "../pages/cdr-trackers-view/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -28,7 +29,8 @@ const authProtectedRoutes = [
   { path: "/idiq-trackers", component: IDIQTrackersView },
   { path: "/paw-trackers", component: PAWTrackersView },
   { path: "/ccr-trackers", component: CCRTrackersView },
-  //{ path: "/ncr-trackers", component: NCRTrackersView },
+  { path: "/cdr-trackers", component: CDRTrackersView },
+  { path: "/ncr-trackers", component: NCRTrackersView },
 
   // //profile
   { path: "/profile", component: UserProfile },
