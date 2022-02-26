@@ -18,20 +18,20 @@ pawResponse: string;
 
 CCRTrackersView {
 id : long {@Id};
-CCRNumber: string;
-Location: string;
-FMManager: string;
-DetailOfComplaint: string;
-Par: string;
-Comments: string;
-DateReceived: date;
-DateAcknowledged: date;
-WONumber: string;
-DateToPar: date;
-Status: string;
-Annex: string;
-SpecItem: string;
-Title: string;
-Validity: string;
-CCRResponse: string;
+ccrNumber: string;
+location: string;
+fmManager: string;
+detailOfComplaint: string;
+par: string;
+comments: string;
+dateReceived: date;
+dateAcknowledged: date;
+woNumber: string;
+dateToPar: date;
+status: string;
+annex: string;
+specItem: string;
+title: string;
+validity: string;
+ccrResponse: string;
 }
