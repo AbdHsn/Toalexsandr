@@ -23,15 +23,15 @@ import {
 import Loader from "../../components/Common/Loader"
 import BtnExporting from "../../components/Common/BtnExporting"
 import {
-  getIDIQTrackersView,
-  exportIDIQTrackersView,
-} from "../../services/idiq-trackers-service"
+  getPAWTrackersView,
+  exportPAWTrackersView,
+} from "../../services/paw-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
 
-const IDIQTrackersView = props => {
-  const [IDIQTrackersViewMdl, setIDIQTrackersViewMdl] = useState({})
+const PAWTrackersView = props => {
+  const [PAWTrackersViewMdl, setPAWTrackersViewMdl] = useState({})
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
   const [isFetching, setIsFetching] = useState(false)
@@ -46,18 +46,20 @@ const IDIQTrackersView = props => {
   const length = useRef("10")
 
   const id = useRef("")
-  const woNumber = useRef("")
-  const idiqsowDescription = useRef("")
+  const pawNumber = useRef("")
   const location = useRef("")
-  const woType = useRef("")
-  const estimator = useRef("")
-  const parAssigned = useRef("")
-  const verifiedBy = useRef("")
-  const inspectionDate = useRef("")
+  const description = useRef("")
+  const par = useRef("")
+  const dateReceived = useRef("")
+  const dateAcknowledged = useRef("")
+  const woNumber = useRef("")
   const dateToPar = useRef("")
-  const dateFromPar = useRef("")
-  const woStatus = useRef("")
-  const comments = useRef("")
+  const status = useRef("")
+  const annex = useRef("")
+  const specItem = useRef("")
+  const title = useRef("")
+  const validity = useRef("")
+  const pawResponse = useRef("")
 
   useEffect(() => {
     loadView()
@@ -69,41 +71,47 @@ const IDIQTrackersView = props => {
       case "id":
         id.current = value
         break
-      case "woNumber":
-        woNumber.current = value
-        break
-      case "idiqsowDescription":
-        idiqsowDescription.current = value
+      case "pawNumber":
+        pawNumber.current = value
         break
       case "location":
         location.current = value
         break
-      case "woType":
-        woType.current = value
+      case "description":
+        description.current = value
         break
-      case "estimator":
-        estimator.current = value
+      case "par":
+        par.current = value
         break
-      case "parAssigned":
-        parAssigned.current = value
+      case "dateReceived":
+        dateReceived.current = value
         break
-      case "verifiedBy":
-        verifiedBy.current = value
+      case "dateAcknowledged":
+        dateAcknowledged.current = value
         break
-      case "inspectionDate":
-        inspectionDate.current = value
+      case "woNumber":
+        woNumber.current = value
         break
       case "dateToPar":
         dateToPar.current = value
         break
-      case "dateFromPar":
-        dateFromPar.current = value
+      case "status":
+        status.current = value
         break
-      case "woStatus":
-        woStatus.current = value
+      case "annex":
+        annex.current = value
         break
-      case "comments":
-        comments.current = value
+      case "specItem":
+        specItem.current = value
+        break
+      case "title":
+        title.current = value
+        break
+      case "validity":
+        validity.current = value
+        break
+      case "pawResponse":
+        pawResponse.current = value
         break
       default:
         break
@@ -119,25 +127,27 @@ const IDIQTrackersView = props => {
       search: {},
       searches: [
         { search_by: "id", value: id.current },
-        { search_by: "woNumber", value: woNumber.current },
-        { search_by: "idiqsowDescription", value: idiqsowDescription.current },
+        { search_by: "pawNumber", value: pawNumber.current },
         { search_by: "location", value: location.current },
-        { search_by: "woType", value: woType.current },
-        { search_by: "estimator", value: estimator.current },
-        { search_by: "parAssigned", value: parAssigned.current },
-        { search_by: "verifiedBy", value: verifiedBy.current },
-        { search_by: "inspectionDate", value: inspectionDate.current },
+        { search_by: "description", value: description.current },
+        { search_by: "par", value: par.current },
+        { search_by: "dateReceived", value: dateReceived.current },
+        { search_by: "dateAcknowledged", value: dateAcknowledged.current },
+        { search_by: "woNumber", value: woNumber.current },
         { search_by: "dateToPar", value: dateToPar.current },
-        { search_by: "dateFromPar", value: dateFromPar.current },
-        { search_by: "woStatus", value: woStatus.current },
-        { search_by: "comments", value: comments.current },
+        { search_by: "status", value: status.current },
+        { search_by: "annex", value: annex.current },
+        { search_by: "specItem", value: specItem.current },
+        { search_by: "title", value: title.current },
+        { search_by: "validity", value: validity.current },
+        { search_by: "pawResponse", value: pawResponse.current },
       ],
     }
 
     setIsFetching(true)
-    getIDIQTrackersView(preparePostData)
+    getPAWTrackersView(preparePostData)
       .then(res => {
-        setIDIQTrackersViewMdl(res.data)
+        setPAWTrackersViewMdl(res.data)
         if (res.data.data.length <= 0) {
           setIsFetching(false)
           toastr.warning("No data found", "NINETRAX")
@@ -172,23 +182,25 @@ const IDIQTrackersView = props => {
       search: {},
       searches: [
         { search_by: "id", value: id.current },
-        { search_by: "woNumber", value: woNumber.current },
-        { search_by: "idiqsowDescription", value: idiqsowDescription.current },
+        { search_by: "pawNumber", value: pawNumber.current },
         { search_by: "location", value: location.current },
-        { search_by: "woType", value: woType.current },
-        { search_by: "estimator", value: estimator.current },
-        { search_by: "parAssigned", value: parAssigned.current },
-        { search_by: "verifiedBy", value: verifiedBy.current },
-        { search_by: "inspectionDate", value: inspectionDate.current },
+        { search_by: "description", value: description.current },
+        { search_by: "par", value: par.current },
+        { search_by: "dateReceived", value: dateReceived.current },
+        { search_by: "dateAcknowledged", value: dateAcknowledged.current },
+        { search_by: "woNumber", value: woNumber.current },
         { search_by: "dateToPar", value: dateToPar.current },
-        { search_by: "dateFromPar", value: dateFromPar.current },
-        { search_by: "woStatus", value: woStatus.current },
-        { search_by: "comments", value: comments.current },
+        { search_by: "status", value: status.current },
+        { search_by: "annex", value: annex.current },
+        { search_by: "specItem", value: specItem.current },
+        { search_by: "title", value: title.current },
+        { search_by: "validity", value: validity.current },
+        { search_by: "pawResponse", value: pawResponse.current },
       ],
     }
 
     setIsExporting(true)
-    exportIDIQTrackersView(preparePostData)
+    exportPAWTrackersView(preparePostData)
       .then(res => {
         let downloadLink = document.createElement("a")
         downloadLink.href = window.URL.createObjectURL(
@@ -197,7 +209,7 @@ const IDIQTrackersView = props => {
           })
         )
 
-        downloadLink.setAttribute("download", "IDIQTrackersView.xlsx")
+        downloadLink.setAttribute("download", "PAWTrackersView.xlsx")
         document.body.appendChild(downloadLink)
         downloadLink.click()
 
@@ -226,11 +238,11 @@ const IDIQTrackersView = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>IDIQ Trackers | NINETRAX | QC Management</title>
+          <title>PAW Trackers | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
-          <Breadcrumbs title="IDIQ Trackers" breadcrumbItem="IDIQ Trackers" />
+          <Breadcrumbs title="PAW Trackers" breadcrumbItem="PAW Trackers" />
 
           <Row>
             <Col xs="12">
@@ -312,36 +324,18 @@ const IDIQTrackersView = props => {
                             </th> */}
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("woNumber")}
+                              onClick={() => onOrderByClick("pawNumber")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "woNumber"
+                                  orderColumn.current.column === "pawNumber"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              WO Number
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("idiqsowDescription")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "idiqsowDescription"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              IDIQ SOW Description
+                              PAW Number
                             </th>
                             <th
                               className="custom-pointer"
@@ -360,79 +354,79 @@ const IDIQTrackersView = props => {
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("woType")}
+                              onClick={() => onOrderByClick("description")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "woType"
+                                  orderColumn.current.column === "description"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              WO Type
+                              Description
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("estimator")}
+                              onClick={() => onOrderByClick("par")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "estimator"
+                                  orderColumn.current.column === "par"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Estimator
+                              PAR
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("parAssigned")}
+                              onClick={() => onOrderByClick("dateReceived")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "parAssigned"
+                                  orderColumn.current.column === "dateReceived"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Assigned PAR
+                              Date Received
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("verifiedBy")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "verifiedBy"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Verified By
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("inspectionDate")}
+                              onClick={() => onOrderByClick("dateAcknowledged")}
                             >
                               <i
                                 className={
                                   orderColumn.current.column ===
-                                  "inspectionDate"
+                                  "dateAcknowledged"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Inspection Date
+                              Date Acknowledged
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("woNumber")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "woNumber"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              WO Number
                             </th>
                             <th
                               className="custom-pointer"
@@ -451,48 +445,93 @@ const IDIQTrackersView = props => {
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("dateFromPar")}
+                              onClick={() => onOrderByClick("status")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "dateFromPar"
+                                  orderColumn.current.column === "status"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Date From PAR
+                              Status
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("woStatus")}
+                              onClick={() => onOrderByClick("annex")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "woStatus"
+                                  orderColumn.current.column === "annex"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              WO Status
+                              Annex
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("comments")}
+                              onClick={() => onOrderByClick("specItem")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "comments"
+                                  orderColumn.current.column === "specItem"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Inspection Notes
+                              Spec Item
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("title")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "title"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Title
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("validity")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "validity"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              Validity
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("pawResponse")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "pawResponse"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              PAW Response
                             </th>
                             <th></th>
                           </tr>
@@ -516,29 +555,12 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="WO Number"
-                                name="swoNumber"
-                                id="swoNumber"
+                                placeholder="PAW Number"
+                                name="spawNumber"
+                                id="spawNumber"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "woNumber",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "450px" }}
-                                type="text"
-                                placeholder="IDIQ SOW Description"
-                                name="sidiqsowDescription"
-                                id="sidiqsowDescription"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "idiqsowDescription",
+                                    "pawNumber",
                                     e.target.value
                                   )
                                 }
@@ -565,28 +587,14 @@ const IDIQTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                style={{ width: "100px" }}
+                                style={{ width: "300px" }}
                                 type="text"
-                                placeholder="WO Type"
-                                name="swoType"
-                                id="swoType"
-                                onChange={e =>
-                                  onUpdateSearchFilter("woType", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Estimator"
-                                name="sestimator"
-                                id="sestimator"
+                                placeholder="Description"
+                                name="sdescription"
+                                id="sdescription"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "estimator",
+                                    "description",
                                     e.target.value
                                   )
                                 }
@@ -598,14 +606,11 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Assigned Par"
-                                name="sparAssigned"
-                                id="sparAssigned"
+                                placeholder="PAR"
+                                name="spar"
+                                id="spar"
                                 onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "parAssigned",
-                                    e.target.value
-                                  )
+                                  onUpdateSearchFilter("par", e.target.value)
                                 }
                                 onKeyUp={onPressEnter}
                               />
@@ -613,14 +618,15 @@ const IDIQTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Verified By"
-                                name="sverifiedBy"
-                                id="sverifiedBy"
+                                type="date"
+                                style={{ width: "140px" }}
+                                placeholder="Date Received"
+                                name="sdateReceived"
+                                id="sdateReceived"
+                                pattern="\d{4}-\d{2}-\d{2}"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "verifiedBy",
+                                    "dateReceived",
                                     e.target.value
                                   )
                                 }
@@ -632,13 +638,30 @@ const IDIQTrackersView = props => {
                               <input
                                 type="date"
                                 style={{ width: "140px" }}
-                                placeholder="Inspection Date"
-                                name="sinspectionDate"
-                                id="sinspectionDate"
+                                placeholder="Date Acknowledged"
+                                name="sdateAcknowledged"
+                                id="sdateAcknowledged"
                                 pattern="\d{4}-\d{2}-\d{2}"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "inspectionDate",
+                                    "dateAcknowledged",
+                                    e.target.value
+                                  )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="WO Number"
+                                name="swoNumber"
+                                id="swoNumber"
+                                onChange={e =>
+                                  onUpdateSearchFilter(
+                                    "woNumber",
                                     e.target.value
                                   )
                                 }
@@ -666,15 +689,42 @@ const IDIQTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Date From PAR"
-                                name="sdateFromPar"
-                                id="sdateFromPar"
-                                pattern="\d{4}-\d{2}-\d{2}"
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="Status"
+                                name="sstatus"
+                                id="sstatus"
+                                onChange={e =>
+                                  onUpdateSearchFilter("status", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="Annex"
+                                name="sannex"
+                                id="sannex"
+                                onChange={e =>
+                                  onUpdateSearchFilter("annex", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="Spec Item"
+                                name="sspecItem"
+                                id="sspecItem"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "dateFromPar",
+                                    "specItem",
                                     e.target.value
                                   )
                                 }
@@ -686,12 +736,26 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="WO Status"
-                                name="swoStatus"
-                                id="swoStatus"
+                                placeholder="Title"
+                                name="stitle"
+                                id="stitle"
+                                onChange={e =>
+                                  onUpdateSearchFilter("title", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="Validity"
+                                name="svalidity"
+                                id="svalidity"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "woStatus",
+                                    "validity",
                                     e.target.value
                                   )
                                 }
@@ -701,14 +765,14 @@ const IDIQTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                style={{ width: "450px" }}
+                                style={{ width: "400px" }}
                                 type="text"
-                                placeholder="Inspection Notes"
-                                name="scomments"
-                                id="scomments"
+                                placeholder="PAW Response"
+                                name="spawResponse"
+                                id="spawResponse"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "comments",
+                                    "pawResponse",
                                     e.target.value
                                   )
                                 }
@@ -727,25 +791,30 @@ const IDIQTrackersView = props => {
                             </tr>
                           ) : null}
 
-                          {IDIQTrackersViewMdl.data &&
-                            IDIQTrackersViewMdl.data.map((item, index) => {
+                          {PAWTrackersViewMdl.data &&
+                            PAWTrackersViewMdl.data.map((item, index) => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{item.woNumber}</td>
-                                  <td>{item.idiqsowDescription}</td>
+                                  <td>{item.pawNumber}</td>
                                   <td>{item.location}</td>
-                                  <td>{item.woType}</td>
-                                  <td>{item.estimator}</td>
-                                  <td>{item.parAssigned}</td>
-                                  <td>{item.verifiedBy}</td>
+                                  <td>{item.description}</td>
+                                  <td>{item.par}</td>
                                   <td>
-                                    {item.inspectionDate
-                                      ? moment(item.inspectionDate).format(
+                                    {item.dateReceived
+                                      ? moment(item.dateReceived).format(
                                           "MM/DD/YYYY"
                                         )
                                       : "No Data"}
                                   </td>
+                                  <td>
+                                    {item.dateAcknowledged
+                                      ? moment(item.dateAcknowledged).format(
+                                          "MM/DD/YYYY"
+                                        )
+                                      : "No Data"}
+                                  </td>
+                                  <td>{item.woNumber}</td>
                                   <td>
                                     {item.dateToPar
                                       ? moment(item.dateToPar).format(
@@ -753,15 +822,12 @@ const IDIQTrackersView = props => {
                                         )
                                       : "No Data"}
                                   </td>
-                                  <td>
-                                    {item.dateFromPar
-                                      ? moment(item.dateFromPar).format(
-                                          "MM/DD/YYYY"
-                                        )
-                                      : "No Data"}
-                                  </td>
-                                  <td>{item.woStatus}</td>
-                                  <td>{item.comments}</td>
+                                  <td>{item.status}</td>
+                                  <td>{item.annex}</td>
+                                  <td>{item.specItem}</td>
+                                  <td>{item.title}</td>
+                                  <td>{item.validity}</td>
+                                  <td>{item.pawResponse}</td>
 
                                   <td>
                                     {/* <button
@@ -787,8 +853,8 @@ const IDIQTrackersView = props => {
                               )
                             })}
 
-                          {IDIQTrackersViewMdl.data &&
-                            IDIQTrackersViewMdl.data.length === 0 && (
+                          {PAWTrackersViewMdl.data &&
+                            PAWTrackersViewMdl.data.length === 0 && (
                               <tr>
                                 <td
                                   colSpan="100%"
@@ -818,7 +884,7 @@ const IDIQTrackersView = props => {
                           breakClassName={"page-item"}
                           breakLinkClassName={"page-link"}
                           pageCount={Math.floor(
-                            IDIQTrackersViewMdl.totalRecords / +length.current
+                            PAWTrackersViewMdl.totalRecords / +length.current
                           )}
                           marginPagesDisplayed={2}
                           pageRangeDisplayed={3}
@@ -836,7 +902,7 @@ const IDIQTrackersView = props => {
                     </Col>
                     <Col className="p-0 mt-2" xs={6} md={4}>
                       <div className="mt-2 float-end">
-                        Total Records: {IDIQTrackersViewMdl.totalRecords}
+                        Total Records: {PAWTrackersViewMdl.totalRecords}
                       </div>
                     </Col>
                   </Row>
@@ -856,4 +922,4 @@ const IDIQTrackersView = props => {
   )
 }
 
-export default IDIQTrackersView
+export default PAWTrackersView

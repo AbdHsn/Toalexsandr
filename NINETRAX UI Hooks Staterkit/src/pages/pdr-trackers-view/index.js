@@ -238,14 +238,11 @@ const PDRTrackersView = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>PDR Trackers View | NINETRAX | QC Management</title>
+          <title>PDR Trackers | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
-          <Breadcrumbs
-            title="PDR Trackers View"
-            breadcrumbItem="PDR Trackers View"
-          />
+          <Breadcrumbs title="PDR Trackers" breadcrumbItem="PDR Trackers" />
 
           <Row>
             <Col xs="12">
@@ -572,7 +569,7 @@ const PDRTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                style={{ width: "100px" }}
+                                style={{ width: "300px" }}
                                 type="text"
                                 placeholder="Work Order"
                                 name="sworkOrder"
@@ -686,7 +683,7 @@ const PDRTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                style={{ width: "100px" }}
+                                style={{ width: "450px" }}
                                 type="text"
                                 placeholder="Unsat Findings"
                                 name="sunsatFindings"

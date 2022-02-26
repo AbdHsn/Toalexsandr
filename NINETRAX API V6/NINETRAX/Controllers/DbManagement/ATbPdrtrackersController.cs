@@ -18,7 +18,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<ATbPdrtracker> _ATbPdrtrackerContext;
-        private readonly IRawQueryRepo<ATbPdrtrackersView> _getATbPdrtrackersView;
+        private readonly IRawQueryRepo<PDRTrackersView> _getPDRTrackersView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -28,7 +28,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<ATbPdrtracker> ATbPdrtrackerContext,
-            IRawQueryRepo<ATbPdrtrackersView> getATbPdrtrackersView,
+            IRawQueryRepo<PDRTrackersView> getPDRTrackersView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -36,15 +36,15 @@ namespace NINETRAX.Controllers.DbManagement
             _ATbPdrtrackerContext = ATbPdrtrackerContext;
             _heSrv = heSrv;
             _context = context;
-            _getATbPdrtrackersView = getATbPdrtrackersView;
+            _getPDRTrackersView = getPDRTrackersView;
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
         }
         #endregion
 
         #region GetATbPdrtrackerView
-        [HttpPost("GetATbPdrtrackersView")]
-        public async Task<ActionResult<DatatableResponseGLB>> GetATbPdrtrackersView(DatatableGLB datatableGLB)
+        [HttpPost("GetPDRTrackersView")]
+        public async Task<ActionResult<DatatableResponseGLB>> GetPDRTrackersView(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
             try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
                 #endregion where-condition gathering code
 
                 #region database query code 
-                var dataGrid = await _getATbPdrtrackersView.GetAllByWhere(new GetAllByWhereGLB()
+                var dataGrid = await _getPDRTrackersView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "ATbPdrtrackersView",
+                    TableOrViewName = "PDRTrackersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "ATbPdrtrackersView",
+                    TableOrViewName = "PDRTrackersView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -136,7 +136,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region GetATbPdrtrackerAutoCompletion
-        [HttpGet("GetATbPdrtrackerAutoCompletion")]
+        [HttpGet("GetPDRTrackersViewAutoCompletion")]
         public async Task<ActionResult<IEnumerable<object>>> GetATbPdrtrackerAutoCompleteSuggestion(string column, string value)
         {
             #region Call Repository Function
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "ATbPdrtrackersView"
+                    TableOrViewName = "PDRTrackersView"
                 });
 
                 #endregion database query code
@@ -328,9 +328,9 @@ namespace NINETRAX.Controllers.DbManagement
                 #endregion where-condition gathering code
 
                 #region database query code 
-                var dataGrid = await _getATbPdrtrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
+                var dataGrid = await _getPDRTrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
                 {
-                    TableOrViewName = "ATbPdrtrackersView",
+                    TableOrViewName = "PDRTrackersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                 });
@@ -382,14 +382,14 @@ namespace NINETRAX.Controllers.DbManagement
                 }
                 //set header column width
                 excelSheet.SetColumnWidth(0, 3400);
-                excelSheet.SetColumnWidth(1, 2600);
+                excelSheet.SetColumnWidth(1, 7600);
                 excelSheet.SetColumnWidth(2, 6600);
                 excelSheet.SetColumnWidth(3, 6600);
                 excelSheet.SetColumnWidth(4, 6600);
                 excelSheet.SetColumnWidth(5, 6600);
                 excelSheet.SetColumnWidth(6, 6600);
                 excelSheet.SetColumnWidth(7, 6600);
-                excelSheet.SetColumnWidth(8, 6600);
+                excelSheet.SetColumnWidth(8, 13000);
                 excelSheet.SetColumnWidth(9, 6600);
                 excelSheet.SetColumnWidth(10, 6600);
                 excelSheet.SetColumnWidth(11, 6600);

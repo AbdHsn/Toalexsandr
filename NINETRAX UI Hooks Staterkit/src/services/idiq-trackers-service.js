@@ -4,7 +4,7 @@ import appSettings from "../app-settings.json"
 export const getIDIQTrackersView = async postData => {
   return http
     .post(
-      appSettings.BASE_URL + "/d/TbIdiqtrackers/GetTbIdiqtrackersView",
+      appSettings.BASE_URL + "/d/TbIdiqtrackers/GetIDIQTrackersView",
       postData
     )
     .catch(error => {

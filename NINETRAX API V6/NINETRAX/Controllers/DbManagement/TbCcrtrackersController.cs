@@ -1,14 +1,12 @@
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
-using DataLayer.Models.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NINETRAX.Globals;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -21,7 +19,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbCcrtracker> _TbCcrtrackerContext;
-        private readonly IRawQueryRepo<TbCcrtrackersView> _getTbCcrtrackersView;
+        private readonly IRawQueryRepo<CCRTrackersView> _getCCRTrackersView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -31,7 +29,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbCcrtracker> TbCcrtrackerContext,
-            IRawQueryRepo<TbCcrtrackersView> getTbCcrtrackersView,
+            IRawQueryRepo<CCRTrackersView> getCCRTrackersView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -39,15 +37,15 @@ namespace NINETRAX.Controllers.DbManagement
             _TbCcrtrackerContext = TbCcrtrackerContext;
             _heSrv = heSrv;
             _context = context;
-            _getTbCcrtrackersView = getTbCcrtrackersView;
+            _getCCRTrackersView = getCCRTrackersView;
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
         }
         #endregion
 
         #region GetTbCcrtrackerView
-        [HttpPost("GetTbCcrtrackersView")]
-        public async Task<ActionResult<DatatableResponseGLB>> GetTbCcrtrackersView(DatatableGLB datatableGLB)
+        [HttpPost("GetCCRTrackersView")]
+        public async Task<ActionResult<DatatableResponseGLB>> GetCCRTrackersView(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
             try
@@ -107,9 +105,9 @@ namespace NINETRAX.Controllers.DbManagement
                 #endregion where-condition gathering code
 
                 #region database query code 
-                var dataGrid = await _getTbCcrtrackersView.GetAllByWhere(new GetAllByWhereGLB()
+                var dataGrid = await _getCCRTrackersView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbCcrtrackersView",
+                    TableOrViewName = "CCRTrackersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -118,7 +116,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbCcrtrackersView",
+                    TableOrViewName = "CCRTrackersView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -139,7 +137,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region GetTbCcrtrackerAutoCompletion
-        [HttpGet("GetTbCcrtrackerAutoCompletion")]
+        [HttpGet("GetCCRTrackersViewAutoCompletion")]
         public async Task<ActionResult<IEnumerable<object>>> GetTbCcrtrackerAutoCompleteSuggestion(string column, string value)
         {
             #region Call Repository Function
@@ -155,7 +153,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbCcrtrackersView"
+                    TableOrViewName = "CCRTrackersView"
                 });
 
                 #endregion database query code
@@ -266,5 +264,174 @@ namespace NINETRAX.Controllers.DbManagement
 
         #endregion
 
+        #region Export
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ExportToExcel(DatatableGLB datatableGLB)
+        {
+            DatatableResponseGLB response = new DatatableResponseGLB();
+            try
+            {
+                int rowSize = 0;
+                if (datatableGLB.length == "All")
+                {
+                    rowSize = 0;
+                }
+                else
+                {
+                    rowSize = int.Parse(datatableGLB.length);
+                }
+
+                string searchText = default(string);
+                if (datatableGLB.search != null)
+                {
+                    searchText = datatableGLB.search.value;
+                }
+
+                #region single sort gathering code
+                string sortInformation = null;
+                if (datatableGLB.orders != null && datatableGLB.orders.Count > 0)
+                {
+                    var getSort = datatableGLB.orders.FirstOrDefault();
+                    sortInformation = getSort.column + " " + getSort.order_by;
+                }
+                else
+                {
+                    //assign default sort info base on column
+                    sortInformation = "Id DESC";
+                }
+
+
+                #endregion single sort code
+
+                #region where-condition gathering code
+                string whereConditionStatement = null;
+                if (datatableGLB != null && datatableGLB.searches.Count() > 0)
+                {
+                    foreach (var item in datatableGLB.searches)
+                    {
+
+                        if (!string.IsNullOrEmpty(item.value))
+                            whereConditionStatement += $"`{item.search_by}` = '{item.value}' AND ";
+                    }
+                    if (!string.IsNullOrEmpty(whereConditionStatement))
+                    {
+                        whereConditionStatement = whereConditionStatement.Substring(0, whereConditionStatement.Length - 4);
+                    }
+                }
+                #endregion where-condition gathering code
+
+                #region database query code 
+                var dataGrid = await _getCCRTrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
+                {
+                    TableOrViewName = "CCRTrackersView",
+                    SortColumn = sortInformation,
+                    WhereConditions = whereConditionStatement,
+                });
+
+                #endregion database query code
+
+                #region Excel data manipulating
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet excelSheet = workbook.CreateSheet("Sheet-01");
+                XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
+                style.WrapText = true;
+                //defining font...
+                IFont boldFont = workbook.CreateFont();
+                boldFont.Boldweight = (short)FontBoldWeight.Bold;
+                ICellStyle boldStyle = workbook.CreateCellStyle();
+                boldStyle.SetFont(boldFont);
+
+                //defining color...
+                boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
+                boldStyle.FillPattern = FillPattern.SolidForeground;
+
+                //defining column names
+                List<string> columnNames = new List<string>()
+                {
+                    "CCR Number",
+                    "Location",
+                    "FM Manager",
+                    "Detail Of Complaint",
+                    "PAR",
+                    "Comments",
+                    "Date Received",
+                    "Date Acknowledged",
+                    "WO Number",
+                    "Date To PAR",
+                    "Status",
+                    "Annex",
+                    "Spec Item",
+                    "Title",
+                    "Validity",
+                    "CCR Response",
+                };
+
+                //drawing header columns into excel
+                IRow row = excelSheet.CreateRow(0);
+
+                foreach (var column in columnNames)
+                {
+                    var cell = row.CreateCell(columnNames.IndexOf(column));
+                    cell.SetCellValue(column);
+                    cell.CellStyle = boldStyle;
+                }
+                //set header column width
+                excelSheet.SetColumnWidth(0, 3400);
+                excelSheet.SetColumnWidth(1, 2600);
+                excelSheet.SetColumnWidth(2, 6600);
+                excelSheet.SetColumnWidth(3, 12600);
+                excelSheet.SetColumnWidth(4, 6600);
+                excelSheet.SetColumnWidth(5, 8600);
+                excelSheet.SetColumnWidth(6, 6600);
+                excelSheet.SetColumnWidth(7, 6600);
+                excelSheet.SetColumnWidth(8, 6600);
+                excelSheet.SetColumnWidth(9, 6600);
+                excelSheet.SetColumnWidth(10, 6600);
+                excelSheet.SetColumnWidth(11, 6600);
+                excelSheet.SetColumnWidth(12, 6600);
+                excelSheet.SetColumnWidth(13, 6600);
+                excelSheet.SetColumnWidth(14, 6600);
+                excelSheet.SetColumnWidth(15, 13600);
+
+                //drawing cell data into excel
+                foreach (var item in dataGrid)
+                {
+                    row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
+
+                    //normal cell defining...
+                    row.CreateCell(0).SetCellValue(item.CCRNumber);
+                    row.CreateCell(1).SetCellValue(item.Location);
+                    row.CreateCell(2).SetCellValue(item.FMManager);
+                    row.CreateCell(3).SetCellValue(item.DetailOfComplaint);
+                    row.CreateCell(4).SetCellValue(item.Par);
+                    row.CreateCell(5).SetCellValue(item.Comments);
+                    row.CreateCell(6).SetCellValue(item.DateReceived.HasValue ? item.DateReceived.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(7).SetCellValue(item.DateAcknowledged.HasValue ? item.DateAcknowledged.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(8).SetCellValue(item.WONumber);
+                    row.CreateCell(9).SetCellValue(item.DateToPar.HasValue ? item.DateToPar.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(10).SetCellValue(item.Status);
+                    row.CreateCell(11).SetCellValue(item.Annex);
+                    row.CreateCell(12).SetCellValue(item.SpecItem);
+                    row.CreateCell(13).SetCellValue(item.Title);
+                    row.CreateCell(14).SetCellValue(item.Validity);
+                    row.CreateCell(15).SetCellValue(item.CCRResponse);
+                }
+                #endregion
+
+                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
+
+                if (prepareExcelData != null)
+                    return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "File.xlsx");
+                else
+                    return StatusCode(400, "Export data is empty");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, "Failed to export.");
+                // return null;
+            }
+        }
+
+        #endregion
     }
 }

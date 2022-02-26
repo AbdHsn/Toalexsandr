@@ -18,7 +18,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbIdiqtracker> _TbIdiqtrackerContext;
-        private readonly IRawQueryRepo<TbIdiqtrackersView> _getTbIdiqtrackersView;
+        private readonly IRawQueryRepo<IDIQTrackersView> _getIDIQTrackersView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -28,7 +28,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbIdiqtracker> TbIdiqtrackerContext,
-            IRawQueryRepo<TbIdiqtrackersView> getTbIdiqtrackersView,
+            IRawQueryRepo<IDIQTrackersView> getIDIQTrackersView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -36,15 +36,15 @@ namespace NINETRAX.Controllers.DbManagement
             _TbIdiqtrackerContext = TbIdiqtrackerContext;
             _heSrv = heSrv;
             _context = context;
-            _getTbIdiqtrackersView = getTbIdiqtrackersView;
+            _getIDIQTrackersView = getIDIQTrackersView;
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
         }
         #endregion
 
         #region GetTbIdiqtrackerView
-        [HttpPost("GetTbIdiqtrackersView")]
-        public async Task<ActionResult<DatatableResponseGLB>> GetTbIdiqtrackersView(DatatableGLB datatableGLB)
+        [HttpPost("GetIDIQTrackersView")]
+        public async Task<ActionResult<DatatableResponseGLB>> GetIDIQTrackersView(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
             try
@@ -104,9 +104,9 @@ namespace NINETRAX.Controllers.DbManagement
                 #endregion where-condition gathering code
 
                 #region database query code 
-                var dataGrid = await _getTbIdiqtrackersView.GetAllByWhere(new GetAllByWhereGLB()
+                var dataGrid = await _getIDIQTrackersView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbIdiqtrackersView",
+                    TableOrViewName = "IDIQTrackersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -115,7 +115,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbIdiqtrackersView",
+                    TableOrViewName = "IDIQTrackersView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -136,7 +136,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region GetTbIdiqtrackerAutoCompletion
-        [HttpGet("GetTbIdiqtrackerAutoCompletion")]
+        [HttpGet("GetIDIQTrackersViewAutoCompletion")]
         public async Task<ActionResult<IEnumerable<object>>> GetTbIdiqtrackerAutoCompleteSuggestion(string column, string value)
         {
             #region Call Repository Function
@@ -152,7 +152,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbIdiqtrackersView"
+                    TableOrViewName = "IDIQTrackersView"
                 });
 
                 #endregion database query code
@@ -328,9 +328,9 @@ namespace NINETRAX.Controllers.DbManagement
                 #endregion where-condition gathering code
 
                 #region database query code 
-                var dataGrid = await _getTbIdiqtrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
+                var dataGrid = await _getIDIQTrackersView.ExportAllByWhere(new ExportAllByWhereGLB()
                 {
-                    TableOrViewName = "TbIdiqtrackersView",
+                    TableOrViewName = "IDIQTrackersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                 });
@@ -380,7 +380,7 @@ namespace NINETRAX.Controllers.DbManagement
                 }
                 //set header column width
                 excelSheet.SetColumnWidth(0, 3400);
-                excelSheet.SetColumnWidth(1, 2600);
+                excelSheet.SetColumnWidth(1, 12600);
                 excelSheet.SetColumnWidth(2, 6600);
                 excelSheet.SetColumnWidth(3, 6600);
                 excelSheet.SetColumnWidth(4, 6600);
@@ -390,7 +390,7 @@ namespace NINETRAX.Controllers.DbManagement
                 excelSheet.SetColumnWidth(8, 6600);
                 excelSheet.SetColumnWidth(9, 6600);
                 excelSheet.SetColumnWidth(10, 6600);
-                excelSheet.SetColumnWidth(11, 6600);
+                excelSheet.SetColumnWidth(11, 12600);
 
                 //drawing cell data into excel
                 foreach (var item in dataGrid)

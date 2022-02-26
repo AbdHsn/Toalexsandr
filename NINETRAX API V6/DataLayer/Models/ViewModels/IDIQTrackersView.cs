@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataLayer.Models.EntityModels
 {
-    public partial class TbIdiqtrackersView
+    public partial class IDIQTrackersView
     {
         public int Id { get; set; }
         public string? WONumber { get; set; }

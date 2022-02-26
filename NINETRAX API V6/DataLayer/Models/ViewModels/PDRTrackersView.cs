@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataLayer.Models.EntityModels
 {
-    public partial class ATbPdrtrackersView
+    public partial class PDRTrackersView
     {
         public int Id { get; set; }
         public string? PDRNumber { get; set; }

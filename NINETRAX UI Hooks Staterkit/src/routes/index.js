@@ -13,6 +13,9 @@ import DirectoryName from "../pages/DirectoryName/index"
 import woInspect from "../pages/work-order-inspections/index"
 import PDRTrackersView from "../pages/pdr-trackers-view/index"
 import IDIQTrackersView from "../pages/idiq-trackers-view/index"
+import PAWTrackersView from "../pages/paw-trackers-view/index"
+import CCRTrackersView from "../pages/ccr-trackers-view/index"
+//import NCRTrackersView from "../pages/ncr-trackers-view/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -23,6 +26,9 @@ const authProtectedRoutes = [
   { path: "/wo-inspect", component: woInspect },
   { path: "/pdr-trackers", component: PDRTrackersView },
   { path: "/idiq-trackers", component: IDIQTrackersView },
+  { path: "/paw-trackers", component: PAWTrackersView },
+  { path: "/ccr-trackers", component: CCRTrackersView },
+  //{ path: "/ncr-trackers", component: NCRTrackersView },
 
   // //profile
   { path: "/profile", component: UserProfile },

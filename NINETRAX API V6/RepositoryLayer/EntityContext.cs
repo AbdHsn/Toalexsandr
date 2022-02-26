@@ -2105,14 +2105,24 @@ namespace RepositoryLayer
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<ATbPdrtrackersView>(a =>
+            modelBuilder.Entity<PDRTrackersView>(a =>
             {
-                a.ToView("ATbPdrtrackersView");
+                a.ToView("PDRTrackersView");
             });
             
-            modelBuilder.Entity<TbIdiqtrackersView>(a =>
+            modelBuilder.Entity<IDIQTrackersView>(a =>
             {
-                a.ToView("TbIdiqtrackersView");
+                a.ToView("IDIQTrackersView");
+            });
+            
+            modelBuilder.Entity<PAWTrackersView>(a =>
+            {
+                a.ToView("PAWTrackersView");
+            });
+            
+            modelBuilder.Entity<CCRTrackersView>(a =>
+            {
+                a.ToView("CCRTrackersView");
             });
 
             OnModelCreatingPartial(modelBuilder);
@@ -2168,8 +2178,10 @@ namespace RepositoryLayer
 
         #region ViewEntity
         public DbSet<TbDirectoryNamesView> TbDirectoryNamesView { get; set; }
-        public DbSet<ATbPdrtrackersView> ATbPdrtrackersView { get; set; }
-        public DbSet<TbIdiqtrackersView> TbIdiqtrackersView { get; set; }
+        public DbSet<PDRTrackersView> PDRTrackersView { get; set; }
+        public DbSet<IDIQTrackersView> IDIQTrackersView { get; set; }
+        public DbSet<PAWTrackersView> PAWTrackersView { get; set; }
+        public DbSet<CCRTrackersView> CCRTrackersView { get; set; }
         #endregion ViewEntity
 
         #region SPEntity

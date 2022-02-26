@@ -163,19 +163,19 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/paw-trackers" className="">
                 <i className="bx bx-x"></i>
                 <span>{props.t("PAW Performance Assmnt. Worksheet")}</span>
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/ccr-trackers" className="">
                 <i className="bx bx-edit"></i>
                 <span>{props.t("CCR Customer Comments Report")}</span>
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to="/ncr-trackers" className="">
                 <i className="bx bxs-report"></i>
                 <span>{props.t("NCR Non-Compliance Report")}</span>
               </Link>
