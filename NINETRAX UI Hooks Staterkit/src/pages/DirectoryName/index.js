@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react"
 import MetaTags from "react-meta-tags"
 import ReactPaginate from "react-paginate"
-//import ReactPaginate from "react-paginate"
-//import "react-pagination-js/dist/styles.css" // import css
-//redux
 import { useSelector, useDispatch } from "react-redux"
-import { isEmpty } from "lodash"
-import PropTypes from "prop-types"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import {
@@ -379,7 +374,7 @@ const DirectoryNames = props => {
                   </div>
 
                   <Modal isOpen={modal} toggle={toggle}>
-                    <ModalHeader toggle={toggle} tag="h4">
+                    <ModalHeader tag="h4">
                       {isEdit ? "Edit Directory Name" : "Add Directory Name"}
                     </ModalHeader>
                     <ModalBody>

@@ -46,7 +46,7 @@ const DeleteModal = ({ show, onDeleteClick, onCloseClick }) => {
 DeleteModal.propTypes = {
   onCloseClick: PropTypes.func,
   onDeleteClick: PropTypes.func,
-  show: PropTypes.any,
+  show: PropTypes.bool,
 }
 
 export default DeleteModal

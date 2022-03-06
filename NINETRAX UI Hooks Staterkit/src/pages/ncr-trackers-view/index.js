@@ -29,6 +29,9 @@ import {
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import NCRTrackerAddUpdate from "./add-update"
 
 const NCRTrackersView = props => {
   const [NCRTrackersViewMdl, setNCRTrackersViewMdl] = useState({})
@@ -234,6 +237,62 @@ const NCRTrackersView = props => {
     loadView()
   }
 
+  const [modal, setModal] = useState(false)
+  const [modalTitle, setModalTitle] = useState("")
+  const [directoryName, setDirectoryName] = useState({})
+  const [isEdit, setIsEdit] = useState(false)
+
+  const onNewClick = () => {
+    setModal(true)
+    setModalTitle("New NCR Tracker")
+    //toggle()
+  }
+
+  const toggle = () => {
+    if (modal) {
+      setModal(false)
+      setDirectoryName(null)
+    } else {
+      setModal(true)
+    }
+  }
+
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      personName: (directoryName && directoryName.personName) || "",
+      personTitle: (directoryName && directoryName.personTitle) || "",
+    },
+    validationSchema: Yup.object({
+      personName: Yup.string().required("Please Enter Person Name"),
+      personTitle: Yup.string().required("Please Enter Person Title"),
+    }),
+
+    onSubmit: values => {
+      if (isEdit) {
+        const update = {
+          id: directoryName ? directoryName.id : 0,
+          personName: values.personName,
+          personTitle: values.personTitle,
+        }
+        // update function
+        dispatch(onUpdateDirectoryName(update))
+        validation.resetForm()
+      } else {
+        const create = {
+          personName: values["personName"],
+          personTitle: values["personTitle"],
+        }
+        // save new function
+        dispatch(onAddNewDirectoryName(create))
+        validation.resetForm()
+      }
+      toggle()
+    },
+  })
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -284,6 +343,14 @@ const NCRTrackersView = props => {
                           })}
                         </DropdownMenu>
                       </ButtonDropdown>
+
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
 
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
@@ -876,11 +943,13 @@ const NCRTrackersView = props => {
                     </Col>
                   </Row>
 
-                  {/* <DeleteModal
-                    show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                  <NCRTrackerAddUpdate
+                    open={modal}
+                    modalTitle={modalTitle}
+                    // onCloseClick={() => setDeleteModal(false)}
+                    onSaveClick={() => {}}
+                    onCloseClick={() => {}}
+                  />
                 </CardBody>
               </Card>
             </Col>
