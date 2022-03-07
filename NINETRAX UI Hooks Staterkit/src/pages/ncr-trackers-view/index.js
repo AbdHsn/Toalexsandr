@@ -19,6 +19,7 @@ import {
   CardTitle,
   ButtonDropdown,
   Table,
+  BreadcrumbItem,
 } from "reactstrap"
 import Loader from "../../components/Common/Loader"
 import BtnExporting from "../../components/Common/BtnExporting"
@@ -238,60 +239,18 @@ const NCRTrackersView = props => {
   }
 
   const [modal, setModal] = useState(false)
-  const [modalTitle, setModalTitle] = useState("")
-  const [directoryName, setDirectoryName] = useState({})
-  const [isEdit, setIsEdit] = useState(false)
+  const [modelData, setModelData] = useState({})
 
   const onNewClick = () => {
     setModal(true)
-    setModalTitle("New NCR Tracker")
-    //toggle()
+    setModelData({})
   }
 
-  const toggle = () => {
-    if (modal) {
-      setModal(false)
-      setDirectoryName(null)
-    } else {
-      setModal(true)
-    }
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+    console.log("Edit item: ", JSON.stringify(item))
   }
-
-  const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      personName: (directoryName && directoryName.personName) || "",
-      personTitle: (directoryName && directoryName.personTitle) || "",
-    },
-    validationSchema: Yup.object({
-      personName: Yup.string().required("Please Enter Person Name"),
-      personTitle: Yup.string().required("Please Enter Person Title"),
-    }),
-
-    onSubmit: values => {
-      if (isEdit) {
-        const update = {
-          id: directoryName ? directoryName.id : 0,
-          personName: values.personName,
-          personTitle: values.personTitle,
-        }
-        // update function
-        dispatch(onUpdateDirectoryName(update))
-        validation.resetForm()
-      } else {
-        const create = {
-          personName: values["personName"],
-          personTitle: values["personTitle"],
-        }
-        // save new function
-        dispatch(onAddNewDirectoryName(create))
-        validation.resetForm()
-      }
-      toggle()
-    },
-  })
 
   return (
     <React.Fragment>
@@ -866,24 +825,27 @@ const NCRTrackersView = props => {
                                   <td>{item.responsibleSub}</td>
 
                                   <td>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
                                     {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={e =>
+                                        onDeleteConfirmation(item.id)
+                                      }
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button> */}
                                   </td>
                                 </tr>
                               )
@@ -945,10 +907,9 @@ const NCRTrackersView = props => {
 
                   <NCRTrackerAddUpdate
                     open={modal}
-                    modalTitle={modalTitle}
-                    // onCloseClick={() => setDeleteModal(false)}
+                    modelData={modelData}
                     onSaveClick={() => {}}
-                    onCloseClick={() => {}}
+                    onCancelClick={setModal}
                   />
                 </CardBody>
               </Card>
