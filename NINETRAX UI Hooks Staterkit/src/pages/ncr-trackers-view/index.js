@@ -19,7 +19,6 @@ import {
   CardTitle,
   ButtonDropdown,
   Table,
-  BreadcrumbItem,
 } from "reactstrap"
 import Loader from "../../components/Common/Loader"
 import BtnExporting from "../../components/Common/BtnExporting"
@@ -30,8 +29,6 @@ import {
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
-import { useFormik } from "formik"
-import * as Yup from "yup"
 import NCRTrackerAddUpdate from "./add-update"
 
 const NCRTrackersView = props => {
@@ -243,13 +240,11 @@ const NCRTrackersView = props => {
 
   const onNewClick = () => {
     setModal(true)
-    setModelData({})
   }
 
   const onEditClick = item => {
     setModal(true)
     setModelData(item)
-    console.log("Edit item: ", JSON.stringify(item))
   }
 
   return (
@@ -908,7 +903,9 @@ const NCRTrackersView = props => {
                   <NCRTrackerAddUpdate
                     open={modal}
                     modelData={modelData}
-                    onSaveClick={() => {}}
+                    onSaveClick={item =>
+                      console.log("onSaveClick from index called...", item)
+                    }
                     onCancelClick={setModal}
                   />
                 </CardBody>

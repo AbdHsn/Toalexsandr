@@ -12,6 +12,22 @@ export const getNCRTrackersView = async postData => {
     })
 }
 
+export const newNCRTracker = async postData => {
+  return http
+    .post(appSettings.BASE_URL + "/d/TbNcrtrackers", postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const editNCRTracker = async postData => {
+  return http
+    .post(appSettings.BASE_URL + "/d/TbNcrtrackers", postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
 export const exportNCRTrackersView = async postData => {
   return http
     .post(appSettings.BASE_URL + "/d/TbNcrtrackers/ExportToExcel", postData, {
