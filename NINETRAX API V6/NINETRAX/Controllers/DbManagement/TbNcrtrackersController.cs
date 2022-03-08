@@ -232,6 +232,12 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbNcrtracker>> CreateTbNcrtracker(TbNcrtracker objTbNcrtracker)
         {
+            var getLast = _context.TbNcrtrackers.LastOrDefaultAsync();
+            if (getLast == null)
+                objTbNcrtracker.Id = 1;
+            else
+                objTbNcrtracker.Id = getLast.Id;
+
             _context.TbNcrtrackers.Add(objTbNcrtracker);
             try
             {
