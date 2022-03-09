@@ -232,7 +232,7 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbNcrtracker>> CreateTbNcrtracker(TbNcrtracker objTbNcrtracker)
         {
-            var getLast = _context.TbNcrtrackers.LastOrDefaultAsync();
+            var getLast = _context.TbNcrtrackers.OrderByDescending(d => d.Id).FirstOrDefaultAsync();
             if (getLast == null)
                 objTbNcrtracker.Id = 1;
             else

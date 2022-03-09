@@ -12,7 +12,7 @@ export const getNCRTrackersView = async postData => {
     })
 }
 
-export const newNCRTracker = async postData => {
+export const newNCRTrackerAddUpdate = async postData => {
   return http
     .post(appSettings.BASE_URL + "/d/TbNcrtrackers", postData)
     .catch(error => {
@@ -20,7 +20,7 @@ export const newNCRTracker = async postData => {
     })
 }
 
-export const editNCRTracker = async postData => {
+export const editNCRTrackerAddUpdate = async postData => {
   return http
     .post(appSettings.BASE_URL + "/d/TbNcrtrackers", postData)
     .catch(error => {

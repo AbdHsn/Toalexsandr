@@ -1,0 +1,90 @@
+PAWTrackersView {
+id : long {@Id};
+pawNumber: string;
+location: string;
+description: string;
+par: string;
+dateReceived: date;
+dateAcknowledged: date;
+woNumber: string;
+dateToPar: date;
+status: string;
+annex: string;
+specItem: string;
+title: string;
+validity: string;
+pawResponse: string;
+}
+
+CCRTrackersView {
+id : long {@Id};
+ccrNumber: string;
+location: string;
+fmManager: string;
+detailOfComplaint: string;
+par: string;
+comments: string;
+dateReceived: date;
+dateAcknowledged: date;
+woNumber: string;
+dateToPar: date;
+status: string;
+annex: string;
+specItem: string;
+title: string;
+validity: string;
+ccrResponse: string;
+}
+
+CDRTrackersView {
+id : long {@Id};
+cdrNumber: string;
+dateReceived: date;
+discrepancy: string;
+functionalManager: string;
+responseDueDate: date;
+memoNumber: string;
+fmResponse: string;
+responseDate: date;
+dateClosed: date;
+status: string;
+notes: string;
+}
+
+NCRTrackerAddUpdate {
+id: long {@Id};
+ncrNumber: string;
+qcfrNumber: string;
+pdrNumber: string;
+woNumber: string;
+dateIssued: date;
+qcInspector: short;
+annex: short;
+specItem: short;
+title: short;
+assessmentType: short;
+nonconformanceType: short;
+nonconformanceSummary: byte;
+requirement1: byte;
+observation1: byte;
+requirement2: byte;
+observation2: byte;
+requirement3: byte;
+observation3: byte;
+requirement4: byte;
+observation4: byte;
+responsiblePersone: string;
+responsibleDiscipline: string;
+responsibleSub: string;
+dateCapDue: date;
+status:string;
+comments: byte;
+--site: string;
+}
+
+long = Number
+byte = TextArea
+short = SelectList
+string = Input
+date = DateTime picker
+boolean = checkbox

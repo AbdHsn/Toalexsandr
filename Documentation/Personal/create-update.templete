@@ -1,0 +1,336 @@
+#parse("include/init_var.vm")
+import PropTypes from "prop-types"
+import React, { useEffect, useRef, useState } from "react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import {
+  Col,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Input,
+  FormFeedback,
+  Label,
+  Form,
+} from "reactstrap"
+import {
+  new${entity.name},
+  edit${entity.name},
+} from "../../services/needToBeDefined"
+import toastr from "toastr"
+import "toastr/build/toastr.min.css"
+import BtnSaving from "../../components/Common/BtnSaving"
+const ${entity.name} = ({
+  open,
+  modelData,
+  onSaveClick,
+  onCancelClick,
+}) => {
+  useEffect(() => {
+    console.log("modal is running...", modelData)
+  }, [])
+
+  const [isSaving, setIsSaving] = useState(false)
+
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+#foreach($attribute in $entity.attributes )
+	#if($attribute.type == "long")
+      $attribute.name: (modelData && modelData.$attribute.name) || 0,
+	#end
+	#if($attribute.type == "Byte")
+      $attribute.name: (modelData && modelData.$attribute.name) || "",
+	#end
+	#if($attribute.type == "Short")
+      $attribute.name: (modelData && modelData.$attribute.name) || "",
+	#end
+	#if($attribute.type == "String")
+      $attribute.name: (modelData && modelData.$attribute.name) || "",
+	#end
+	#if($attribute.type == "Date")
+      $attribute.name: (modelData && modelData.$attribute.name) || "",
+	#end
+	#if($attribute.type == "Boolean")
+      $attribute.name: (modelData && modelData.$attribute.name) || "",
+	#end
+#end
+    },
+    validationSchema: Yup.object({
+#foreach($attribute in $entity.attributes )
+	#if($attribute.type == "long")
+      // $attribute.name: Yup.string().required("$attribute.name is required")
+	#end
+	#if($attribute.type == "Byte")
+      // $attribute.name: Yup.string().required("$attribute.name is required")
+	#end
+	#if($attribute.type == "Short")
+      // $attribute.name: Yup.string().required("$attribute.name is required")
+	#end
+	#if($attribute.type == "String")
+      // $attribute.name: Yup.string().required("$attribute.name is required")
+	#end
+	#if($attribute.type == "Date")
+      // $attribute.name: Yup.string().required("$attribute.name is required")
+	#end
+	#if($attribute.type == "Boolean")
+      // $attribute.name: Yup.string().required("$attribute.name is required")
+	#end
+#end
+    }),
+
+    onSubmit: values => {
+      console.log("add-update save..01", values)
+
+      const submitModel = {
+#foreach($attribute in $entity.attributes )
+        $attribute.name: values.$attribute.name,
+#end
+      }
+
+      if (submitModel && submitModel?.id > 0) {
+        setIsSaving(true)
+        edit${entity.name}(submitModel)
+          .then(res => {
+            console.log("submit model create response: ", res)
+            if (res.data.id > 0) {
+              toastr.success("Data successfully saved.", "NINETRAX")
+              setIsSaving(false)
+              validation.resetForm()
+              onSaveClick(res.data)
+              onCancelClick(false)
+            } else {
+              setIsSaving(false)
+              toastr.warning("Failed to save data.", "NINETRAX")
+            }
+          })
+          .catch(error => {
+            setIsSaving(false)
+            toastr.error("Failed to process data.", "NINETRAX")
+          })
+      } else {
+        setIsSaving(true)
+        new${entity.name}(submitModel)
+          .then(res => {
+            console.log("submit model update response: ", res)
+            if (res.data.id > 0) {
+              toastr.success("Data successfully saved.", "NINETRAX")
+              setIsSaving(false)
+              validation.resetForm()
+              onSaveClick(res.data)
+              onCancelClick(false)
+            } else {
+              setIsSaving(false)
+              toastr.warning("Failed to save data.", "NINETRAX")
+            }
+          })
+          .catch(error => {
+            setIsSaving(false)
+            toastr.error("Failed to process data.", "NINETRAX")
+          })
+      }
+    },
+  })
+
+  return (
+    <>
+      <Modal isOpen={open}>
+        <ModalHeader tag="h4">
+          {modelData?.id > 0 ? "Update ${entity.name}" : "New ${entity.name}"}
+        </ModalHeader>
+        <ModalBody>
+          <Form
+            onSubmit={e => {
+              e.preventDefault()
+              validation.handleSubmit()
+              return false
+            }}
+          >
+            <Row form>
+              <Col className="col-12">
+                <div className="mb-3">
+                  {/* <Label className="form-label">Id</Label> */}
+                  <Input
+                    id="id"
+                    name="id"
+                    type="number"
+                    placeholder="Id"
+                    hidden={true}
+                    defaultValue={validation.values.id || 0}
+                  />
+                </div>
+#foreach($attribute in $entity.attributes )
+	#if($attribute.type == "long")
+                <div className="mb-3">
+                  <Label className="form-label">$attribute.name</Label>
+                  <Input
+                    id="$attribute.name"
+                    name="$attribute.name"
+                    type="number"
+                    placeholder="$attribute.name"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.$attribute.name || ""}
+                    invalid={
+                      validation.touched.$attribute.name &&
+                      validation.errors.$attribute.name
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.$attribute.name &&
+                  validation.errors.$attribute.name ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.$attribute.name}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+	#end
+	#if($attribute.type == "Byte")
+                <div className="mb-3">
+                  <Label className="form-label">$attribute.name</Label>
+                  <Input
+                    id="$attribute.name"
+                    name="$attribute.name"
+                    type="textarea"
+                    placeholder="$attribute.name"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.$attribute.name || ""}
+                    invalid={
+                      validation.touched.$attribute.name &&
+                      validation.errors.$attribute.name
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.$attribute.name &&
+                  validation.errors.$attribute.name ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.$attribute.name}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+	#end
+	#if($attribute.type == "Short")		 
+  		{/* selectList */}
+	#end
+	#if($attribute.type == "String")
+                <div className="mb-3">
+                  <Label className="form-label">$attribute.name</Label>
+                  <Input
+                    id="$attribute.name"
+                    name="$attribute.name"
+                    type="text"
+                    placeholder="$attribute.name"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.$attribute.name || ""}
+                    invalid={
+                      validation.touched.$attribute.name &&
+                      validation.errors.$attribute.name
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.$attribute.name &&
+                  validation.errors.$attribute.name ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.$attribute.name}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+	#end
+	#if($attribute.type == "Date")
+                <div className="mb-3">
+                  <Label className="form-label">$attribute.name</Label>
+                  <Input
+                    id="$attribute.name"
+                    name="$attribute.name"
+                    type="date"
+  					pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="$attribute.name"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.$attribute.name || ""}
+                    invalid={
+                      validation.touched.$attribute.name &&
+                      validation.errors.$attribute.name
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.$attribute.name &&
+                  validation.errors.$attribute.name ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.$attribute.name}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+	#end
+	#if($attribute.type == "Boolean")
+    {/* checkbox */}
+	#end
+#end
+
+               
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <div className="text-end">
+                  {isSaving === true ? (
+                    <BtnSaving isSaving={isSaving} />
+                  ) : (
+                    // <button
+                    //   type="button"
+                    //   className="btn btn-outline-secondary w-xs"
+                    //   onClick={onExportClick}
+                    // >
+                    //   <i className="bx bx-file"></i> Export
+                    // </button>
+
+                    <button
+                      type="submit"
+                      className="btn btn-outline-success w-xs"
+                    >
+                      <i className="bx bx-save"></i> SAVE
+                    </button>
+                  )}{" "}
+                  <button
+                    onClick={() => postData(modelData)}
+                    type="button"
+                    className="btn btn-danger ml-5"
+                  >
+                    Test
+                  </button>
+                  <button
+                    onClick={() => onCancelClick(false)}
+                    type="button"
+                    className="btn btn-danger ml-5"
+                  >
+                    CANCEL
+                  </button>
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </>
+  )
+}
+
+${entity.name}.propTypes = {
+  onSaveClick: PropTypes.func,
+  onCancelClick: PropTypes.func,
+  open: PropTypes.bool,
+  modelData: PropTypes.object,
+}
+
+export default ${entity.name}

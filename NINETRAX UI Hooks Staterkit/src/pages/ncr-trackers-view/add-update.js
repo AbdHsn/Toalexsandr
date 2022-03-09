@@ -14,8 +14,8 @@ import {
   Form,
 } from "reactstrap"
 import {
-  newNCRTracker,
-  editNCRTracker,
+  newNCRTrackerAddUpdate,
+  editNCRTrackerAddUpdate,
 } from "../../services/ncr-trackers-service"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
@@ -38,41 +38,63 @@ const NCRTrackerAddUpdate = ({
 
     initialValues: {
       id: (modelData && modelData.id) || 0,
-      site: (modelData && modelData.site) || "",
       ncrNumber: (modelData && modelData.ncrNumber) || "",
       qcfrNumber: (modelData && modelData.qcfrNumber) || "",
       pdrNumber: (modelData && modelData.pdrNumber) || "",
       woNumber: (modelData && modelData.woNumber) || "",
       dateIssued: (modelData && modelData.dateIssued) || "",
       qcInspector: (modelData && modelData.qcInspector) || "",
-      nonconformanceSummary:
-        (modelData && modelData.nonconformanceSummary) || "",
       annex: (modelData && modelData.annex) || "",
       specItem: (modelData && modelData.specItem) || "",
       title: (modelData && modelData.title) || "",
-      dateCAPDue: (modelData && modelData.dateCAPDue) || "",
-      status: (modelData && modelData.status) || "",
-      responsiblePerson: (modelData && modelData.responsiblePerson) || "",
+      assessmentType: (modelData && modelData.assessmentType) || "",
+      nonconformanceType: (modelData && modelData.nonconformanceType) || "",
+      nonconformanceSummary:
+        (modelData && modelData.nonconformanceSummary) || "",
+      requirement1: (modelData && modelData.requirement1) || "",
+      observation1: (modelData && modelData.observation1) || "",
+      requirement2: (modelData && modelData.requirement2) || "",
+      observation2: (modelData && modelData.observation2) || "",
+      requirement3: (modelData && modelData.requirement3) || "",
+      observation3: (modelData && modelData.observation3) || "",
+      requirement4: (modelData && modelData.requirement4) || "",
+      observation4: (modelData && modelData.observation4) || "",
+      responsiblePersone: (modelData && modelData.responsiblePersone) || "",
+      responsibleDiscipline:
+        (modelData && modelData.responsibleDiscipline) || "",
       responsibleSub: (modelData && modelData.responsibleSub) || "",
+      dateCapDue: (modelData && modelData.dateCapDue) || "",
+      status: (modelData && modelData.status) || "",
+      comments: (modelData && modelData.comments) || "",
     },
     validationSchema: Yup.object({
-      // ncrNumber: Yup.string().required("NCR Number is required"),
-      // pdrNumber: Yup.string().required("PDR Number is required"),
-      // woNumber: Yup.string().required("WO Number is required"),
-      // dateIssued: Yup.string().required("Date Issued is required"),
-      // qcInspector: Yup.string().required("QC Inspector is required"),
-      // nonConformanceSummary: Yup.string().required(
-      //   "Non Conformance Summary is required"
-      // ),
-      // dateCAPDue: Yup.string().required("Date CAP Due is required"),
-      // status: Yup.string().required("Status is required"),
-      // annex: Yup.string().required("Annex is required"),
-      // specItem: Yup.string().required("Spec Item is required"),
-      // title: Yup.string().required("Title is required"),
-      // responsiblePerson: Yup.string().required(
-      //   "Responsible Person is required"
-      // ),
-      // responsibleSub: Yup.string().required("Responsible Sub is required"),
+      // id: Yup.string().required("id is required")
+      // ncrNumber: Yup.string().required("ncrNumber is required")
+      // qcfrNumber: Yup.string().required("qcfrNumber is required")
+      // pdrNumber: Yup.string().required("pdrNumber is required")
+      // woNumber: Yup.string().required("woNumber is required")
+      // dateIssued: Yup.string().required("dateIssued is required")
+      // qcInspector: Yup.string().required("qcInspector is required")
+      // annex: Yup.string().required("annex is required")
+      // specItem: Yup.string().required("specItem is required")
+      // title: Yup.string().required("title is required")
+      // assessmentType: Yup.string().required("assessmentType is required")
+      // nonconformanceType: Yup.string().required("nonconformanceType is required")
+      // nonconformanceSummary: Yup.string().required("nonconformanceSummary is required")
+      // requirement1: Yup.string().required("requirement1 is required")
+      // observation1: Yup.string().required("observation1 is required")
+      // requirement2: Yup.string().required("requirement2 is required")
+      // observation2: Yup.string().required("observation2 is required")
+      // requirement3: Yup.string().required("requirement3 is required")
+      // observation3: Yup.string().required("observation3 is required")
+      // requirement4: Yup.string().required("requirement4 is required")
+      // observation4: Yup.string().required("observation4 is required")
+      // responsiblePersone: Yup.string().required("responsiblePersone is required")
+      // responsibleDiscipline: Yup.string().required("responsibleDiscipline is required")
+      // responsibleSub: Yup.string().required("responsibleSub is required")
+      // dateCapDue: Yup.string().required("dateCapDue is required")
+      // status: Yup.string().required("status is required")
+      // comments: Yup.string().required("comments is required")
     }),
 
     onSubmit: values => {
@@ -81,6 +103,7 @@ const NCRTrackerAddUpdate = ({
       const submitModel = {
         id: values.id,
         ncrNumber: values.ncrNumber,
+        qcfrNumber: values.qcfrNumber,
         pdrNumber: values.pdrNumber,
         woNumber: values.woNumber,
         dateIssued: values.dateIssued,
@@ -88,16 +111,30 @@ const NCRTrackerAddUpdate = ({
         annex: values.annex,
         specItem: values.specItem,
         title: values.title,
-        nonConformanceSummary: values.nonConformanceSummary,
-        dateCAPDue: values.dateCAPDue,
+        assessmentType: values.assessmentType,
+        nonconformanceType: values.nonconformanceType,
+        nonconformanceSummary: values.nonconformanceSummary,
+        requirement1: values.requirement1,
+        observation1: values.observation1,
+        requirement2: values.requirement2,
+        observation2: values.observation2,
+        requirement3: values.requirement3,
+        observation3: values.observation3,
+        requirement4: values.requirement4,
+        observation4: values.observation4,
+        responsiblePersone: values.responsiblePersone,
+        responsibleDiscipline: values.responsibleDiscipline,
+        responsibleSub: values.responsibleSub,
+        dateCapDue: values.dateCapDue,
         status: values.status,
+        comments: values.comments,
       }
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
-        editNCRTracker(submitModel)
+        editNCRTrackerAddUpdate(submitModel)
           .then(res => {
-            console.log("add res", res)
+            console.log("submit model create response: ", res)
             if (res.data.id > 0) {
               toastr.success("Data successfully saved.", "NINETRAX")
               setIsSaving(false)
@@ -115,9 +152,9 @@ const NCRTrackerAddUpdate = ({
           })
       } else {
         setIsSaving(true)
-        newNCRTracker(submitModel)
+        newNCRTrackerAddUpdate(submitModel)
           .then(res => {
-            console.log("add res", res)
+            console.log("submit model update response: ", res)
             if (res.data.id > 0) {
               toastr.success("Data successfully saved.", "NINETRAX")
               setIsSaving(false)
@@ -137,68 +174,13 @@ const NCRTrackerAddUpdate = ({
     },
   })
 
-  const postData = item => {
-    console.log("add-update save..03", validation.values)
-
-    let data = {
-      id: 12,
-      site: "Site o1 test",
-      ncrNumber: "string",
-      qcfrNumber: "string",
-      pdrNumber: "string",
-      woNumber: "string",
-      dateIssued: "2022-03-07T12:00:38.603Z",
-      qcInspector: "string",
-      nonconformanceSummary: "string",
-      annex: "string",
-      specItem: "string",
-      title: "string",
-      assessmentType: "string",
-      nonconformanceType: "string",
-      requirement1: "string",
-      observation1: "string",
-      requirement2: "string",
-      observation2: "string",
-      requirement3: "string",
-      observation3: "string",
-      requirement4: "string",
-      observation4: "string",
-      responsiblePersone: "string",
-      responsibleDiscipline: "string",
-      responsibleSub: "string",
-      dateCapDue: "2022-03-07T12:00:38.603Z",
-      comments: "string",
-      status: "string",
-    }
-
-    setIsSaving(true)
-    newNCRTracker(data)
-      .then(res => {
-        console.log("add res", res)
-        if (res.data.id > 0) {
-          toastr.success("Data successfully saved.", "NINETRAX")
-          setIsSaving(false)
-          validation.resetForm()
-          onSaveClick(res.data)
-          onCancelClick(false)
-        } else {
-          setIsSaving(false)
-          toastr.warning("Failed to save data.", "NINETRAX")
-        }
-      })
-      .catch(error => {
-        setIsSaving(false)
-        toastr.error("Failed to process data.", "NINETRAX")
-      })
-    //validation.resetForm()
-    //toggle()
-  }
-
   return (
     <>
       <Modal isOpen={open}>
         <ModalHeader tag="h4">
-          {modelData?.id > 0 ? "Update NCR Tracker" : "New NCR Tracker"}
+          {modelData?.id > 0
+            ? "Update NCRTrackerAddUpdate"
+            : "New NCRTrackerAddUpdate"}
         </ModalHeader>
         <ModalBody>
           <Form
@@ -215,20 +197,41 @@ const NCRTrackerAddUpdate = ({
                   <Input
                     id="id"
                     name="id"
-                    type="text"
+                    type="number"
                     placeholder="Id"
                     hidden={true}
                     defaultValue={validation.values.id || 0}
                   />
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">NCR Number</Label>
+                  <Label className="form-label">id</Label>
+                  <Input
+                    id="id"
+                    name="id"
+                    type="number"
+                    placeholder="id"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.id || ""}
+                    invalid={
+                      validation.touched.id && validation.errors.id
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.id && validation.errors.id ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">ncrNumber</Label>
                   <Input
                     id="ncrNumber"
                     name="ncrNumber"
                     type="text"
-                    placeholder="NCR Number"
+                    placeholder="ncrNumber"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.ncrNumber || ""}
@@ -246,14 +249,37 @@ const NCRTrackerAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">PDR Number</Label>
+                  <Label className="form-label">qcfrNumber</Label>
+                  <Input
+                    id="qcfrNumber"
+                    name="qcfrNumber"
+                    type="text"
+                    placeholder="qcfrNumber"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.qcfrNumber || ""}
+                    invalid={
+                      validation.touched.qcfrNumber &&
+                      validation.errors.qcfrNumber
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.qcfrNumber &&
+                  validation.errors.qcfrNumber ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.qcfrNumber}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">pdrNumber</Label>
                   <Input
                     id="pdrNumber"
                     name="pdrNumber"
                     type="text"
-                    placeholder="PDR Number"
+                    placeholder="pdrNumber"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pdrNumber || ""}
@@ -271,14 +297,13 @@ const NCRTrackerAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">WO Number</Label>
+                  <Label className="form-label">woNumber</Label>
                   <Input
                     id="woNumber"
                     name="woNumber"
                     type="text"
-                    placeholder="WO Number"
+                    placeholder="woNumber"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.woNumber || ""}
@@ -294,14 +319,14 @@ const NCRTrackerAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">Date Issued</Label>
+                  <Label className="form-label">dateIssued</Label>
                   <Input
                     id="dateIssued"
                     name="dateIssued"
                     type="date"
                     pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="dateIssued"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.dateIssued || ""}
@@ -319,120 +344,301 @@ const NCRTrackerAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
-
+                {/* selectList */}
+                {/* selectList */}
+                {/* selectList */}
+                {/* selectList */}
+                {/* selectList */}
+                {/* selectList */}
                 <div className="mb-3">
-                  <Label className="form-label">QC Inspector</Label>
+                  <Label className="form-label">nonconformanceSummary</Label>
                   <Input
-                    id="qcInspector"
-                    name="qcInspector"
-                    type="text"
-                    placeholder="QC Inspector"
+                    id="nonconformanceSummary"
+                    name="nonconformanceSummary"
+                    type="textarea"
+                    placeholder="nonconformanceSummary"
+                    maxLength="225"
+                    rows="3"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.qcInspector || ""}
+                    value={validation.values.nonconformanceSummary || ""}
                     invalid={
-                      validation.touched.qcInspector &&
-                      validation.errors.qcInspector
+                      validation.touched.nonconformanceSummary &&
+                      validation.errors.nonconformanceSummary
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.qcInspector &&
-                  validation.errors.qcInspector ? (
+                  {validation.touched.nonconformanceSummary &&
+                  validation.errors.nonconformanceSummary ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.qcInspector}
+                      {validation.errors.nonconformanceSummary}
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">Annex</Label>
-                  {/* <Select
-                    placeholder="Select Annex"
-                    value={data.find(obj => obj.value === annexSelectValue)} // set selected value
-                    options={data} // set list of the data
-                    onChange={value => console.log("change!", value)} // assign onChange function
-                  /> */}
-                </div>
-
-                <div className="mb-3">
-                  <Label className="form-label">Spec Item</Label>
+                  <Label className="form-label">requirement1</Label>
                   <Input
-                    id="specItem"
-                    name="specItem"
-                    type="text"
-                    placeholder="Spec Item"
+                    id="requirement1"
+                    name="requirement1"
+                    type="textarea"
+                    placeholder="requirement1"
+                    maxLength="225"
+                    rows="3"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.specItem || ""}
+                    value={validation.values.requirement1 || ""}
                     invalid={
-                      validation.touched.specItem && validation.errors.specItem
+                      validation.touched.requirement1 &&
+                      validation.errors.requirement1
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.specItem && validation.errors.specItem ? (
+                  {validation.touched.requirement1 &&
+                  validation.errors.requirement1 ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.specItem}
+                      {validation.errors.requirement1}
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">Title</Label>
+                  <Label className="form-label">observation1</Label>
                   <Input
-                    id="title"
-                    name="title"
-                    type="text"
-                    placeholder="Title"
+                    id="observation1"
+                    name="observation1"
+                    type="textarea"
+                    placeholder="observation1"
+                    maxLength="225"
+                    rows="3"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.title || ""}
+                    value={validation.values.observation1 || ""}
                     invalid={
-                      validation.touched.title && validation.errors.title
+                      validation.touched.observation1 &&
+                      validation.errors.observation1
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.title && validation.errors.title ? (
+                  {validation.touched.observation1 &&
+                  validation.errors.observation1 ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.title}
+                      {validation.errors.observation1}
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">Responsible Person</Label>
+                  <Label className="form-label">requirement2</Label>
                   <Input
-                    id="responsiblePerson"
-                    name="responsiblePerson"
-                    type="text"
-                    placeholder="Responsible Person"
+                    id="requirement2"
+                    name="requirement2"
+                    type="textarea"
+                    placeholder="requirement2"
+                    maxLength="225"
+                    rows="3"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.responsiblePerson || ""}
+                    value={validation.values.requirement2 || ""}
                     invalid={
-                      validation.touched.responsiblePerson &&
-                      validation.errors.responsiblePerson
+                      validation.touched.requirement2 &&
+                      validation.errors.requirement2
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.responsiblePerson &&
-                  validation.errors.responsiblePerson ? (
+                  {validation.touched.requirement2 &&
+                  validation.errors.requirement2 ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.responsiblePerson}
+                      {validation.errors.requirement2}
                     </FormFeedback>
                   ) : null}
                 </div>
-
                 <div className="mb-3">
-                  <Label className="form-label">Responsible Sub</Label>
+                  <Label className="form-label">observation2</Label>
+                  <Input
+                    id="observation2"
+                    name="observation2"
+                    type="textarea"
+                    placeholder="observation2"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.observation2 || ""}
+                    invalid={
+                      validation.touched.observation2 &&
+                      validation.errors.observation2
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.observation2 &&
+                  validation.errors.observation2 ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.observation2}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">requirement3</Label>
+                  <Input
+                    id="requirement3"
+                    name="requirement3"
+                    type="textarea"
+                    placeholder="requirement3"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.requirement3 || ""}
+                    invalid={
+                      validation.touched.requirement3 &&
+                      validation.errors.requirement3
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.requirement3 &&
+                  validation.errors.requirement3 ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.requirement3}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">observation3</Label>
+                  <Input
+                    id="observation3"
+                    name="observation3"
+                    type="textarea"
+                    placeholder="observation3"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.observation3 || ""}
+                    invalid={
+                      validation.touched.observation3 &&
+                      validation.errors.observation3
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.observation3 &&
+                  validation.errors.observation3 ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.observation3}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">requirement4</Label>
+                  <Input
+                    id="requirement4"
+                    name="requirement4"
+                    type="textarea"
+                    placeholder="requirement4"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.requirement4 || ""}
+                    invalid={
+                      validation.touched.requirement4 &&
+                      validation.errors.requirement4
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.requirement4 &&
+                  validation.errors.requirement4 ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.requirement4}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">observation4</Label>
+                  <Input
+                    id="observation4"
+                    name="observation4"
+                    type="textarea"
+                    placeholder="observation4"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.observation4 || ""}
+                    invalid={
+                      validation.touched.observation4 &&
+                      validation.errors.observation4
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.observation4 &&
+                  validation.errors.observation4 ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.observation4}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">responsiblePersone</Label>
+                  <Input
+                    id="responsiblePersone"
+                    name="responsiblePersone"
+                    type="text"
+                    placeholder="responsiblePersone"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.responsiblePersone || ""}
+                    invalid={
+                      validation.touched.responsiblePersone &&
+                      validation.errors.responsiblePersone
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.responsiblePersone &&
+                  validation.errors.responsiblePersone ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.responsiblePersone}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">responsibleDiscipline</Label>
+                  <Input
+                    id="responsibleDiscipline"
+                    name="responsibleDiscipline"
+                    type="text"
+                    placeholder="responsibleDiscipline"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.responsibleDiscipline || ""}
+                    invalid={
+                      validation.touched.responsibleDiscipline &&
+                      validation.errors.responsibleDiscipline
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.responsibleDiscipline &&
+                  validation.errors.responsibleDiscipline ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.responsibleDiscipline}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">responsibleSub</Label>
                   <Input
                     id="responsibleSub"
                     name="responsibleSub"
                     type="text"
-                    placeholder="ResponsibleSub"
+                    placeholder="responsibleSub"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.responsibleSub || ""}
@@ -447,6 +653,77 @@ const NCRTrackerAddUpdate = ({
                   validation.errors.responsibleSub ? (
                     <FormFeedback type="invalid">
                       {validation.errors.responsibleSub}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">dateCapDue</Label>
+                  <Input
+                    id="dateCapDue"
+                    name="dateCapDue"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="dateCapDue"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.dateCapDue || ""}
+                    invalid={
+                      validation.touched.dateCapDue &&
+                      validation.errors.dateCapDue
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.dateCapDue &&
+                  validation.errors.dateCapDue ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.dateCapDue}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">status</Label>
+                  <Input
+                    id="status"
+                    name="status"
+                    type="text"
+                    placeholder="status"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.status || ""}
+                    invalid={
+                      validation.touched.status && validation.errors.status
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.status && validation.errors.status ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.status}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">comments</Label>
+                  <Input
+                    id="comments"
+                    name="comments"
+                    type="textarea"
+                    placeholder="comments"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.comments || ""}
+                    invalid={
+                      validation.touched.comments && validation.errors.comments
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.comments && validation.errors.comments ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.comments}
                     </FormFeedback>
                   ) : null}
                 </div>
