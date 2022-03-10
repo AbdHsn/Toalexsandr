@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import React, { useEffect, useRef, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import Select from "react-select";
 import {
   Col,
   Row,
@@ -27,11 +28,19 @@ const ${entity.name} = ({
   onSaveClick,
   onCancelClick,
 }) => {
+
   useEffect(() => {
     console.log("modal is running...", modelData)
   }, [])
 
   const [isSaving, setIsSaving] = useState(false)
+
+#foreach($attribute in $entity.attributes )
+	#if($attribute.type == "Short")
+  const [_$attribute.name+Selected, set_$attribute.name+Selected] = useState(null)
+  const [_$attribute.name+SelectItems, set_$attribute.name+SelectItems] = useState([])
+	#end
+#end
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -52,32 +61,32 @@ const ${entity.name} = ({
       $attribute.name: (modelData && modelData.$attribute.name) || "",
 	#end
 	#if($attribute.type == "Date")
-      $attribute.name: (modelData && modelData.$attribute.name) || "",
+      $attribute.name: (modelData && modelData.$attribute.name) || null,
 	#end
 	#if($attribute.type == "Boolean")
-      $attribute.name: (modelData && modelData.$attribute.name) || "",
+      $attribute.name: (modelData && modelData.$attribute.name) || false,
 	#end
 #end
     },
     validationSchema: Yup.object({
 #foreach($attribute in $entity.attributes )
 	#if($attribute.type == "long")
-      // $attribute.name: Yup.string().required("$attribute.name is required")
+      // $attribute.name: Yup.string().required("$attribute.name is required"),
 	#end
 	#if($attribute.type == "Byte")
-      // $attribute.name: Yup.string().required("$attribute.name is required")
+      // $attribute.name: Yup.string().required("$attribute.name is required"),
 	#end
 	#if($attribute.type == "Short")
-      // $attribute.name: Yup.string().required("$attribute.name is required")
+      // $attribute.name: Yup.string().required("$attribute.name is required"),
 	#end
 	#if($attribute.type == "String")
-      // $attribute.name: Yup.string().required("$attribute.name is required")
+      // $attribute.name: Yup.string().required("$attribute.name is required"),
 	#end
 	#if($attribute.type == "Date")
-      // $attribute.name: Yup.string().required("$attribute.name is required")
+      // $attribute.name: Yup.string().required("$attribute.name is required"),
 	#end
 	#if($attribute.type == "Boolean")
-      // $attribute.name: Yup.string().required("$attribute.name is required")
+      // $attribute.name: Yup.string().required("$attribute.name is required"),
 	#end
 #end
     }),
@@ -87,7 +96,11 @@ const ${entity.name} = ({
 
       const submitModel = {
 #foreach($attribute in $entity.attributes )
-        $attribute.name: values.$attribute.name,
+    #if ($attribute.type == "Short")
+		$attribute.name: _$attribute.name+Selected,
+    #else
+    	$attribute.name: values.$attribute.name,
+    #end
 #end
       }
 
@@ -151,6 +164,9 @@ const ${entity.name} = ({
           >
             <Row form>
               <Col className="col-12">
+#foreach($attribute in $entity.attributes )
+	#if($attribute.type == "long")
+			#if($attribute.name == "id")
                 <div className="mb-3">
                   {/* <Label className="form-label">Id</Label> */}
                   <Input
@@ -162,8 +178,7 @@ const ${entity.name} = ({
                     defaultValue={validation.values.id || 0}
                   />
                 </div>
-#foreach($attribute in $entity.attributes )
-	#if($attribute.type == "long")
+			    #else
                 <div className="mb-3">
                   <Label className="form-label">$attribute.name</Label>
                   <Input
@@ -188,6 +203,7 @@ const ${entity.name} = ({
                     </FormFeedback>
                   ) : null}
                 </div>
+			#end
 	#end
 	#if($attribute.type == "Byte")
                 <div className="mb-3">
@@ -218,7 +234,32 @@ const ${entity.name} = ({
                 </div>
 	#end
 	#if($attribute.type == "Short")		 
-  		{/* selectList */}
+   				<div className="mb-3">
+                  <Label>$attribute.name</Label>
+                  <Select
+                    id="$attribute.name"
+                    name="$attribute.name"
+                    type="text"
+                    onChange={e => {
+                      set_$attribute.name+Selected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_$attribute.name+SelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select $attribute.name"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.$attribute.name && validation.errors.$attribute.name ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.$attribute.name}
+                    </FormFeedback>
+                  ) : null}
+                </div>
 	#end
 	#if($attribute.type == "String")
                 <div className="mb-3">
@@ -287,14 +328,6 @@ const ${entity.name} = ({
                   {isSaving === true ? (
                     <BtnSaving isSaving={isSaving} />
                   ) : (
-                    // <button
-                    //   type="button"
-                    //   className="btn btn-outline-secondary w-xs"
-                    //   onClick={onExportClick}
-                    // >
-                    //   <i className="bx bx-file"></i> Export
-                    // </button>
-
                     <button
                       type="submit"
                       className="btn btn-outline-success w-xs"
@@ -302,13 +335,6 @@ const ${entity.name} = ({
                       <i className="bx bx-save"></i> SAVE
                     </button>
                   )}{" "}
-                  <button
-                    onClick={() => postData(modelData)}
-                    type="button"
-                    className="btn btn-danger ml-5"
-                  >
-                    Test
-                  </button>
                   <button
                     onClick={() => onCancelClick(false)}
                     type="button"

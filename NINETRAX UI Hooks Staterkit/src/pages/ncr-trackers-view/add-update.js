@@ -2,6 +2,7 @@ import PropTypes from "prop-types"
 import React, { useEffect, useRef, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import Select from "react-select"
 import {
   Col,
   Row,
@@ -32,6 +33,23 @@ const NCRTrackerAddUpdate = ({
 
   const [isSaving, setIsSaving] = useState(false)
 
+  const [_qcInspectorSelected, set_qcInspectorSelected] = useState(null)
+  const [_qcInspectorSelectItems, set_qcInspectorSelectItems] = useState([])
+  const [_annexSelected, set_annexSelected] = useState(null)
+  const [_annexSelectItems, set_annexSelectItems] = useState([])
+  const [_specItemSelected, set_specItemSelected] = useState(null)
+  const [_specItemSelectItems, set_specItemSelectItems] = useState([])
+  const [_titleSelected, set_titleSelected] = useState(null)
+  const [_titleSelectItems, set_titleSelectItems] = useState([])
+  const [_assessmentTypeSelected, set_assessmentTypeSelected] = useState(null)
+  const [_assessmentTypeSelectItems, set_assessmentTypeSelectItems] = useState(
+    []
+  )
+  const [_nonconformanceTypeSelected, set_nonconformanceTypeSelected] =
+    useState(null)
+  const [_nonconformanceTypeSelectItems, set_nonconformanceTypeSelectItems] =
+    useState([])
+
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -42,7 +60,7 @@ const NCRTrackerAddUpdate = ({
       qcfrNumber: (modelData && modelData.qcfrNumber) || "",
       pdrNumber: (modelData && modelData.pdrNumber) || "",
       woNumber: (modelData && modelData.woNumber) || "",
-      dateIssued: (modelData && modelData.dateIssued) || "",
+      dateIssued: (modelData && modelData.dateIssued) || null,
       qcInspector: (modelData && modelData.qcInspector) || "",
       annex: (modelData && modelData.annex) || "",
       specItem: (modelData && modelData.specItem) || "",
@@ -63,38 +81,38 @@ const NCRTrackerAddUpdate = ({
       responsibleDiscipline:
         (modelData && modelData.responsibleDiscipline) || "",
       responsibleSub: (modelData && modelData.responsibleSub) || "",
-      dateCapDue: (modelData && modelData.dateCapDue) || "",
+      dateCapDue: (modelData && modelData.dateCapDue) || null,
       status: (modelData && modelData.status) || "",
       comments: (modelData && modelData.comments) || "",
     },
     validationSchema: Yup.object({
-      // id: Yup.string().required("id is required")
-      // ncrNumber: Yup.string().required("ncrNumber is required")
-      // qcfrNumber: Yup.string().required("qcfrNumber is required")
-      // pdrNumber: Yup.string().required("pdrNumber is required")
-      // woNumber: Yup.string().required("woNumber is required")
-      // dateIssued: Yup.string().required("dateIssued is required")
-      // qcInspector: Yup.string().required("qcInspector is required")
-      // annex: Yup.string().required("annex is required")
-      // specItem: Yup.string().required("specItem is required")
-      // title: Yup.string().required("title is required")
-      // assessmentType: Yup.string().required("assessmentType is required")
-      // nonconformanceType: Yup.string().required("nonconformanceType is required")
-      // nonconformanceSummary: Yup.string().required("nonconformanceSummary is required")
-      // requirement1: Yup.string().required("requirement1 is required")
-      // observation1: Yup.string().required("observation1 is required")
-      // requirement2: Yup.string().required("requirement2 is required")
-      // observation2: Yup.string().required("observation2 is required")
-      // requirement3: Yup.string().required("requirement3 is required")
-      // observation3: Yup.string().required("observation3 is required")
-      // requirement4: Yup.string().required("requirement4 is required")
-      // observation4: Yup.string().required("observation4 is required")
-      // responsiblePersone: Yup.string().required("responsiblePersone is required")
-      // responsibleDiscipline: Yup.string().required("responsibleDiscipline is required")
-      // responsibleSub: Yup.string().required("responsibleSub is required")
-      // dateCapDue: Yup.string().required("dateCapDue is required")
-      // status: Yup.string().required("status is required")
-      // comments: Yup.string().required("comments is required")
+      // id: Yup.string().required("id is required"),
+      // ncrNumber: Yup.string().required("ncrNumber is required"),
+      // qcfrNumber: Yup.string().required("qcfrNumber is required"),
+      // pdrNumber: Yup.string().required("pdrNumber is required"),
+      // woNumber: Yup.string().required("woNumber is required"),
+      // dateIssued: Yup.string().required("dateIssued is required"),
+      // qcInspector: Yup.string().required("qcInspector is required"),
+      // annex: Yup.string().required("annex is required"),
+      // specItem: Yup.string().required("specItem is required"),
+      // title: Yup.string().required("title is required"),
+      // assessmentType: Yup.string().required("assessmentType is required"),
+      // nonconformanceType: Yup.string().required("nonconformanceType is required"),
+      // nonconformanceSummary: Yup.string().required("nonconformanceSummary is required"),
+      // requirement1: Yup.string().required("requirement1 is required"),
+      // observation1: Yup.string().required("observation1 is required"),
+      // requirement2: Yup.string().required("requirement2 is required"),
+      // observation2: Yup.string().required("observation2 is required"),
+      // requirement3: Yup.string().required("requirement3 is required"),
+      // observation3: Yup.string().required("observation3 is required"),
+      // requirement4: Yup.string().required("requirement4 is required"),
+      // observation4: Yup.string().required("observation4 is required"),
+      // responsiblePersone: Yup.string().required("responsiblePersone is required"),
+      // responsibleDiscipline: Yup.string().required("responsibleDiscipline is required"),
+      // responsibleSub: Yup.string().required("responsibleSub is required"),
+      // dateCapDue: Yup.string().required("dateCapDue is required"),
+      // status: Yup.string().required("status is required"),
+      // comments: Yup.string().required("comments is required"),
     }),
 
     onSubmit: values => {
@@ -107,12 +125,12 @@ const NCRTrackerAddUpdate = ({
         pdrNumber: values.pdrNumber,
         woNumber: values.woNumber,
         dateIssued: values.dateIssued,
-        qcInspector: values.qcInspector,
-        annex: values.annex,
-        specItem: values.specItem,
-        title: values.title,
-        assessmentType: values.assessmentType,
-        nonconformanceType: values.nonconformanceType,
+        qcInspector: _qcInspectorSelected,
+        annex: _annexSelected,
+        specItem: _specItemSelected,
+        title: _titleSelected,
+        assessmentType: _assessmentTypeSelected,
+        nonconformanceType: _nonconformanceTypeSelected,
         nonconformanceSummary: values.nonconformanceSummary,
         requirement1: values.requirement1,
         observation1: values.observation1,
@@ -202,28 +220,6 @@ const NCRTrackerAddUpdate = ({
                     hidden={true}
                     defaultValue={validation.values.id || 0}
                   />
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">id</Label>
-                  <Input
-                    id="id"
-                    name="id"
-                    type="number"
-                    placeholder="id"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.id || ""}
-                    invalid={
-                      validation.touched.id && validation.errors.id
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.id && validation.errors.id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.id}
-                    </FormFeedback>
-                  ) : null}
                 </div>
                 <div className="mb-3">
                   <Label className="form-label">ncrNumber</Label>
@@ -344,12 +340,165 @@ const NCRTrackerAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
-                {/* selectList */}
-                {/* selectList */}
-                {/* selectList */}
-                {/* selectList */}
-                {/* selectList */}
-                {/* selectList */}
+                <div className="mb-3">
+                  <Label>qcInspector</Label>
+                  <Select
+                    id="qcInspector"
+                    name="qcInspector"
+                    type="text"
+                    onChange={e => {
+                      set_qcInspectorSelected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_qcInspectorSelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select qcInspector"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.qcInspector &&
+                  validation.errors.qcInspector ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.qcInspector}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>annex</Label>
+                  <Select
+                    id="annex"
+                    name="annex"
+                    type="text"
+                    onChange={e => {
+                      set_annexSelected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_annexSelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select annex"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.annex && validation.errors.annex ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.annex}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>specItem</Label>
+                  <Select
+                    id="specItem"
+                    name="specItem"
+                    type="text"
+                    onChange={e => {
+                      set_specItemSelected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_specItemSelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select specItem"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.specItem && validation.errors.specItem ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.specItem}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>title</Label>
+                  <Select
+                    id="title"
+                    name="title"
+                    type="text"
+                    onChange={e => {
+                      set_titleSelected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_titleSelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select title"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.title && validation.errors.title ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.title}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>assessmentType</Label>
+                  <Select
+                    id="assessmentType"
+                    name="assessmentType"
+                    type="text"
+                    onChange={e => {
+                      set_assessmentTypeSelected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_assessmentTypeSelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select assessmentType"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.assessmentType &&
+                  validation.errors.assessmentType ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.assessmentType}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>nonconformanceType</Label>
+                  <Select
+                    id="nonconformanceType"
+                    name="nonconformanceType"
+                    type="text"
+                    onChange={e => {
+                      set_nonconformanceTypeSelected(e.value)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_nonconformanceTypeSelectItems}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select nonconformanceType"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.nonconformanceType &&
+                  validation.errors.nonconformanceType ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.nonconformanceType}
+                    </FormFeedback>
+                  ) : null}
+                </div>
                 <div className="mb-3">
                   <Label className="form-label">nonconformanceSummary</Label>
                   <Input
@@ -735,14 +884,6 @@ const NCRTrackerAddUpdate = ({
                   {isSaving === true ? (
                     <BtnSaving isSaving={isSaving} />
                   ) : (
-                    // <button
-                    //   type="button"
-                    //   className="btn btn-outline-secondary w-xs"
-                    //   onClick={onExportClick}
-                    // >
-                    //   <i className="bx bx-file"></i> Export
-                    // </button>
-
                     <button
                       type="submit"
                       className="btn btn-outline-success w-xs"
@@ -750,13 +891,6 @@ const NCRTrackerAddUpdate = ({
                       <i className="bx bx-save"></i> SAVE
                     </button>
                   )}{" "}
-                  <button
-                    onClick={() => postData(modelData)}
-                    type="button"
-                    className="btn btn-danger ml-5"
-                  >
-                    Test
-                  </button>
                   <button
                     onClick={() => onCancelClick(false)}
                     type="button"
