@@ -217,13 +217,13 @@ namespace NINETRAX.Controllers.DbManagement
             try
             {
                 await _context.SaveChangesAsync();
+                return StatusCode(200, objTbNcrtracker);
 
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "API response failed.");
             }
-            return StatusCode(200, objTbNcrtracker);
         }
 
         #endregion
@@ -232,13 +232,13 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbNcrtracker>> CreateTbNcrtracker(TbNcrtracker objTbNcrtracker)
         {
-            var getLast = _context.TbNcrtrackers.OrderByDescending(d => d.Id).FirstOrDefaultAsync();
+            var getLast = await _context.TbNcrtrackers.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
             if (getLast == null)
                 objTbNcrtracker.Id = 1;
             else
-                objTbNcrtracker.Id = getLast.Id;
+                objTbNcrtracker.Id = getLast.Id+1;
 
-            _context.TbNcrtrackers.Add(objTbNcrtracker);
+            await _context.TbNcrtrackers.AddAsync(objTbNcrtracker);
             try
             {
                 await _context.SaveChangesAsync();

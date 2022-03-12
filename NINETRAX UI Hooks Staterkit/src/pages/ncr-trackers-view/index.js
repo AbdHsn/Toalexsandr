@@ -5,6 +5,7 @@ import * as moment from "moment"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import "../../assets/scss/custom/_common.scss"
+import DeleteModal from "../../components/Common/DeleteModal"
 
 import {
   Button,
@@ -25,6 +26,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getNCRTrackersView,
   exportNCRTrackersView,
+  deleteNCRTracker,
 } from "../../services/ncr-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
@@ -38,6 +40,7 @@ const NCRTrackersView = props => {
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
+  const [deleteModal, setDeleteModal] = useState(false)
 
   const start = useRef(0)
   const orderColumn = useRef({
@@ -160,6 +163,33 @@ const NCRTrackersView = props => {
       })
   }
 
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteNCRTracker(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
+
   const onPressEnter = async e => {
     if (e.key === "Enter") {
       start.current = 0
@@ -240,6 +270,7 @@ const NCRTrackersView = props => {
 
   const onNewClick = () => {
     setModal(true)
+    setModelData(null)
   }
 
   const onEditClick = item => {
@@ -829,18 +860,16 @@ const NCRTrackersView = props => {
                                     >
                                       <i className="far fa-edit"></i> Edit
                                     </button>{" "}
-                                    {/* <button
+                                    <button
                                       type="button"
                                       className="btn btn-sm btn-outline-danger ml-2"
-                                      onClick={e =>
-                                        onDeleteConfirmation(item.id)
-                                      }
+                                      onClick={() => onAttemptDelete(item.id)}
                                       data-toggle="modal"
                                       data-target=".bs-example-modal-center"
                                     >
                                       <i className="far fa-trash-alt"></i>{" "}
                                       Delete
-                                    </button> */}
+                                    </button>
                                   </td>
                                 </tr>
                               )
@@ -900,12 +929,24 @@ const NCRTrackersView = props => {
                     </Col>
                   </Row>
 
+                  <DeleteModal
+                    show={deleteModal}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
                   <NCRTrackerAddUpdate
                     open={modal}
                     modelData={modelData}
-                    onSaveClick={item =>
+                    onSaveClick={item => {
                       console.log("onSaveClick from index called...", item)
-                    }
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
                     onCancelClick={setModal}
                   />
                 </CardBody>

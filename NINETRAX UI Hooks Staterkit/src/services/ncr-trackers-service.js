@@ -20,9 +20,17 @@ export const newNCRTrackerAddUpdate = async postData => {
     })
 }
 
-export const editNCRTrackerAddUpdate = async postData => {
+export const editNCRTrackerAddUpdate = async (id, postData) => {
   return http
-    .post(appSettings.BASE_URL + "/d/TbNcrtrackers", postData)
+    .put(appSettings.BASE_URL + "/d/TbNcrtrackers/" + id, postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const deleteNCRTracker = async id => {
+  return http
+    .delete(appSettings.BASE_URL + "/d/TbNcrtrackers/" + id)
     .catch(error => {
       throw error.response.data
     })

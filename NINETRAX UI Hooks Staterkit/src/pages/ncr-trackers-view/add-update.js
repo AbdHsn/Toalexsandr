@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import Select from "react-select"
+import * as moment from "moment"
 import {
   Col,
   Row,
@@ -60,7 +61,11 @@ const NCRTrackerAddUpdate = ({
       qcfrNumber: (modelData && modelData.qcfrNumber) || "",
       pdrNumber: (modelData && modelData.pdrNumber) || "",
       woNumber: (modelData && modelData.woNumber) || "",
-      dateIssued: (modelData && modelData.dateIssued) || null,
+      dateIssued:
+        (modelData &&
+          modelData?.dateIssued &&
+          moment(modelData?.dateIssued).format("YYYY-MM-DD")) ||
+        null,
       qcInspector: (modelData && modelData.qcInspector) || "",
       annex: (modelData && modelData.annex) || "",
       specItem: (modelData && modelData.specItem) || "",
@@ -81,7 +86,11 @@ const NCRTrackerAddUpdate = ({
       responsibleDiscipline:
         (modelData && modelData.responsibleDiscipline) || "",
       responsibleSub: (modelData && modelData.responsibleSub) || "",
-      dateCapDue: (modelData && modelData.dateCapDue) || null,
+      dateCapDue:
+        (modelData &&
+          modelData?.dateCapDue &&
+          moment(modelData?.dateCapDue).format("YYYY-MM-DD")) ||
+        null,
       status: (modelData && modelData.status) || "",
       comments: (modelData && modelData.comments) || "",
     },
@@ -150,7 +159,7 @@ const NCRTrackerAddUpdate = ({
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
-        editNCRTrackerAddUpdate(submitModel)
+        editNCRTrackerAddUpdate(submitModel?.id, submitModel)
           .then(res => {
             console.log("submit model create response: ", res)
             if (res.data.id > 0) {
@@ -892,7 +901,10 @@ const NCRTrackerAddUpdate = ({
                     </button>
                   )}{" "}
                   <button
-                    onClick={() => onCancelClick(false)}
+                    onClick={() => {
+                      onCancelClick(false)
+                      validation.resetForm()
+                    }}
                     type="button"
                     className="btn btn-danger ml-5"
                   >

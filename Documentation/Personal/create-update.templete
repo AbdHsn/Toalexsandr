@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import Select from "react-select";
+import * as moment from "moment"
 import {
   Col,
   Row,
@@ -61,7 +62,8 @@ const ${entity.name} = ({
       $attribute.name: (modelData && modelData.$attribute.name) || "",
 	#end
 	#if($attribute.type == "Date")
-      $attribute.name: (modelData && modelData.$attribute.name) || null,
+      $attribute.name: (modelData && modelData?.$attribute.name &&
+          moment(modelData?.$attribute.name).format("YYYY-MM-DD")) || null,
 	#end
 	#if($attribute.type == "Boolean")
       $attribute.name: (modelData && modelData.$attribute.name) || false,
