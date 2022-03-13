@@ -1,4 +1,4 @@
-PAWTrackersView {
+PAWTrackersAddUpdate {
 id : long {@Id};
 pawNumber: string;
 location: string;
@@ -14,9 +14,42 @@ specItem: string;
 title: string;
 validity: string;
 pawResponse: string;
+
+//////////////////
+  "id": 0,
+  "site": "string",
+  "pawNumber": "string",
+  "woNumber": "string",
+  "location": "string",
+  "pawLevel": "string",
+  "pawAssessment": "string",
+  "par": "string",
+  "finding": "string",
+  "description": "string",
+
+  "annex": "string",
+  "specItem1": "string",
+  "title": "string",
+  "pawRating": "string",
+  "descriptionShort": "string",
+  "validity": "string",
+  "toNumber": "string",
+  "modNumber": "string",
+  "dateReceived": "2022-03-13T12:39:31.386Z",
+  "dateAcknowledged": "2022-03-13T12:39:31.386Z",
+  "dateSentToPar": "2022-03-13T12:39:31.386Z",
+  "pastDueFromPar": "string",
+  "dateClosedByPar": "2022-03-13T12:39:31.386Z",
+  "pawStatus": "string",
+  "pawResponse": "string",
+  "responseBy": "string",
+  "comments": "string",
+  "unsatCondition": "string",
+  "unsatRootCause": "string"
+
 }
 
-CCRTrackersView {
+CCRTrackersAddUpdate {
 id : long {@Id};
 ccrNumber: string;
 location: string;
@@ -36,7 +69,7 @@ validity: string;
 ccrResponse: string;
 }
 
-CDRTrackersView {
+CDRTrackersAddUpdate {
 id : long {@Id};
 cdrNumber: string;
 dateReceived: date;
@@ -79,7 +112,7 @@ responsibleSub: string;
 dateCapDue: date;
 status:string;
 comments: byte;
---site: string;
+site: string;
 }
 
 long = Number
