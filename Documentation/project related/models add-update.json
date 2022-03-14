@@ -1,87 +1,89 @@
-PAWTrackersAddUpdate {
-id : long {@Id};
-pawNumber: string;
-location: string;
-description: string;
-par: string;
-dateReceived: date;
-dateAcknowledged: date;
-woNumber: string;
-dateToPar: date;
-status: string;
-annex: string;
-specItem: string;
-title: string;
-validity: string;
-pawResponse: string;
-
-//////////////////
-  "id": 0,
-  "site": "string",
-  "pawNumber": "string",
-  "woNumber": "string",
-  "location": "string",
-  "pawLevel": "string",
-  "pawAssessment": "string",
-  "par": "string",
-  "finding": "string",
-  "description": "string",
-
-  "annex": "string",
-  "specItem1": "string",
-  "title": "string",
-  "pawRating": "string",
-  "descriptionShort": "string",
-  "validity": "string",
-  "toNumber": "string",
-  "modNumber": "string",
-  "dateReceived": "2022-03-13T12:39:31.386Z",
-  "dateAcknowledged": "2022-03-13T12:39:31.386Z",
-  "dateSentToPar": "2022-03-13T12:39:31.386Z",
-  "pastDueFromPar": "string",
-  "dateClosedByPar": "2022-03-13T12:39:31.386Z",
-  "pawStatus": "string",
-  "pawResponse": "string",
-  "responseBy": "string",
-  "comments": "string",
-  "unsatCondition": "string",
-  "unsatRootCause": "string"
-
-}
-
 CCRTrackersAddUpdate {
 id : long {@Id};
 ccrNumber: string;
-location: string;
-fmManager: string;
-detailOfComplaint: string;
-par: string;
-comments: string;
-dateReceived: date;
-dateAcknowledged: date;
 woNumber: string;
-dateToPar: date;
-status: string;
-annex: string;
-specItem: string;
-title: string;
-validity: string;
+location: string;
+par: short;
+dateReceived: date;
+dateAcked: date;
+valid: short;
+annex: short;
+specItem1: short;
+title: short;
+fmBldgManager: short;
+detailOfComplaint: byte;
+comments: byte;
+detailOfComplaintShort: byte;
+
+issuedBy: string;
+dateResponded: date;
+dateClosed: date;
+
+responseBy: short;
+status: short;
+isitvalid: short;
+unsatCondition: short;
+unsatRootCause: short;
+
 ccrResponse: string;
+
+// description: string;
+// specItem3: string;
+// site: string;
 }
 
 CDRTrackersAddUpdate {
 id : long {@Id};
-cdrNumber: string;
+cdrnumber: string;
+datereceived:  date;
+responseduedate:  date;
+dateclosed:  date;
+status: short;
+discrepancy: byte;
+discrepancyshort: byte;
+responsedate:  date;
+responseby:  short;
+isitvalid: short;
+memonumber: string;
+notes: byte;
+
+// functionalmanager: string;
+// considerations: string;
+// response: byte;
+}
+
+PAWTrackersAddUpdate {
+id: long {@Id};
+site: short;
+pawNumber: string;
+woNumber: string;
+location: string;
+pawLevel: short;
+pawAssessment: short;
+par: short;
+finding: byte;
+descriptionShort: byte;
+pawResponse: byte;
+dateClosedByPar: date;
+responseBy: short;
+comments: byte;
+
+modNumber: string;
+annex: short;
+specItem1: short;
+title: short;
 dateReceived: date;
-discrepancy: string;
-functionalManager: string;
-responseDueDate: date;
-memoNumber: string;
-fmResponse: string;
-responseDate: date;
-dateClosed: date;
-status: string;
-notes: string;
+dateAcknowledged: date;
+validity: short;
+pawStatus: short;
+unsatCondition: short;
+unsatRootCause: short;
+
+description: string;
+pawRating: string;
+toNumber: string;
+dateSentToPar: date;
+pastDueFromPar: string;
 }
 
 NCRTrackerAddUpdate {
@@ -115,9 +117,147 @@ comments: byte;
 site: string;
 }
 
+PDRTrackerAddUpdate {
+id: long {@Id};
+pdrnumber: string;
+workOrder: string;
+location: string;
+inspectionFailReaso:short;
+qcInspector: short;
+surveillanceType: short;
+surveillanceResults: short;
+dateStarted: date;
+dateCompleted: date;
+dateIssued: date;
+dateDue: date;
+dateReinspected: date;
+descriptionOfInspection: string;
+
+fmResponse: string;
+qcComments: string;
+
+closedBy: short;
+dateClosed: date;
+qcComments2: byte;
+causeCode: short;
+rootCause: short;
+
+// techsName: string;
+// unsatFindings: string;
+// subcontractorName: string;
+// annex: string;
+// specItem: string;
+// title: string;
+// specItemRequirements: string;
+// fmname: string;
+// fmtitle: string;
+// status: string;
+}
+
+IDIQTrackerAddUpdate {
+id: long {@Id};
+woNumber: string;
+woType: short;
+woLocation: string;
+estimator: short;
+
+// targetStart: date;
+// targetFinish: date;
+
+idiqWorkOrderDescription: byte;
+
+
+modNumber: string;
+subcontractorInHouse: string;
+subcontractorName: string;
+parAssigned: string;
+approvedStartDate: date;
+approvedEndDate: date;
+actualCompletionDate: date;
+taskCompleted: string;
+taskCompletedOnTime: string;
+qcReceivedDate: date;
+qcInspectionComplete: date;
+dateSentToPar: date;
+dateReceivedFromPar: date;
+dateSentToWorkControl: date;
+dateWoWasClosed: date;
+woCompleted: string;
+closedBy: string;
+verifiedBy: string;
+woStatus: string;
+comments: string;
+
+unsatNotes:byte;
+causeCode: short;
+rootCause: short;
+}
+
+InspectionAddUpdate {
+id: long {@Id};
+workOrder: string;
+location: string;
+status: string;
+elin: string;
+annex: short;
+specItem: short;
+title: short;
+description: byte;
+
+workType: string;
+subWorkType: string;
+//elin: string;
+//pointofcontact: string;
+//POC phone: string;
+asset: string;
+//assetDescription: string;
+
+crew: string;
+lead: string;
+targetStart: date;
+targetFinish: date;
+actualStart: date;
+actualFinish: date;
+statusDate: date;
+
+qcInspector: short;
+//qcStatus: short;
+inspectionDate: date;
+enteredDate: date;
+causeCode: short;
+rootCause: short;
+
+
+// priority: string;
+// glAccount: string;
+// inspectionResults: string;
+// unsatFindings: string;
+// correctiveActions: string;
+// reinspectionDate: date;
+// reinspectionStatus: string;
+// qccomments: string;
+
+  // selected": tru;
+  // task": tru;
+  // isDelete": tru;
+  // deletedBy": "strin;
+}
+
 long = Number
 byte = TextArea
 short = SelectList
 string = Input
 date = DateTime picker
 boolean = checkbox
+
+
+CCRTracker-Done
+CDRTracker-Done
+NCRTracker-Done
+PAWTracker-Done
+PDRTracker-Done
+IDIQTracker-working...
+ManualInspection-
+
+
+PDR Tracker, IDIQ Tracker, Inspection,
