@@ -14,6 +14,35 @@ export const fetchTableView = async postData => {
     })
 }
 
+export const newInspectionAddUpdate = async postData => {
+  console.log("deleteInspection url error due to different url", id)
+
+  return http
+    .post(appSettings.BASE_URL + "/d/ATbPdrtrackers", postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const editInspectionAddUpdate = async (id, postData) => {
+  console.log("deleteInspection url error due to different url", id)
+
+  return http
+    .put(appSettings.BASE_URL + "/d/ATbPdrtrackers/" + id, postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const deleteInspection = async id => {
+  console.log("deleteInspection url error due to different url", id)
+  return http
+    .delete(appSettings.BASE_URL + "/d/ATbPdrtrackers/" + id)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
 export const exportTableView = async postData => {
   console.log("export data is fetching...", postData, appSettings.BASE_URL)
   return http
@@ -27,5 +56,3 @@ export const exportTableView = async postData => {
       throw error.response.data
     })
 }
-
-export const fetchViews1 = async postData => {}

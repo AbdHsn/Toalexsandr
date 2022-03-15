@@ -5,6 +5,8 @@ import * as moment from "moment"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import "../../assets/scss/custom/_common.scss"
+import DeleteModal from "../../components/Common/DeleteModal"
+import CDRTrackersAddUpdate from "./add-update"
 
 import {
   Button,
@@ -25,6 +27,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getCDRTrackersView,
   exportCDRTrackersView,
+  deleteCDRTracker,
 } from "../../services/cdr-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
@@ -37,7 +40,7 @@ const CDRTrackersView = props => {
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
-
+  const [deleteModal, setDeleteModal] = useState(false)
   const start = useRef(0)
   const orderColumn = useRef({
     column: "Id",
@@ -216,6 +219,46 @@ const CDRTrackersView = props => {
     loadView()
   }
 
+  const [modal, setModal] = useState(false)
+  const [modelData, setModelData] = useState({})
+
+  const onNewClick = () => {
+    setModal(true)
+    setModelData(null)
+  }
+
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+  }
+
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteNCRTracker(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -266,6 +309,14 @@ const CDRTrackersView = props => {
                           })}
                         </DropdownMenu>
                       </ButtonDropdown>
+
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
 
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
@@ -729,24 +780,25 @@ const CDRTrackersView = props => {
                                   <td>{item.notes}</td>
 
                                   <td>
-                                    {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={() => onAttemptDelete(item.id)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button>
                                   </td>
                                 </tr>
                               )
@@ -806,11 +858,26 @@ const CDRTrackersView = props => {
                     </Col>
                   </Row>
 
-                  {/* <DeleteModal
+                  <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <CDRTrackersAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />
                 </CardBody>
               </Card>
             </Col>

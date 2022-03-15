@@ -6,7 +6,6 @@ import classnames from "classnames"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import "../../assets/scss/custom/_common.scss"
-
 import {
   Button,
   Card,
@@ -29,13 +28,16 @@ import {
   exportTableView,
 } from "../../services/wo-inspect-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
-
 import Breadcrumbs from "components/Common/Breadcrumb"
+import InspectionAddUpdate from "./add-update"
+import DeleteModal from "../../components/Common/DeleteModal"
 
 const workOrderInspections = props => {
   const [workOrderInspectionTbl, setWorkOrderInspectionTbl] = useState({})
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
-
+  const [modal, setModal] = useState(false)
+  const [modelData, setModelData] = useState({})
+  const [deleteModal, setDeleteModal] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
@@ -351,6 +353,43 @@ const workOrderInspections = props => {
     loadView()
   }
 
+  const onNewClick = () => {
+    setModal(true)
+    setModelData(null)
+  }
+
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+  }
+
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteNCRTracker(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -401,6 +440,14 @@ const workOrderInspections = props => {
                           })}
                         </DropdownMenu>
                       </ButtonDropdown>
+
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
 
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
@@ -1324,24 +1371,25 @@ const workOrderInspections = props => {
                                   </td>
 
                                   <td>
-                                    {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={() => onAttemptDelete(item.id)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button>
                                   </td>
                                 </tr>
                               )
@@ -1401,12 +1449,26 @@ const workOrderInspections = props => {
                       </div>
                     </Col>
                   </Row>
-
-                  {/* <DeleteModal
+                  <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <InspectionAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />
                 </CardBody>
               </Card>
             </Col>

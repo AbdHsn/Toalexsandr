@@ -12,6 +12,30 @@ export const getCCRTrackersView = async postData => {
     })
 }
 
+export const newCCRTrackerAddUpdate = async postData => {
+  return http
+    .post(appSettings.BASE_URL + "/d/TbCcrtrackers", postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const editCCRTrackerAddUpdate = async (id, postData) => {
+  return http
+    .put(appSettings.BASE_URL + "/d/TbCcrtrackers/" + id, postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const deleteCCRTracker = async id => {
+  return http
+    .delete(appSettings.BASE_URL + "/d/TbCcrtrackers/" + id)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
 export const exportCCRTrackersView = async postData => {
   return http
     .post(appSettings.BASE_URL + "/d/TbCcrtrackers/ExportToExcel", postData, {

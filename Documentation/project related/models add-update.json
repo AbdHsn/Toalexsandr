@@ -1,4 +1,55 @@
-CCRTrackersAddUpdate {
+NCRTrackerAddUpdate {
+id: long {@Id};
+ncrNumber: string;
+qcfrNumber: string;
+pdrNumber: string;
+woNumber: string;
+dateIssued: date;
+qcInspector: short;
+annex: short;
+specItem: short;
+title: short;
+assessmentType: short;
+nonconformanceType: short;
+nonconformanceSummary: byte;
+requirement1: byte;
+observation1: byte;
+requirement2: byte;
+observation2: byte;
+requirement3: byte;
+observation3: byte;
+requirement4: byte;
+observation4: byte;
+responsiblePersone: string;
+responsibleDiscipline: string;
+responsibleSub: string;
+dateCapDue: date;
+status:string;
+comments: byte;
+site: string;
+}
+
+CDRTrackerAddUpdate {
+id : long {@Id};
+cdrnumber: string;
+datereceived:  date;
+responseduedate:  date;
+dateclosed:  date;
+status: short;
+discrepancy: byte;
+discrepancyshort: byte;
+responsedate:  date;
+responseby:  short;
+isitvalid: short;
+memonumber: string;
+notes: byte;
+
+// functionalmanager: string;
+// considerations: string;
+// response: byte;
+}
+
+CCRTrackerAddUpdate {
 id : long {@Id};
 ccrNumber: string;
 woNumber: string;
@@ -32,27 +83,7 @@ ccrResponse: string;
 // site: string;
 }
 
-CDRTrackersAddUpdate {
-id : long {@Id};
-cdrnumber: string;
-datereceived:  date;
-responseduedate:  date;
-dateclosed:  date;
-status: short;
-discrepancy: byte;
-discrepancyshort: byte;
-responsedate:  date;
-responseby:  short;
-isitvalid: short;
-memonumber: string;
-notes: byte;
-
-// functionalmanager: string;
-// considerations: string;
-// response: byte;
-}
-
-PAWTrackersAddUpdate {
+PAWTrackerAddUpdate {
 id: long {@Id};
 site: short;
 pawNumber: string;
@@ -84,37 +115,6 @@ pawRating: string;
 toNumber: string;
 dateSentToPar: date;
 pastDueFromPar: string;
-}
-
-NCRTrackerAddUpdate {
-id: long {@Id};
-ncrNumber: string;
-qcfrNumber: string;
-pdrNumber: string;
-woNumber: string;
-dateIssued: date;
-qcInspector: short;
-annex: short;
-specItem: short;
-title: short;
-assessmentType: short;
-nonconformanceType: short;
-nonconformanceSummary: byte;
-requirement1: byte;
-observation1: byte;
-requirement2: byte;
-observation2: byte;
-requirement3: byte;
-observation3: byte;
-requirement4: byte;
-observation4: byte;
-responsiblePersone: string;
-responsibleDiscipline: string;
-responsibleSub: string;
-dateCapDue: date;
-status:string;
-comments: byte;
-site: string;
 }
 
 PDRTrackerAddUpdate {
