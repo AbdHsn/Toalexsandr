@@ -255,105 +255,247 @@ const IDIQTrackerAddUpdate = ({
                     defaultValue={validation.values.id || 0}
                   />
                 </div>
-                <div className="mb-3">
-                  <Label className="form-label">woNumber</Label>
-                  <Input
-                    id="woNumber"
-                    name="woNumber"
-                    type="text"
-                    placeholder="woNumber"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.woNumber || ""}
-                    invalid={
-                      validation.touched.woNumber && validation.errors.woNumber
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.woNumber && validation.errors.woNumber ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.woNumber}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>woType</Label>
-                  <Select
-                    id="woType"
-                    name="woType"
-                    type="text"
-                    onChange={e => {
-                      set_woTypeSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_woTypeSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select woType"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.woType && validation.errors.woType ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.woType}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">woLocation</Label>
-                  <Input
-                    id="woLocation"
-                    name="woLocation"
-                    type="text"
-                    placeholder="woLocation"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.woLocation || ""}
-                    invalid={
-                      validation.touched.woLocation &&
-                      validation.errors.woLocation
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.woLocation &&
-                  validation.errors.woLocation ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.woLocation}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>estimator</Label>
-                  <Select
-                    id="estimator"
-                    name="estimator"
-                    type="text"
-                    onChange={e => {
-                      set_estimatorSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_estimatorSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select estimator"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.estimator &&
-                  validation.errors.estimator ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.estimator}
-                    </FormFeedback>
-                  ) : null}
-                </div>
+
+                <Row>
+                  <Col className="col-4">
+                    <div className="mb-3">
+                      <Label className="form-label">WO Number</Label>
+                      <Input
+                        id="woNumber"
+                        name="woNumber"
+                        type="text"
+                        placeholder="woNumber"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.woNumber || ""}
+                        invalid={
+                          validation.touched.woNumber &&
+                          validation.errors.woNumber
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.woNumber &&
+                      validation.errors.woNumber ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.woNumber}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>WO Type</Label>
+                      <Select
+                        id="woType"
+                        name="woType"
+                        type="text"
+                        onChange={e => {
+                          set_woTypeSelected(e.value)
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_woTypeSelectItems}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select woType"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.woType && validation.errors.woType ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.woType}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">WO Location</Label>
+                      <Input
+                        id="woLocation"
+                        name="woLocation"
+                        type="text"
+                        placeholder="woLocation"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.woLocation || ""}
+                        invalid={
+                          validation.touched.woLocation &&
+                          validation.errors.woLocation
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.woLocation &&
+                      validation.errors.woLocation ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.woLocation}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Estimator</Label>
+                      <Select
+                        id="estimator"
+                        name="estimator"
+                        type="text"
+                        onChange={e => {
+                          set_estimatorSelected(e.value)
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_estimatorSelectItems}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select estimator"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.estimator &&
+                      validation.errors.estimator ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.estimator}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col className="col-4">
+                    <div className="mb-3">
+                      <Label className="form-label">Target Start</Label>
+                      <Input
+                        id="targetStart"
+                        name="targetStart"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="targetStart"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.targetStart || ""}
+                        invalid={
+                          validation.touched.targetStart &&
+                          validation.errors.targetStart
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.targetStart &&
+                      validation.errors.targetStart ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.targetStart}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">Target End</Label>
+                      <Input
+                        id="targetEnd"
+                        name="targetEnd"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="targetEnd"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.targetEnd || ""}
+                        invalid={
+                          validation.touched.targetEnd &&
+                          validation.errors.targetEnd
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.targetEnd &&
+                      validation.errors.targetEnd ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.targetEnd}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+
+                    <div className="mb-3">
+                      <Label className="form-label">Actual Date</Label>
+                      <Input
+                        id="actualDate"
+                        name="actualDate"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="actualDate"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.actualDate || ""}
+                        invalid={
+                          validation.touched.actualDate &&
+                          validation.errors.actualDate
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.actualDate &&
+                      validation.errors.actualDate ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.actualDate}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col className="col-4">
+                    <div className="mb-3">
+                      <Label>Done Yes/No</Label>
+                      <Select
+                        id="doneYesNo"
+                        name="doneYesNo"
+                        type="text"
+                        onChange={e => {
+                          set_causeCodeSelected(e.value)
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_causeCodeSelectItems}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select causeCode"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.doneYesNo &&
+                      validation.errors.doneYesNo ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.doneYesNo}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+
+                    <div className="mb-3">
+                      <Label>On Time</Label>
+                      <Select
+                        id="onTime"
+                        name="onTime"
+                        type="text"
+                        onChange={e => {
+                          set_causeCodeSelected(e.value)
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_causeCodeSelectItems}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select On Time"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.onTime && validation.errors.onTime ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.onTime}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+
                 <div className="mb-3">
                   <Label className="form-label">idiqWorkOrderDescription</Label>
                   <Input
