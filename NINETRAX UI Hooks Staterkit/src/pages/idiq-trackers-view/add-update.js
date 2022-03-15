@@ -41,7 +41,14 @@ const IDIQTrackerAddUpdate = ({
   const [_causeCodeSelected, set_causeCodeSelected] = useState(null)
   const [_causeCodeSelectItems, set_causeCodeSelectItems] = useState([])
   const [_rootCauseSelected, set_rootCauseSelected] = useState(null)
-  const [_rootCauseSelectItems, set_rootCauseSelectItems] = useState([])
+  const [_doneYesNoSelectItems, set_doneYesNoSelectItems] = useState([
+    { value: "YES", label: "YES" },
+    { value: "NO", label: "NO" },
+  ])
+  const [_onTimeSelectItems, set_onTimeSelectItems] = useState([
+    { value: "ON TIME", label: "ON TIME" },
+    { value: "LATE", label: "LATE" },
+  ])
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
