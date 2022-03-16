@@ -119,21 +119,32 @@ pastDueFromPar: string;
 
 PDRTrackerAddUpdate {
 id: long {@Id};
-pdrnumber: string;
-workOrder: string;
-location: string;
-inspectionFailReaso:short;
-qcInspector: short;
-surveillanceType: short;
-surveillanceResults: short;
+pdrnumber: string; //PDR Number
+workOrder: string; //WO Number
+location: string; //location
+inspectionFailReason:short; //Fail reason from db
+qcInspector: short; //QC Inspector from db
+surveillanceType: short;  //Surveillance Type from db
+surveillanceResults: short; //Surveillance Results from db
 dateStarted: date;
 dateCompleted: date;
 dateIssued: date;
 dateDue: date;
 dateReinspected: date;
-descriptionOfInspection: string;
+status: string; //PDR Status from db
+ fmname: short; //Functional Maanager from db
+ fmtitle: short; //FM Title from db
+  techsName: string;
+ subcontractorName: short; //Subcontractor Name from db
+  annex: short;
+ specItem: short;
+ title: short;
+ specItemRequirements: byte;
+descriptionOfInspection: byte;
+unsatFindings: byte; //Deficiencies Noted
+fmResponse: byte; //FM Response
 
-fmResponse: string;
+
 qcComments: string;
 
 closedBy: short;
@@ -142,55 +153,41 @@ qcComments2: byte;
 causeCode: short;
 rootCause: short;
 
-// techsName: string;
-// unsatFindings: string;
-// subcontractorName: string;
-// annex: string;
-// specItem: string;
-// title: string;
-// specItemRequirements: string;
-// fmname: string;
-// fmtitle: string;
-// status: string;
+
+
 }
 
 IDIQTrackerAddUpdate {
 id: long {@Id};
-woNumber: string;
-woType: short;
-woLocation: string;
-estimator: short;
+woNumber: string; //WO Number
+woType: short; // WO Type from db
+woLocation: string; //WO Location
+estimator: short; //Estimator from db
+idiqWorkOrderDescription: byte; //IDIQ SOW
+approvedStartDate: date; //Target start date
+approvedEndDate: date; //target end date
+actualCompletionDate: date; //Actual date
+taskCompleted: short; //Done/y/n; YES, NO
+taskCompletedOnTime: short; //On Time; ON TIME, LATE
+qcReceivedDate: date; //Insp Date
+closedBy: short; //IDIQ Closed by from db
+qcInspectionComplete: date; //verif date
+verifiedBy: short; //verif by from db
+parAssigned: short; //PAR assigned
+dateSentToPar: date; //TO PAR
+dateReceivedFromPar: date; //From PAR
+dateSentToWorkControl: date; //to work control
+subcontractorInHouse: short; //Sub/ In-House
+subcontractorName: string; //Sub Name
+dateWoWasClosed: date; //Date Closed
+woStatus: string; // WO Status; OPEN, CLOSED, WAITING COMPLETION, WAITING VERIFICATION, WAITING PAR, WAITING TO PAR, WAITING ON PAR
+comments: byte; // Inspection Notes
+unsatNotes:byte; // Unsat Notes
+causeCode: short; //Cause Code from db dropdownmenu-causecode
+rootCause: short; //Root Cause from db dropdownmenu-rootcause
 
-// targetStart: date;
-// targetFinish: date;
-
-idiqWorkOrderDescription: byte;
-
-
-modNumber: string;
-subcontractorInHouse: string;
-subcontractorName: string;
-parAssigned: string;
-approvedStartDate: date;
-approvedEndDate: date;
-actualCompletionDate: date;
-taskCompleted: string;
-taskCompletedOnTime: string;
-qcReceivedDate: date;
-qcInspectionComplete: date;
-dateSentToPar: date;
-dateReceivedFromPar: date;
-dateSentToWorkControl: date;
-dateWoWasClosed: date;
-woCompleted: string;
-closedBy: string;
-verifiedBy: string;
-woStatus: string;
-comments: string;
-
-unsatNotes:byte;
-causeCode: short;
-rootCause: short;
+//modNumber: string;
+// woCompleted: string;
 }
 
 InspectionAddUpdate {
@@ -261,3 +258,18 @@ ManualInspection-
 
 
 PDR Tracker, IDIQ Tracker, Inspection,
+
+
+
+//Default DDL
+[    { value: "YES", label: "YES" },
+    { value: "NO", label: "NO" },
+]
+
+////
+[
+      { value: "ON TIME", label: "ON TIME" },
+      { value: "LATE", label: "LATE" },
+    ]
+///
+

@@ -243,10 +243,11 @@ const ${entity.name} = ({
                     name="$attribute.name"
                     type="text"
                     onChange={e => {
-                      set_$attribute.name+Selected(e.value)
+                      set_$attribute.name+Selected(e)
                     }}
                     onBlur={validation.handleBlur}
                     options={_$attribute.name+SelectItems}
+       				value={_$attribute.name+Selected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select $attribute.name"

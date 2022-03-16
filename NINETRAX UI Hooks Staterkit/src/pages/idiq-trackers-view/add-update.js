@@ -38,17 +38,31 @@ const IDIQTrackerAddUpdate = ({
   const [_woTypeSelectItems, set_woTypeSelectItems] = useState([])
   const [_estimatorSelected, set_estimatorSelected] = useState(null)
   const [_estimatorSelectItems, set_estimatorSelectItems] = useState([])
-  const [_causeCodeSelected, set_causeCodeSelected] = useState(null)
-  const [_causeCodeSelectItems, set_causeCodeSelectItems] = useState([])
-  const [_rootCauseSelected, set_rootCauseSelected] = useState(null)
-  const [_doneYesNoSelectItems, set_doneYesNoSelectItems] = useState([
+  const [_taskCompletedSelected, set_taskCompletedSelected] = useState(null)
+  const [_taskCompletedSelectItems, set_taskCompletedSelectItems] = useState([
     { value: "YES", label: "YES" },
     { value: "NO", label: "NO" },
   ])
-  const [_onTimeSelectItems, set_onTimeSelectItems] = useState([
-    { value: "ON TIME", label: "ON TIME" },
-    { value: "LATE", label: "LATE" },
-  ])
+  const [_taskCompletedOnTimeSelected, set_taskCompletedOnTimeSelected] =
+    useState(null)
+  const [_taskCompletedOnTimeSelectItems, set_taskCompletedOnTimeSelectItems] =
+    useState([])
+  const [_closedBySelected, set_closedBySelected] = useState(null)
+  const [_closedBySelectItems, set_closedBySelectItems] = useState([])
+  const [_verifiedBySelected, set_verifiedBySelected] = useState(null)
+  const [_verifiedBySelectItems, set_verifiedBySelectItems] = useState([])
+  const [_parAssignedSelected, set_parAssignedSelected] = useState(null)
+  const [_parAssignedSelectItems, set_parAssignedSelectItems] = useState([])
+  const [_subcontractorInHouseSelected, set_subcontractorInHouseSelected] =
+    useState(null)
+  const [
+    _subcontractorInHouseSelectItems,
+    set_subcontractorInHouseSelectItems,
+  ] = useState([])
+  const [_causeCodeSelected, set_causeCodeSelected] = useState(null)
+  const [_causeCodeSelectItems, set_causeCodeSelectItems] = useState([])
+  const [_rootCauseSelected, set_rootCauseSelected] = useState(null)
+  const [_rootCauseSelectItems, set_rootCauseSelectItems] = useState([])
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -62,10 +76,6 @@ const IDIQTrackerAddUpdate = ({
       estimator: (modelData && modelData.estimator) || "",
       idiqWorkOrderDescription:
         (modelData && modelData.idiqWorkOrderDescription) || "",
-      modNumber: (modelData && modelData.modNumber) || "",
-      subcontractorInHouse: (modelData && modelData.subcontractorInHouse) || "",
-      subcontractorName: (modelData && modelData.subcontractorName) || "",
-      parAssigned: (modelData && modelData.parAssigned) || "",
       approvedStartDate:
         (modelData &&
           modelData?.approvedStartDate &&
@@ -88,11 +98,14 @@ const IDIQTrackerAddUpdate = ({
           modelData?.qcReceivedDate &&
           moment(modelData?.qcReceivedDate).format("YYYY-MM-DD")) ||
         null,
+      closedBy: (modelData && modelData.closedBy) || "",
       qcInspectionComplete:
         (modelData &&
           modelData?.qcInspectionComplete &&
           moment(modelData?.qcInspectionComplete).format("YYYY-MM-DD")) ||
         null,
+      verifiedBy: (modelData && modelData.verifiedBy) || "",
+      parAssigned: (modelData && modelData.parAssigned) || "",
       dateSentToPar:
         (modelData &&
           modelData?.dateSentToPar &&
@@ -108,14 +121,13 @@ const IDIQTrackerAddUpdate = ({
           modelData?.dateSentToWorkControl &&
           moment(modelData?.dateSentToWorkControl).format("YYYY-MM-DD")) ||
         null,
+      subcontractorInHouse: (modelData && modelData.subcontractorInHouse) || "",
+      subcontractorName: (modelData && modelData.subcontractorName) || "",
       dateWoWasClosed:
         (modelData &&
           modelData?.dateWoWasClosed &&
           moment(modelData?.dateWoWasClosed).format("YYYY-MM-DD")) ||
         null,
-      woCompleted: (modelData && modelData.woCompleted) || "",
-      closedBy: (modelData && modelData.closedBy) || "",
-      verifiedBy: (modelData && modelData.verifiedBy) || "",
       woStatus: (modelData && modelData.woStatus) || "",
       comments: (modelData && modelData.comments) || "",
       unsatNotes: (modelData && modelData.unsatNotes) || "",
@@ -129,24 +141,22 @@ const IDIQTrackerAddUpdate = ({
       // woLocation: Yup.string().required("woLocation is required"),
       // estimator: Yup.string().required("estimator is required"),
       // idiqWorkOrderDescription: Yup.string().required("idiqWorkOrderDescription is required"),
-      // modNumber: Yup.string().required("modNumber is required"),
-      // subcontractorInHouse: Yup.string().required("subcontractorInHouse is required"),
-      // subcontractorName: Yup.string().required("subcontractorName is required"),
-      // parAssigned: Yup.string().required("parAssigned is required"),
       // approvedStartDate: Yup.string().required("approvedStartDate is required"),
       // approvedEndDate: Yup.string().required("approvedEndDate is required"),
       // actualCompletionDate: Yup.string().required("actualCompletionDate is required"),
       // taskCompleted: Yup.string().required("taskCompleted is required"),
       // taskCompletedOnTime: Yup.string().required("taskCompletedOnTime is required"),
       // qcReceivedDate: Yup.string().required("qcReceivedDate is required"),
+      // closedBy: Yup.string().required("closedBy is required"),
       // qcInspectionComplete: Yup.string().required("qcInspectionComplete is required"),
+      // verifiedBy: Yup.string().required("verifiedBy is required"),
+      // parAssigned: Yup.string().required("parAssigned is required"),
       // dateSentToPar: Yup.string().required("dateSentToPar is required"),
       // dateReceivedFromPar: Yup.string().required("dateReceivedFromPar is required"),
       // dateSentToWorkControl: Yup.string().required("dateSentToWorkControl is required"),
+      // subcontractorInHouse: Yup.string().required("subcontractorInHouse is required"),
+      // subcontractorName: Yup.string().required("subcontractorName is required"),
       // dateWoWasClosed: Yup.string().required("dateWoWasClosed is required"),
-      // woCompleted: Yup.string().required("woCompleted is required"),
-      // closedBy: Yup.string().required("closedBy is required"),
-      // verifiedBy: Yup.string().required("verifiedBy is required"),
       // woStatus: Yup.string().required("woStatus is required"),
       // comments: Yup.string().required("comments is required"),
       // unsatNotes: Yup.string().required("unsatNotes is required"),
@@ -164,24 +174,22 @@ const IDIQTrackerAddUpdate = ({
         woLocation: values.woLocation,
         estimator: _estimatorSelected,
         idiqWorkOrderDescription: values.idiqWorkOrderDescription,
-        modNumber: values.modNumber,
-        subcontractorInHouse: values.subcontractorInHouse,
-        subcontractorName: values.subcontractorName,
-        parAssigned: values.parAssigned,
         approvedStartDate: values.approvedStartDate,
         approvedEndDate: values.approvedEndDate,
         actualCompletionDate: values.actualCompletionDate,
-        taskCompleted: values.taskCompleted,
-        taskCompletedOnTime: values.taskCompletedOnTime,
+        taskCompleted: _taskCompletedSelected,
+        taskCompletedOnTime: _taskCompletedOnTimeSelected,
         qcReceivedDate: values.qcReceivedDate,
+        closedBy: _closedBySelected,
         qcInspectionComplete: values.qcInspectionComplete,
+        verifiedBy: _verifiedBySelected,
+        parAssigned: _parAssignedSelected,
         dateSentToPar: values.dateSentToPar,
         dateReceivedFromPar: values.dateReceivedFromPar,
         dateSentToWorkControl: values.dateSentToWorkControl,
+        subcontractorInHouse: _subcontractorInHouseSelected,
+        subcontractorName: values.subcontractorName,
         dateWoWasClosed: values.dateWoWasClosed,
-        woCompleted: values.woCompleted,
-        closedBy: values.closedBy,
-        verifiedBy: values.verifiedBy,
         woStatus: values.woStatus,
         comments: values.comments,
         unsatNotes: values.unsatNotes,
@@ -262,247 +270,107 @@ const IDIQTrackerAddUpdate = ({
                     defaultValue={validation.values.id || 0}
                   />
                 </div>
-
-                <Row>
-                  <Col className="col-4">
-                    <div className="mb-3">
-                      <Label className="form-label">WO Number</Label>
-                      <Input
-                        id="woNumber"
-                        name="woNumber"
-                        type="text"
-                        placeholder="woNumber"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.woNumber || ""}
-                        invalid={
-                          validation.touched.woNumber &&
-                          validation.errors.woNumber
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.woNumber &&
-                      validation.errors.woNumber ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.woNumber}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
-                      <Label>WO Type</Label>
-                      <Select
-                        id="woType"
-                        name="woType"
-                        type="text"
-                        onChange={e => {
-                          set_woTypeSelected(e.value)
-                        }}
-                        onBlur={validation.handleBlur}
-                        options={_woTypeSelectItems}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        placeholder="Select woType"
-                        isClearable={false}
-                        isSearchable={true}
-                        isLoading={false}
-                        loadingMessage={() => "Fetching Data..."}
-                        noOptionsMessage={() => "No Data Found."}
-                      />
-                      {validation.touched.woType && validation.errors.woType ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.woType}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
-                      <Label className="form-label">WO Location</Label>
-                      <Input
-                        id="woLocation"
-                        name="woLocation"
-                        type="text"
-                        placeholder="woLocation"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.woLocation || ""}
-                        invalid={
-                          validation.touched.woLocation &&
-                          validation.errors.woLocation
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.woLocation &&
-                      validation.errors.woLocation ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.woLocation}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
-                      <Label>Estimator</Label>
-                      <Select
-                        id="estimator"
-                        name="estimator"
-                        type="text"
-                        onChange={e => {
-                          set_estimatorSelected(e.value)
-                        }}
-                        onBlur={validation.handleBlur}
-                        options={_estimatorSelectItems}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        placeholder="Select estimator"
-                        isClearable={false}
-                        isSearchable={true}
-                        isLoading={false}
-                        loadingMessage={() => "Fetching Data..."}
-                        noOptionsMessage={() => "No Data Found."}
-                      />
-                      {validation.touched.estimator &&
-                      validation.errors.estimator ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.estimator}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-4">
-                    <div className="mb-3">
-                      <Label className="form-label">Target Start</Label>
-                      <Input
-                        id="targetStart"
-                        name="targetStart"
-                        type="date"
-                        pattern="\d{4}-\d{2}-\d{2}"
-                        placeholder="targetStart"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.targetStart || ""}
-                        invalid={
-                          validation.touched.targetStart &&
-                          validation.errors.targetStart
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.targetStart &&
-                      validation.errors.targetStart ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.targetStart}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
-                      <Label className="form-label">Target End</Label>
-                      <Input
-                        id="targetEnd"
-                        name="targetEnd"
-                        type="date"
-                        pattern="\d{4}-\d{2}-\d{2}"
-                        placeholder="targetEnd"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.targetEnd || ""}
-                        invalid={
-                          validation.touched.targetEnd &&
-                          validation.errors.targetEnd
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.targetEnd &&
-                      validation.errors.targetEnd ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.targetEnd}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-3">
-                      <Label className="form-label">Actual Date</Label>
-                      <Input
-                        id="actualDate"
-                        name="actualDate"
-                        type="date"
-                        pattern="\d{4}-\d{2}-\d{2}"
-                        placeholder="actualDate"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.actualDate || ""}
-                        invalid={
-                          validation.touched.actualDate &&
-                          validation.errors.actualDate
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.actualDate &&
-                      validation.errors.actualDate ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.actualDate}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                  <Col className="col-4">
-                    <div className="mb-3">
-                      <Label>Done Yes/No</Label>
-                      <Select
-                        id="doneYesNo"
-                        name="doneYesNo"
-                        type="text"
-                        onChange={e => {
-                          set_causeCodeSelected(e.value)
-                        }}
-                        onBlur={validation.handleBlur}
-                        options={_causeCodeSelectItems}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        placeholder="Select causeCode"
-                        isClearable={false}
-                        isSearchable={true}
-                        isLoading={false}
-                        loadingMessage={() => "Fetching Data..."}
-                        noOptionsMessage={() => "No Data Found."}
-                      />
-                      {validation.touched.doneYesNo &&
-                      validation.errors.doneYesNo ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.doneYesNo}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-3">
-                      <Label>On Time</Label>
-                      <Select
-                        id="onTime"
-                        name="onTime"
-                        type="text"
-                        onChange={e => {
-                          set_causeCodeSelected(e.value)
-                        }}
-                        onBlur={validation.handleBlur}
-                        options={_causeCodeSelectItems}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        placeholder="Select On Time"
-                        isClearable={false}
-                        isSearchable={true}
-                        isLoading={false}
-                        loadingMessage={() => "Fetching Data..."}
-                        noOptionsMessage={() => "No Data Found."}
-                      />
-                      {validation.touched.onTime && validation.errors.onTime ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.onTime}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                  </Col>
-                </Row>
-
+                <div className="mb-3">
+                  <Label className="form-label">woNumber</Label>
+                  <Input
+                    id="woNumber"
+                    name="woNumber"
+                    type="text"
+                    placeholder="woNumber"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.woNumber || ""}
+                    invalid={
+                      validation.touched.woNumber && validation.errors.woNumber
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.woNumber && validation.errors.woNumber ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.woNumber}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>woType</Label>
+                  <Select
+                    id="woType"
+                    name="woType"
+                    type="text"
+                    onChange={e => {
+                      set_woTypeSelected(e)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_woTypeSelectItems}
+                    value={_woTypeSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select woType"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.woType && validation.errors.woType ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.woType}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">woLocation</Label>
+                  <Input
+                    id="woLocation"
+                    name="woLocation"
+                    type="text"
+                    placeholder="woLocation"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.woLocation || ""}
+                    invalid={
+                      validation.touched.woLocation &&
+                      validation.errors.woLocation
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.woLocation &&
+                  validation.errors.woLocation ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.woLocation}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>estimator</Label>
+                  <Select
+                    id="estimator"
+                    name="estimator"
+                    type="text"
+                    onChange={e => {
+                      set_estimatorSelected(e)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_estimatorSelectItems}
+                    value={_estimatorSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select estimator"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.estimator &&
+                  validation.errors.estimator ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.estimator}
+                    </FormFeedback>
+                  ) : null}
+                </div>
                 <div className="mb-3">
                   <Label className="form-label">idiqWorkOrderDescription</Label>
                   <Input
@@ -526,102 +394,6 @@ const IDIQTrackerAddUpdate = ({
                   validation.errors.idiqWorkOrderDescription ? (
                     <FormFeedback type="invalid">
                       {validation.errors.idiqWorkOrderDescription}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">modNumber</Label>
-                  <Input
-                    id="modNumber"
-                    name="modNumber"
-                    type="text"
-                    placeholder="modNumber"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.modNumber || ""}
-                    invalid={
-                      validation.touched.modNumber &&
-                      validation.errors.modNumber
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.modNumber &&
-                  validation.errors.modNumber ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.modNumber}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">subcontractorInHouse</Label>
-                  <Input
-                    id="subcontractorInHouse"
-                    name="subcontractorInHouse"
-                    type="text"
-                    placeholder="subcontractorInHouse"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.subcontractorInHouse || ""}
-                    invalid={
-                      validation.touched.subcontractorInHouse &&
-                      validation.errors.subcontractorInHouse
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.subcontractorInHouse &&
-                  validation.errors.subcontractorInHouse ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.subcontractorInHouse}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">subcontractorName</Label>
-                  <Input
-                    id="subcontractorName"
-                    name="subcontractorName"
-                    type="text"
-                    placeholder="subcontractorName"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.subcontractorName || ""}
-                    invalid={
-                      validation.touched.subcontractorName &&
-                      validation.errors.subcontractorName
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.subcontractorName &&
-                  validation.errors.subcontractorName ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.subcontractorName}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">parAssigned</Label>
-                  <Input
-                    id="parAssigned"
-                    name="parAssigned"
-                    type="text"
-                    placeholder="parAssigned"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.parAssigned || ""}
-                    invalid={
-                      validation.touched.parAssigned &&
-                      validation.errors.parAssigned
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.parAssigned &&
-                  validation.errors.parAssigned ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.parAssigned}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -701,21 +473,25 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">taskCompleted</Label>
-                  <Input
+                  <Label>taskCompleted</Label>
+                  <Select
                     id="taskCompleted"
                     name="taskCompleted"
                     type="text"
-                    placeholder="taskCompleted"
-                    onChange={validation.handleChange}
+                    onChange={e => {
+                      set_taskCompletedSelected(e)
+                    }}
                     onBlur={validation.handleBlur}
-                    value={validation.values.taskCompleted || ""}
-                    invalid={
-                      validation.touched.taskCompleted &&
-                      validation.errors.taskCompleted
-                        ? true
-                        : false
-                    }
+                    options={_taskCompletedSelectItems}
+                    value={_taskCompletedSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select taskCompleted"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
                   />
                   {validation.touched.taskCompleted &&
                   validation.errors.taskCompleted ? (
@@ -725,21 +501,25 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">taskCompletedOnTime</Label>
-                  <Input
+                  <Label>taskCompletedOnTime</Label>
+                  <Select
                     id="taskCompletedOnTime"
                     name="taskCompletedOnTime"
                     type="text"
-                    placeholder="taskCompletedOnTime"
-                    onChange={validation.handleChange}
+                    onChange={e => {
+                      set_taskCompletedOnTimeSelected(e)
+                    }}
                     onBlur={validation.handleBlur}
-                    value={validation.values.taskCompletedOnTime || ""}
-                    invalid={
-                      validation.touched.taskCompletedOnTime &&
-                      validation.errors.taskCompletedOnTime
-                        ? true
-                        : false
-                    }
+                    options={_taskCompletedOnTimeSelectItems}
+                    value={_taskCompletedOnTimeSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select taskCompletedOnTime"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
                   />
                   {validation.touched.taskCompletedOnTime &&
                   validation.errors.taskCompletedOnTime ? (
@@ -774,6 +554,33 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
+                  <Label>closedBy</Label>
+                  <Select
+                    id="closedBy"
+                    name="closedBy"
+                    type="text"
+                    onChange={e => {
+                      set_closedBySelected(e)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_closedBySelectItems}
+                    value={_closedBySelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select closedBy"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.closedBy && validation.errors.closedBy ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.closedBy}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
                   <Label className="form-label">qcInspectionComplete</Label>
                   <Input
                     id="qcInspectionComplete"
@@ -795,6 +602,62 @@ const IDIQTrackerAddUpdate = ({
                   validation.errors.qcInspectionComplete ? (
                     <FormFeedback type="invalid">
                       {validation.errors.qcInspectionComplete}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>verifiedBy</Label>
+                  <Select
+                    id="verifiedBy"
+                    name="verifiedBy"
+                    type="text"
+                    onChange={e => {
+                      set_verifiedBySelected(e)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_verifiedBySelectItems}
+                    value={_verifiedBySelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select verifiedBy"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.verifiedBy &&
+                  validation.errors.verifiedBy ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.verifiedBy}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>parAssigned</Label>
+                  <Select
+                    id="parAssigned"
+                    name="parAssigned"
+                    type="text"
+                    onChange={e => {
+                      set_parAssignedSelected(e)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_parAssignedSelectItems}
+                    value={_parAssignedSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select parAssigned"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.parAssigned &&
+                  validation.errors.parAssigned ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.parAssigned}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -874,6 +737,58 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
+                  <Label>subcontractorInHouse</Label>
+                  <Select
+                    id="subcontractorInHouse"
+                    name="subcontractorInHouse"
+                    type="text"
+                    onChange={e => {
+                      set_subcontractorInHouseSelected(e)
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_subcontractorInHouseSelectItems}
+                    value={_subcontractorInHouseSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select subcontractorInHouse"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.subcontractorInHouse &&
+                  validation.errors.subcontractorInHouse ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.subcontractorInHouse}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">subcontractorName</Label>
+                  <Input
+                    id="subcontractorName"
+                    name="subcontractorName"
+                    type="text"
+                    placeholder="subcontractorName"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.subcontractorName || ""}
+                    invalid={
+                      validation.touched.subcontractorName &&
+                      validation.errors.subcontractorName
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.subcontractorName &&
+                  validation.errors.subcontractorName ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.subcontractorName}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
                   <Label className="form-label">dateWoWasClosed</Label>
                   <Input
                     id="dateWoWasClosed"
@@ -895,76 +810,6 @@ const IDIQTrackerAddUpdate = ({
                   validation.errors.dateWoWasClosed ? (
                     <FormFeedback type="invalid">
                       {validation.errors.dateWoWasClosed}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">woCompleted</Label>
-                  <Input
-                    id="woCompleted"
-                    name="woCompleted"
-                    type="text"
-                    placeholder="woCompleted"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.woCompleted || ""}
-                    invalid={
-                      validation.touched.woCompleted &&
-                      validation.errors.woCompleted
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.woCompleted &&
-                  validation.errors.woCompleted ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.woCompleted}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">closedBy</Label>
-                  <Input
-                    id="closedBy"
-                    name="closedBy"
-                    type="text"
-                    placeholder="closedBy"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.closedBy || ""}
-                    invalid={
-                      validation.touched.closedBy && validation.errors.closedBy
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.closedBy && validation.errors.closedBy ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.closedBy}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">verifiedBy</Label>
-                  <Input
-                    id="verifiedBy"
-                    name="verifiedBy"
-                    type="text"
-                    placeholder="verifiedBy"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.verifiedBy || ""}
-                    invalid={
-                      validation.touched.verifiedBy &&
-                      validation.errors.verifiedBy
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.verifiedBy &&
-                  validation.errors.verifiedBy ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.verifiedBy}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -995,8 +840,10 @@ const IDIQTrackerAddUpdate = ({
                   <Input
                     id="comments"
                     name="comments"
-                    type="text"
+                    type="textarea"
                     placeholder="comments"
+                    maxLength="225"
+                    rows="3"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.comments || ""}
@@ -1045,10 +892,11 @@ const IDIQTrackerAddUpdate = ({
                     name="causeCode"
                     type="text"
                     onChange={e => {
-                      set_causeCodeSelected(e.value)
+                      set_causeCodeSelected(e)
                     }}
                     onBlur={validation.handleBlur}
                     options={_causeCodeSelectItems}
+                    value={_causeCodeSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select causeCode"
@@ -1072,10 +920,11 @@ const IDIQTrackerAddUpdate = ({
                     name="rootCause"
                     type="text"
                     onChange={e => {
-                      set_rootCauseSelected(e.value)
+                      set_rootCauseSelected(e)
                     }}
                     onBlur={validation.handleBlur}
                     options={_rootCauseSelectItems}
+                    value={_rootCauseSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select rootCause"
