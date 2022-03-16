@@ -35,18 +35,18 @@ cdrnumber: string;
 datereceived:  date;
 responseduedate:  date;
 dateclosed:  date;
-status: short;
+status: short; //CDR Status
 discrepancy: byte;
 discrepancyshort: byte;
 responsedate:  date;
 responseby:  short;
 isitvalid: short;
 memonumber: string;
+response: byte;
 notes: byte;
 
 // functionalmanager: string;
 // considerations: string;
-// response: byte;
 }
 
 CCRTrackerAddUpdate {
@@ -65,17 +65,14 @@ fmBldgManager: short;
 detailOfComplaint: byte;
 comments: byte;
 detailOfComplaintShort: byte;
-
 issuedBy: string;
 dateResponded: date;
 dateClosed: date;
-
 responseBy: short;
 status: short;
 isitvalid: short;
 unsatCondition: short;
 unsatRootCause: short;
-
 ccrResponse: string;
 
 // description: string;
@@ -90,31 +87,31 @@ pawNumber: string;
 woNumber: string;
 location: string;
 pawLevel: short;
-pawAssessment: short;
-par: short;
-finding: byte;
-descriptionShort: byte;
-pawResponse: byte;
-dateClosedByPar: date;
-responseBy: short;
-comments: byte;
-
-modNumber: string;
-annex: short;
+pawAssessment: short; //from db
+par: short; //PAR Name
+modNumber: string; //MOD Number
+annex: short; 
 specItem1: short;
 title: short;
 dateReceived: date;
 dateAcknowledged: date;
 validity: short;
-pawStatus: short;
-unsatCondition: short;
-unsatRootCause: short;
 
-description: string;
-pawRating: string;
-toNumber: string;
+description: byte;  //Findings
+descriptionShort: byte; //Short Description
+
 dateSentToPar: date;
-pastDueFromPar: string;
+dateClosedByPar: date;
+responseBy: short;
+pawStatus: short; //from db
+unsatCondition: short; //from db
+unsatRootCause: short; //from db
+pawResponse: byte; //PAW response
+comments: byte;
+
+// pawRating: string;
+// toNumber: string;
+// pastDueFromPar: string;
 }
 
 PDRTrackerAddUpdate {
@@ -143,17 +140,13 @@ status: string; //PDR Status from db
 descriptionOfInspection: byte;
 unsatFindings: byte; //Deficiencies Noted
 fmResponse: byte; //FM Response
-
-
-qcComments: string;
-
 closedBy: short;
 dateClosed: date;
-qcComments2: byte;
+qcComments: short;
 causeCode: short;
 rootCause: short;
 
-
+//qcComments2: byte;
 
 }
 

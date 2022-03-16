@@ -31,14 +31,24 @@ const ${entity.name} = ({
 }) => {
 
   useEffect(() => {
-    console.log("modal is running...", modelData)
-  }, [])
+    //set existing selected value
+#foreach($attribute in $entity.attributes )
+	#if($attribute.type == "Short")
+    modelData && modelData?.$attribute.name != null
+      ? set_$attribute.name+Selected({ label: modelData?.$attribute.name, value: "" })
+      : set_$attribute.name+Selected("")
+
+	#end
+#end
+
+
+  }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
 
 #foreach($attribute in $entity.attributes )
 	#if($attribute.type == "Short")
-  const [_$attribute.name+Selected, set_$attribute.name+Selected] = useState(null)
+  const [_$attribute.name+Selected, set_$attribute.name+Selected] = useState("")
   const [_$attribute.name+SelectItems, set_$attribute.name+SelectItems] = useState([])
 	#end
 #end
@@ -99,7 +109,7 @@ const ${entity.name} = ({
       const submitModel = {
 #foreach($attribute in $entity.attributes )
     #if ($attribute.type == "Short")
-		$attribute.name: _$attribute.name+Selected,
+		$attribute.name: _$attribute.name+Selected.value,
     #else
     	$attribute.name: values.$attribute.name,
     #end
@@ -243,11 +253,14 @@ const ${entity.name} = ({
                     name="$attribute.name"
                     type="text"
                     onChange={e => {
-                      set_$attribute.name+Selected(e)
+                      set_$attribute.name+Selected({
+						  label: e.label,
+                          value: e.value,
+						})
                     }}
                     onBlur={validation.handleBlur}
                     options={_$attribute.name+SelectItems}
-       				value={_$attribute.name+Selected}
+       				defaultValue={_$attribute.name+Selected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select $attribute.name"

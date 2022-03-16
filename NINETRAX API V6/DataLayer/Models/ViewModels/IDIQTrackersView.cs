@@ -18,5 +18,6 @@ namespace DataLayer.Models.ViewModels
         public DateTime? DateFromPar { get; set; }
         public string? WOStatus { get; set; }
         public string? Comments { get; set; }
+        public string? TaskCompleted { get; set; }
     }
 }

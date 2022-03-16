@@ -29,39 +29,90 @@ const IDIQTrackerAddUpdate = ({
   onCancelClick,
 }) => {
   useEffect(() => {
-    console.log("modal is running...", modelData)
-  }, [])
+    //set existing selected value
+    modelData && modelData?.woType != null
+      ? set_woTypeSelected({ label: modelData?.woType, value: "" })
+      : set_woTypeSelected("")
+
+    modelData && modelData?.estimator != null
+      ? set_estimatorSelected({ label: modelData?.estimator, value: "" })
+      : set_estimatorSelected("")
+
+    modelData && modelData?.taskCompleted != null
+      ? set_taskCompletedSelected({
+          label: modelData?.taskCompleted,
+          value: "",
+        })
+      : set_taskCompletedSelected("")
+
+    modelData && modelData?.taskCompletedOnTime != null
+      ? set_taskCompletedOnTimeSelected({
+          label: modelData?.taskCompletedOnTime,
+          value: "",
+        })
+      : set_taskCompletedOnTimeSelected("")
+
+    modelData && modelData?.closedBy != null
+      ? set_closedBySelected({ label: modelData?.closedBy, value: "" })
+      : set_closedBySelected("")
+
+    modelData && modelData?.verifiedBy != null
+      ? set_verifiedBySelected({ label: modelData?.verifiedBy, value: "" })
+      : set_verifiedBySelected("")
+
+    modelData && modelData?.parAssigned != null
+      ? set_parAssignedSelected({ label: modelData?.parAssigned, value: "" })
+      : set_parAssignedSelected("")
+
+    modelData && modelData?.subcontractorInHouse != null
+      ? set_subcontractorInHouseSelected({
+          label: modelData?.subcontractorInHouse,
+          value: "",
+        })
+      : set_subcontractorInHouseSelected("")
+
+    modelData && modelData?.causeCode != null
+      ? set_causeCodeSelected({ label: modelData?.causeCode, value: "" })
+      : set_causeCodeSelected("")
+
+    modelData && modelData?.rootCause != null
+      ? set_rootCauseSelected({ label: modelData?.rootCause, value: "" })
+      : set_rootCauseSelected("")
+  }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
 
-  const [_woTypeSelected, set_woTypeSelected] = useState(null)
+  const [_woTypeSelected, set_woTypeSelected] = useState("")
   const [_woTypeSelectItems, set_woTypeSelectItems] = useState([])
-  const [_estimatorSelected, set_estimatorSelected] = useState(null)
+  const [_estimatorSelected, set_estimatorSelected] = useState("")
   const [_estimatorSelectItems, set_estimatorSelectItems] = useState([])
-  const [_taskCompletedSelected, set_taskCompletedSelected] = useState(null)
+  const [_taskCompletedSelected, set_taskCompletedSelected] = useState("")
   const [_taskCompletedSelectItems, set_taskCompletedSelectItems] = useState([
     { value: "YES", label: "YES" },
     { value: "NO", label: "NO" },
   ])
   const [_taskCompletedOnTimeSelected, set_taskCompletedOnTimeSelected] =
-    useState(null)
+    useState("")
   const [_taskCompletedOnTimeSelectItems, set_taskCompletedOnTimeSelectItems] =
-    useState([])
-  const [_closedBySelected, set_closedBySelected] = useState(null)
+    useState([
+      { value: "ON TIME", label: "ON TIME" },
+      { value: "LATE", label: "LATE" },
+    ])
+  const [_closedBySelected, set_closedBySelected] = useState("")
   const [_closedBySelectItems, set_closedBySelectItems] = useState([])
-  const [_verifiedBySelected, set_verifiedBySelected] = useState(null)
+  const [_verifiedBySelected, set_verifiedBySelected] = useState("")
   const [_verifiedBySelectItems, set_verifiedBySelectItems] = useState([])
-  const [_parAssignedSelected, set_parAssignedSelected] = useState(null)
+  const [_parAssignedSelected, set_parAssignedSelected] = useState("")
   const [_parAssignedSelectItems, set_parAssignedSelectItems] = useState([])
   const [_subcontractorInHouseSelected, set_subcontractorInHouseSelected] =
-    useState(null)
+    useState("")
   const [
     _subcontractorInHouseSelectItems,
     set_subcontractorInHouseSelectItems,
   ] = useState([])
-  const [_causeCodeSelected, set_causeCodeSelected] = useState(null)
+  const [_causeCodeSelected, set_causeCodeSelected] = useState("")
   const [_causeCodeSelectItems, set_causeCodeSelectItems] = useState([])
-  const [_rootCauseSelected, set_rootCauseSelected] = useState(null)
+  const [_rootCauseSelected, set_rootCauseSelected] = useState("")
   const [_rootCauseSelectItems, set_rootCauseSelectItems] = useState([])
 
   const validation = useFormik({
@@ -170,31 +221,31 @@ const IDIQTrackerAddUpdate = ({
       const submitModel = {
         id: values.id,
         woNumber: values.woNumber,
-        woType: _woTypeSelected,
+        woType: _woTypeSelected.value,
         woLocation: values.woLocation,
-        estimator: _estimatorSelected,
+        estimator: _estimatorSelected.value,
         idiqWorkOrderDescription: values.idiqWorkOrderDescription,
         approvedStartDate: values.approvedStartDate,
         approvedEndDate: values.approvedEndDate,
         actualCompletionDate: values.actualCompletionDate,
-        taskCompleted: _taskCompletedSelected,
-        taskCompletedOnTime: _taskCompletedOnTimeSelected,
+        taskCompleted: _taskCompletedSelected.value,
+        taskCompletedOnTime: _taskCompletedOnTimeSelected.value,
         qcReceivedDate: values.qcReceivedDate,
-        closedBy: _closedBySelected,
+        closedBy: _closedBySelected.value,
         qcInspectionComplete: values.qcInspectionComplete,
-        verifiedBy: _verifiedBySelected,
-        parAssigned: _parAssignedSelected,
+        verifiedBy: _verifiedBySelected.value,
+        parAssigned: _parAssignedSelected.value,
         dateSentToPar: values.dateSentToPar,
         dateReceivedFromPar: values.dateReceivedFromPar,
         dateSentToWorkControl: values.dateSentToWorkControl,
-        subcontractorInHouse: _subcontractorInHouseSelected,
+        subcontractorInHouse: _subcontractorInHouseSelected.value,
         subcontractorName: values.subcontractorName,
         dateWoWasClosed: values.dateWoWasClosed,
         woStatus: values.woStatus,
         comments: values.comments,
         unsatNotes: values.unsatNotes,
-        causeCode: _causeCodeSelected,
-        rootCause: _rootCauseSelected,
+        causeCode: _causeCodeSelected.value,
+        rootCause: _rootCauseSelected.value,
       }
 
       if (submitModel && submitModel?.id > 0) {
@@ -245,9 +296,7 @@ const IDIQTrackerAddUpdate = ({
     <>
       <Modal isOpen={open}>
         <ModalHeader tag="h4">
-          {modelData?.id > 0
-            ? "Update IDIQTrackerAddUpdate"
-            : "New IDIQTrackerAddUpdate"}
+          {modelData?.id > 0 ? "Update IDIQ Tracker" : "New IDIQ Tracker"}
         </ModalHeader>
         <ModalBody>
           <Form
@@ -271,7 +320,7 @@ const IDIQTrackerAddUpdate = ({
                   />
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">woNumber</Label>
+                  <Label className="form-label">WO Number</Label>
                   <Input
                     id="woNumber"
                     name="woNumber"
@@ -293,17 +342,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>woType</Label>
+                  <Label>WO Type</Label>
                   <Select
                     id="woType"
                     name="woType"
                     type="text"
                     onChange={e => {
-                      set_woTypeSelected(e)
+                      set_woTypeSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_woTypeSelectItems}
-                    value={_woTypeSelected}
+                    defaultValue={_woTypeSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select woType"
@@ -320,7 +372,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">woLocation</Label>
+                  <Label className="form-label">WO Location</Label>
                   <Input
                     id="woLocation"
                     name="woLocation"
@@ -344,17 +396,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>estimator</Label>
+                  <Label>Estimator</Label>
                   <Select
                     id="estimator"
                     name="estimator"
                     type="text"
                     onChange={e => {
-                      set_estimatorSelected(e)
+                      set_estimatorSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_estimatorSelectItems}
-                    value={_estimatorSelected}
+                    defaultValue={_estimatorSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select estimator"
@@ -372,7 +427,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">idiqWorkOrderDescription</Label>
+                  <Label className="form-label">IDIQ SOW</Label>
                   <Input
                     id="idiqWorkOrderDescription"
                     name="idiqWorkOrderDescription"
@@ -398,7 +453,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">approvedStartDate</Label>
+                  <Label className="form-label">Target Start</Label>
                   <Input
                     id="approvedStartDate"
                     name="approvedStartDate"
@@ -423,7 +478,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">approvedEndDate</Label>
+                  <Label className="form-label">Target End</Label>
                   <Input
                     id="approvedEndDate"
                     name="approvedEndDate"
@@ -448,7 +503,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">actualCompletionDate</Label>
+                  <Label className="form-label">Actual Date</Label>
                   <Input
                     id="actualCompletionDate"
                     name="actualCompletionDate"
@@ -473,17 +528,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>taskCompleted</Label>
+                  <Label>Done (YES/NO)</Label>
                   <Select
                     id="taskCompleted"
                     name="taskCompleted"
                     type="text"
                     onChange={e => {
-                      set_taskCompletedSelected(e)
+                      set_taskCompletedSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_taskCompletedSelectItems}
-                    value={_taskCompletedSelected}
+                    defaultValue={_taskCompletedSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select taskCompleted"
@@ -501,17 +559,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>taskCompletedOnTime</Label>
+                  <Label>On Time</Label>
                   <Select
                     id="taskCompletedOnTime"
                     name="taskCompletedOnTime"
                     type="text"
                     onChange={e => {
-                      set_taskCompletedOnTimeSelected(e)
+                      set_taskCompletedOnTimeSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_taskCompletedOnTimeSelectItems}
-                    value={_taskCompletedOnTimeSelected}
+                    defaultValue={_taskCompletedOnTimeSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select taskCompletedOnTime"
@@ -529,7 +590,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qcReceivedDate</Label>
+                  <Label className="form-label">Inspection Date</Label>
                   <Input
                     id="qcReceivedDate"
                     name="qcReceivedDate"
@@ -554,17 +615,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>closedBy</Label>
+                  <Label>IDIQ Closed By</Label>
                   <Select
                     id="closedBy"
                     name="closedBy"
                     type="text"
                     onChange={e => {
-                      set_closedBySelected(e)
+                      set_closedBySelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_closedBySelectItems}
-                    value={_closedBySelected}
+                    defaultValue={_closedBySelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select closedBy"
@@ -581,7 +645,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qcInspectionComplete</Label>
+                  <Label className="form-label">Verified Date</Label>
                   <Input
                     id="qcInspectionComplete"
                     name="qcInspectionComplete"
@@ -606,17 +670,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>verifiedBy</Label>
+                  <Label>Verified By</Label>
                   <Select
                     id="verifiedBy"
                     name="verifiedBy"
                     type="text"
                     onChange={e => {
-                      set_verifiedBySelected(e)
+                      set_verifiedBySelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_verifiedBySelectItems}
-                    value={_verifiedBySelected}
+                    defaultValue={_verifiedBySelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select verifiedBy"
@@ -634,17 +701,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>parAssigned</Label>
+                  <Label>PAR Assigned</Label>
                   <Select
                     id="parAssigned"
                     name="parAssigned"
                     type="text"
                     onChange={e => {
-                      set_parAssignedSelected(e)
+                      set_parAssignedSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_parAssignedSelectItems}
-                    value={_parAssignedSelected}
+                    defaultValue={_parAssignedSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select parAssigned"
@@ -662,7 +732,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">dateSentToPar</Label>
+                  <Label className="form-label">To PAR</Label>
                   <Input
                     id="dateSentToPar"
                     name="dateSentToPar"
@@ -687,7 +757,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">dateReceivedFromPar</Label>
+                  <Label className="form-label">From PAR</Label>
                   <Input
                     id="dateReceivedFromPar"
                     name="dateReceivedFromPar"
@@ -712,7 +782,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">dateSentToWorkControl</Label>
+                  <Label className="form-label">To Work Control</Label>
                   <Input
                     id="dateSentToWorkControl"
                     name="dateSentToWorkControl"
@@ -737,17 +807,20 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label>subcontractorInHouse</Label>
+                  <Label>Sub Contractor/ In House</Label>
                   <Select
                     id="subcontractorInHouse"
                     name="subcontractorInHouse"
                     type="text"
                     onChange={e => {
-                      set_subcontractorInHouseSelected(e)
+                      set_subcontractorInHouseSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_subcontractorInHouseSelectItems}
-                    value={_subcontractorInHouseSelected}
+                    defaultValue={_subcontractorInHouseSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select subcontractorInHouse"
@@ -765,7 +838,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">subcontractorName</Label>
+                  <Label className="form-label">Sub Contractor Name</Label>
                   <Input
                     id="subcontractorName"
                     name="subcontractorName"
@@ -789,7 +862,7 @@ const IDIQTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">dateWoWasClosed</Label>
+                  <Label className="form-label">Date Closed</Label>
                   <Input
                     id="dateWoWasClosed"
                     name="dateWoWasClosed"
@@ -892,11 +965,14 @@ const IDIQTrackerAddUpdate = ({
                     name="causeCode"
                     type="text"
                     onChange={e => {
-                      set_causeCodeSelected(e)
+                      set_causeCodeSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_causeCodeSelectItems}
-                    value={_causeCodeSelected}
+                    defaultValue={_causeCodeSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select causeCode"
@@ -920,11 +996,14 @@ const IDIQTrackerAddUpdate = ({
                     name="rootCause"
                     type="text"
                     onChange={e => {
-                      set_rootCauseSelected(e)
+                      set_rootCauseSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
                     }}
                     onBlur={validation.handleBlur}
                     options={_rootCauseSelectItems}
-                    value={_rootCauseSelected}
+                    defaultValue={_rootCauseSelected}
                     className="basic-single"
                     classNamePrefix="select"
                     placeholder="Select rootCause"

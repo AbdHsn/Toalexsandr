@@ -124,7 +124,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 response.data = dataGrid;
                 response.totalRecords = dataGridCount.TotalRecord;
-                response.totalFilteredRecords = dataGridCount.TotalRecord;
+                response.totalFilteredRecords = dataGridCount.TotalRecord; 
 
                 return StatusCode(200, response);
             }
