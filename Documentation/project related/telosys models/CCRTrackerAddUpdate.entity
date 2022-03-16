@@ -1,0 +1,35 @@
+// Entity CCRTrackerAddUpdate
+
+CCRTrackerAddUpdate {
+id : long {@Id};
+ccrNumber: string;
+woNumber: string;
+location: string;
+par: short;
+dateReceived: date;
+dateAcked: date;
+valid: short;
+annex: short;
+specItem1: short;
+title: short;
+fmBldgManager: short;
+detailOfComplaint: byte;
+comments: byte;
+detailOfComplaintShort: byte;
+
+issuedBy: string;
+dateResponded: date;
+dateClosed: date;
+
+responseBy: short;
+status: short;
+isitvalid: short;
+unsatCondition: short;
+unsatRootCause: short;
+
+ccrResponse: string;
+
+// description: string;
+// specItem3: string;
+// site: string;
+}

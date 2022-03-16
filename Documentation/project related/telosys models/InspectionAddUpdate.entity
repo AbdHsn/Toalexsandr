@@ -1,0 +1,51 @@
+// Entity InspectionAddUpdate
+
+InspectionAddUpdate {
+id: long {@Id};
+workOrder: string;
+location: string;
+status: string;
+elin: string;
+annex: short;
+specItem: short;
+title: short;
+description: byte;
+
+workType: string;
+subWorkType: string;
+//elin: string;
+//pointofcontact: string;
+//POC phone: string;
+asset: string;
+//assetDescription: string;
+
+crew: string;
+lead: string;
+targetStart: date;
+targetFinish: date;
+actualStart: date;
+actualFinish: date;
+statusDate: date;
+
+qcInspector: short;
+//qcStatus: short;
+inspectionDate: date;
+enteredDate: date;
+causeCode: short;
+rootCause: short;
+
+
+// priority: string;
+// glAccount: string;
+// inspectionResults: string;
+// unsatFindings: string;
+// correctiveActions: string;
+// reinspectionDate: date;
+// reinspectionStatus: string;
+// qccomments: string;
+
+  // selected": tru;
+  // task": tru;
+  // isDelete": tru;
+  // deletedBy": "strin;
+}

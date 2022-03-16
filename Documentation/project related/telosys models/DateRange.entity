@@ -1,0 +1,6 @@
+// Entity DateRange
+
+DateRange {
+  Id: long {@Id};
+  DateRange : date ; // field example 
+}

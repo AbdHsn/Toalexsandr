@@ -1,0 +1,32 @@
+// Entity IDIQTrackerAddUpdate
+
+IDIQTrackerAddUpdate {
+id: long {@Id};
+woNumber: string; //WO Number
+woType: short; // WO Type from db
+woLocation: string; //WO Location
+estimator: short; //Estimator from db
+idiqWorkOrderDescription: byte; //IDIQ SOW
+approvedStartDate: date; //Target start date
+approvedEndDate: date; //target end date
+actualCompletionDate: date; //Actual date
+taskCompleted: short; //Done/y/n; YES, NO
+taskCompletedOnTime: short; //On Time; ON TIME, LATE
+qcReceivedDate: date; //Insp Date
+closedBy: short; //IDIQ Closed by from db
+qcInspectionComplete: date; //verif date
+verifiedBy: short; //verif by from db
+parAssigned: short; //PAR assigned
+dateSentToPar: date; //TO PAR
+dateReceivedFromPar: date; //From PAR
+dateSentToWorkControl: date; //to work control
+subcontractorInHouse: short; //Sub/ In-House
+subcontractorName: string; //Sub Name
+dateWoWasClosed: date; //Date Closed
+woStatus: string; // WO Status; OPEN, CLOSED, WAITING COMPLETION, WAITING VERIFICATION, WAITING PAR, WAITING TO PAR, WAITING ON PAR
+comments: byte; // Inspection Notes
+unsatNotes:byte; // Unsat Notes
+causeCode: short; //Cause Code from db dropdownmenu-causecode
+rootCause: short; //Root Cause from db dropdownmenu-rootcause
+
+}

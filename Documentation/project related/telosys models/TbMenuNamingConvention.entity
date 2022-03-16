@@ -1,0 +1,5 @@
+// Entity TbMenuNamingConvention
+
+TbMenuNamingConvention {
+id : long {@Id};
+}

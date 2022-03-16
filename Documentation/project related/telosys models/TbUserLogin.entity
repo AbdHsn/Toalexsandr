@@ -1,0 +1,5 @@
+// Entity TbUserLogin
+
+TbUserLogin {
+id : long {@Id};
+}

@@ -1,0 +1,31 @@
+// Entity NCRTrackerAddUpdate
+
+NCRTrackerAddUpdate {
+id: long {@Id};
+ncrNumber: string;
+qcfrNumber: string;
+pdrNumber: string;
+woNumber: string;
+dateIssued: date;
+qcInspector: short;
+annex: short;
+specItem: short;
+title: short;
+assessmentType: short;
+nonconformanceType: short;
+nonconformanceSummary: byte;
+requirement1: byte;
+observation1: byte;
+requirement2: byte;
+observation2: byte;
+requirement3: byte;
+observation3: byte;
+requirement4: byte;
+observation4: byte;
+responsiblePersone: string;
+responsibleDiscipline: string;
+responsibleSub: string;
+dateCapDue: date;
+status:string;
+comments: byte;
+}

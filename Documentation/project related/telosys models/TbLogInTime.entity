@@ -1,0 +1,5 @@
+// Entity TbLogInTime
+
+TbLogInTime {
+id : long {@Id};
+}

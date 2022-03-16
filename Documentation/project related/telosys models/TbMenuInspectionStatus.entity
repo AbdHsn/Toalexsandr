@@ -1,0 +1,5 @@
+// Entity TbMenuInspectionStatus
+
+TbMenuInspectionStatus {
+id : long {@Id};
+}

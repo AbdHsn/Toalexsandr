@@ -1,0 +1,21 @@
+// Entity CDRTrackersAddUpdate
+
+CDRTrackersAddUpdate {
+id : long {@Id};
+cdrnumber: string;
+datereceived:  date;
+responseduedate:  date;
+dateclosed:  date;
+status: short;
+discrepancy: byte;
+discrepancyshort: byte;
+responsedate:  date;
+responseby:  short;
+isitvalid: short;
+memonumber: string;
+notes: byte;
+
+// functionalmanager: string;
+// considerations: string;
+// response: byte;
+}

@@ -1,0 +1,15 @@
+IDIQTrackersView {
+id: long {@Id};
+woNumber: string;
+idiqsowDescription: string;
+location: string;
+woType: string;
+estimator: string;
+parAssigned: string;
+verifiedBy: string;
+inspectionDate: date;
+dateToPar: date;
+dateFromPar: date;
+woStatus: string;
+comments: string;
+}

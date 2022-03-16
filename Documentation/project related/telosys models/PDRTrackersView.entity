@@ -1,0 +1,17 @@
+PDRTrackersView {
+id: long {@Id};
+pdrNumber: string;
+workOrder: string;
+location: string;
+qcInspector: string;
+annex: string;
+specItem: string;
+title: string;
+dateCompleted: date;
+unsatFindings: string;
+fmName: string;
+fmTitle: string;
+dateIssued: date;
+dateDue: date;
+status: string;
+}

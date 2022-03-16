@@ -1,0 +1,5 @@
+// Entity ATbNasinspection
+
+ATbNasinspection {
+id : long {@Id};
+}

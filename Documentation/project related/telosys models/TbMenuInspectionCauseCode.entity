@@ -1,0 +1,5 @@
+// Entity TbMenuInspectionCauseCode
+
+TbMenuInspectionCauseCode {
+id : long {@Id};
+}

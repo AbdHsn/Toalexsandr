@@ -1,0 +1,5 @@
+// Entity TbMenuIdiqWotype
+
+TbMenuIdiqWotype {
+id : long {@Id};
+}

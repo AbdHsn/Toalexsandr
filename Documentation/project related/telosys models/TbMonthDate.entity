@@ -1,0 +1,5 @@
+// Entity TbMonthDate
+
+TbMonthDate {
+id : long {@Id};
+}

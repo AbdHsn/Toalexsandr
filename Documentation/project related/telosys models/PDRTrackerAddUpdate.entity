@@ -1,0 +1,38 @@
+// Entity PDRTrackerAddUpdate
+
+PDRTrackerAddUpdate {
+id: long {@Id};
+pdrnumber: string;
+workOrder: string;
+location: string;
+inspectionFailReaso:short;
+qcInspector: short;
+surveillanceType: short;
+surveillanceResults: short;
+dateStarted: date;
+dateCompleted: date;
+dateIssued: date;
+dateDue: date;
+dateReinspected: date;
+descriptionOfInspection: string;
+
+fmResponse: string;
+qcComments: string;
+
+closedBy: short;
+dateClosed: date;
+qcComments2: byte;
+causeCode: short;
+rootCause: short;
+
+// techsName: string;
+// unsatFindings: string;
+// subcontractorName: string;
+// annex: string;
+// specItem: string;
+// title: string;
+// specItemRequirements: string;
+// fmname: string;
+// fmtitle: string;
+// status: string;
+}

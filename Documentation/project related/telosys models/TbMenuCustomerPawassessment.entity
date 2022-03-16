@@ -1,0 +1,5 @@
+// Entity TbMenuCustomerPawassessment
+
+TbMenuCustomerPawassessment {
+id : long {@Id};
+}

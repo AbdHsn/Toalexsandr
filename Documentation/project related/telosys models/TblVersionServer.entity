@@ -1,0 +1,5 @@
+// Entity TblVersionServer
+
+TblVersionServer {
+ id : long {@Id} ; 
+}

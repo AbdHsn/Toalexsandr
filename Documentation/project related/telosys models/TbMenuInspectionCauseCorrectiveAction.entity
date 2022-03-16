@@ -1,0 +1,5 @@
+// Entity TbMenuInspectionCauseCorrectiveAction
+
+TbMenuInspectionCauseCorrectiveAction {
+id : long {@Id};
+}

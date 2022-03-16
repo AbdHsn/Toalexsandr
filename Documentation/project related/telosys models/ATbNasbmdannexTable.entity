@@ -1,0 +1,5 @@
+// Entity ATbNasbmdannexTable
+
+ATbNasbmdannexTable {
+id : long {@Id};
+}

@@ -1,0 +1,35 @@
+// Entity PAWTrackerAddUpdate
+
+PAWTrackerAddUpdate {
+id: long {@Id};
+site: short;
+pawNumber: string;
+woNumber: string;
+location: string;
+pawLevel: short;
+pawAssessment: short;
+par: short;
+finding: byte;
+descriptionShort: byte;
+pawResponse: byte;
+dateClosedByPar: date;
+responseBy: short;
+comments: byte;
+
+modNumber: string;
+annex: short;
+specItem1: short;
+title: short;
+dateReceived: date;
+dateAcknowledged: date;
+validity: short;
+pawStatus: short;
+unsatCondition: short;
+unsatRootCause: short;
+
+description: string;
+pawRating: string;
+toNumber: string;
+dateSentToPar: date;
+pastDueFromPar: string;
+}

@@ -1,0 +1,5 @@
+// Entity ATbYear
+
+ATbYear {
+id : long {@Id};
+}

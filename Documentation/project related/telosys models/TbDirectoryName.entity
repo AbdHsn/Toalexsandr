@@ -1,0 +1,5 @@
+// Entity TbDirectoryName
+
+TbDirectoryName {
+id : long {@Id};
+}

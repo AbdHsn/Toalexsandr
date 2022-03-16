@@ -1,0 +1,5 @@
+// Entity TblPdrtemplate
+
+TblPdrtemplate {
+id : long {@Id};
+}

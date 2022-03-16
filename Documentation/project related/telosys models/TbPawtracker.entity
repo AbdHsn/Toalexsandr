@@ -1,0 +1,5 @@
+// Entity TbPawtracker
+
+TbPawtracker {
+id : long {@Id};
+}

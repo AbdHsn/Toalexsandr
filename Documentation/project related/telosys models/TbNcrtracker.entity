@@ -1,0 +1,5 @@
+// Entity TbNcrtracker
+
+TbNcrtracker {
+id : long {@Id}; 
+}

@@ -1,0 +1,5 @@
+// Entity TbIdiqtracker
+
+TbIdiqtracker {
+id : long {@Id};
+}
