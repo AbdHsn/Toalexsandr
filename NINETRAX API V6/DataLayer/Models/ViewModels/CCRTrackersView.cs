@@ -22,5 +22,19 @@ namespace DataLayer.Models.ViewModels
         public string? Title { get; set; }
         public string? Validity { get; set; }
         public string? CCRResponse { get; set; }
+
+
+        public string? site { get; set; }
+        public string? specItem3 { get; set; }
+        public string? issuedBy { get; set; }
+        public DateTime? dateClosed { get; set; }
+        public string? description { get; set; }
+        public string? detailOfComplaintShort { get; set; }
+        public string? responseBy { get; set; }
+        public string? valid { get; set; }
+        public string? unsatCondition { get; set; }
+        public string? unsatRootCause { get; set; }
+
+
     }
 }

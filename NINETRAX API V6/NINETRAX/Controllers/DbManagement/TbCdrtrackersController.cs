@@ -232,11 +232,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbCdrtracker>> CreateTbCdrtracker(TbCdrtracker objTbCdrtracker)
         {
+            var getLast = await _context.TbCdrtrackers.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbCdrtracker.Id = 1;
+            else
+                objTbCdrtracker.Id = getLast.Id + 1;
+
             _context.TbCdrtrackers.Add(objTbCdrtracker);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbCdrtracker);
+
+                if (objTbCdrtracker.Id > 0)
+                    return StatusCode(200, objTbCdrtracker);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {

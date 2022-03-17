@@ -6,8 +6,7 @@ import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import "../../assets/scss/custom/_common.scss"
 import DeleteModal from "../../components/Common/DeleteModal"
-import CDRTrackersAddUpdate from "./add-update"
-
+import CDRTrackerAddUpdate from "./add-update"
 import {
   Button,
   Card,
@@ -241,7 +240,7 @@ const CDRTrackersView = props => {
 
   const onDeleteConfirmed = () => {
     if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
+      deleteCDRTracker(modelData.id)
         .then(res => {
           if (res.data) {
             toastr.success("Selected item successfully deleted.", "NINETRAX")
@@ -867,7 +866,7 @@ const CDRTrackersView = props => {
                     }}
                   />
 
-                  <CDRTrackersAddUpdate
+                  <CDRTrackerAddUpdate
                     open={modal}
                     modelData={modelData}
                     onSaveClick={item => {

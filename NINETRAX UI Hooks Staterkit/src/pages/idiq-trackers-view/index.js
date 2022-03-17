@@ -24,6 +24,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getIDIQTrackersView,
   exportIDIQTrackersView,
+  deleteIDIQTracker,
 } from "../../services/idiq-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -232,6 +233,7 @@ const IDIQTrackersView = props => {
   const onEditClick = item => {
     setModal(true)
     setModelData(item)
+    console.log("edit items: ", item)
   }
 
   const onAttemptDelete = id => {
@@ -243,7 +245,7 @@ const IDIQTrackersView = props => {
 
   const onDeleteConfirmed = () => {
     if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
+      deleteIDIQTracker(modelData.id)
         .then(res => {
           if (res.data) {
             toastr.success("Selected item successfully deleted.", "NINETRAX")

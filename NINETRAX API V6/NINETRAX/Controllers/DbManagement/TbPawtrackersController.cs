@@ -232,11 +232,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbPawtracker>> CreateTbPawtracker(TbPawtracker objTbPawtracker)
         {
+            var getLast = await _context.TbPawtrackers.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbPawtracker.Id = 1;
+            else
+                objTbPawtracker.Id = getLast.Id + 1;
+
             _context.TbPawtrackers.Add(objTbPawtracker);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbPawtracker);
+
+                if (objTbPawtracker.Id > 0)
+                    return StatusCode(200, objTbPawtracker);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {

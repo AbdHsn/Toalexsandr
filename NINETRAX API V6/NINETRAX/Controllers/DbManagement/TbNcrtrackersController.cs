@@ -242,7 +242,10 @@ namespace NINETRAX.Controllers.DbManagement
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbNcrtracker);
+
+                if (objTbNcrtracker.Id > 0)
+                    return StatusCode(200, objTbNcrtracker);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {

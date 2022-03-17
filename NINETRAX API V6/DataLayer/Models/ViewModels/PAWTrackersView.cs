@@ -20,5 +20,20 @@ namespace DataLayer.Models.ViewModels
         public string? Title { get; set; }
         public string? Validity { get; set; }
         public string? PawResponse { get; set; }
+        //
+
+        public string? site { get; set; }
+        public string? descriptionShort { get; set; }
+        public string? pawLevel { get; set; }
+        public string? pawRating { get; set; }
+        public string? pawAssessment { get; set; }
+        public string? toNumber { get; set; }
+        public string? modNumber { get; set; }
+        public string? pastDueFromPar { get; set; }
+        public DateTime? dateClosedByPar { get; set; }
+        public string? responseBy { get; set; }
+        public string? comments { get; set; }
+        public string? unsatCondition { get; set; }
+        public string? unsatRootCause { get; set; }
     }
 }

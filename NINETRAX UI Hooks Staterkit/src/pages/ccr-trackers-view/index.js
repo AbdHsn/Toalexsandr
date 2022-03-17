@@ -25,6 +25,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getCCRTrackersView,
   exportCCRTrackersView,
+  deleteCCRTracker,
 } from "../../services/ccr-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
@@ -270,7 +271,7 @@ const CCRTrackersView = props => {
 
   const onDeleteConfirmed = () => {
     if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
+      deleteCCRTracker(modelData.id)
         .then(res => {
           if (res.data) {
             toastr.success("Selected item successfully deleted.", "NINETRAX")

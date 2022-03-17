@@ -29,36 +29,107 @@ const PAWTrackerAddUpdate = ({
   onCancelClick,
 }) => {
   useEffect(() => {
-    console.log("modal is running...", modelData)
-  }, [])
+    //set existing selected value
+    modelData && modelData?.site != null
+      ? set_siteSelected({ label: modelData?.site, value: modelData?.site })
+      : set_siteSelected("")
+
+    modelData && modelData?.pawLevel != null
+      ? set_pawLevelSelected({
+          label: modelData?.pawLevel,
+          value: modelData?.pawLevel,
+        })
+      : set_pawLevelSelected("")
+
+    modelData && modelData?.pawAssessment != null
+      ? set_pawAssessmentSelected({
+          label: modelData?.pawAssessment,
+          value: modelData?.pawAssessment,
+        })
+      : set_pawAssessmentSelected("")
+
+    modelData && modelData?.par != null
+      ? set_parSelected({ label: modelData?.par, value: modelData?.par })
+      : set_parSelected("")
+
+    modelData && modelData?.annex != null
+      ? set_annexSelected({ label: modelData?.annex, value: modelData?.annex })
+      : set_annexSelected("")
+
+    modelData && modelData?.specItem1 != null
+      ? set_specItem1Selected({
+          label: modelData?.specItem1,
+          value: modelData?.specItem1,
+        })
+      : set_specItem1Selected("")
+
+    modelData && modelData?.title != null
+      ? set_titleSelected({ label: modelData?.title, value: modelData?.title })
+      : set_titleSelected("")
+
+    modelData && modelData?.validity != null
+      ? set_validitySelected({
+          label: modelData?.validity,
+          value: modelData?.validity,
+        })
+      : set_validitySelected("")
+
+    modelData && modelData?.responseBy != null
+      ? set_responseBySelected({
+          label: modelData?.responseBy,
+          value: modelData?.responseBy,
+        })
+      : set_responseBySelected("")
+
+    modelData && modelData?.pawStatus != null
+      ? set_pawStatusSelected({
+          label: modelData?.pawStatus,
+          value: modelData?.pawStatus,
+        })
+      : set_pawStatusSelected("")
+
+    modelData && modelData?.unsatCondition != null
+      ? set_unsatConditionSelected({
+          label: modelData?.unsatCondition,
+          value: modelData?.unsatCondition,
+        })
+      : set_unsatConditionSelected("")
+
+    modelData && modelData?.unsatRootCause != null
+      ? set_unsatRootCauseSelected({
+          label: modelData?.unsatRootCause,
+          value: modelData?.unsatRootCause,
+        })
+      : set_unsatRootCauseSelected("")
+  }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
 
-  const [_siteSelected, set_siteSelected] = useState(null)
+  const [_siteSelected, set_siteSelected] = useState("")
   const [_siteSelectItems, set_siteSelectItems] = useState([])
-  const [_pawLevelSelected, set_pawLevelSelected] = useState(null)
+  const [_pawLevelSelected, set_pawLevelSelected] = useState("")
   const [_pawLevelSelectItems, set_pawLevelSelectItems] = useState([])
-  const [_pawAssessmentSelected, set_pawAssessmentSelected] = useState(null)
+  const [_pawAssessmentSelected, set_pawAssessmentSelected] = useState("")
   const [_pawAssessmentSelectItems, set_pawAssessmentSelectItems] = useState([])
-  const [_parSelected, set_parSelected] = useState(null)
+  const [_parSelected, set_parSelected] = useState("")
   const [_parSelectItems, set_parSelectItems] = useState([])
-  const [_responseBySelected, set_responseBySelected] = useState(null)
-  const [_responseBySelectItems, set_responseBySelectItems] = useState([])
-  const [_annexSelected, set_annexSelected] = useState(null)
+  const [_annexSelected, set_annexSelected] = useState("")
   const [_annexSelectItems, set_annexSelectItems] = useState([])
-  const [_specItem1Selected, set_specItem1Selected] = useState(null)
+  const [_specItem1Selected, set_specItem1Selected] = useState("")
   const [_specItem1SelectItems, set_specItem1SelectItems] = useState([])
-  const [_titleSelected, set_titleSelected] = useState(null)
+  const [_titleSelected, set_titleSelected] = useState("")
   const [_titleSelectItems, set_titleSelectItems] = useState([])
-  const [_validitySelected, set_validitySelected] = useState(null)
+  const [_validitySelected, set_validitySelected] = useState("")
   const [_validitySelectItems, set_validitySelectItems] = useState([])
-  const [_pawStatusSelected, set_pawStatusSelected] = useState(null)
+  const [_responseBySelected, set_responseBySelected] = useState("")
+  const [_responseBySelectItems, set_responseBySelectItems] = useState([])
+  const [_pawStatusSelected, set_pawStatusSelected] = useState("")
   const [_pawStatusSelectItems, set_pawStatusSelectItems] = useState([])
-  const [_unsatConditionSelected, set_unsatConditionSelected] = useState(null)
+  const [_unsatConditionSelected, set_unsatConditionSelected] = useState("")
   const [_unsatConditionSelectItems, set_unsatConditionSelectItems] = useState(
     []
   )
-  const [_unsatRootCauseSelected, set_unsatRootCauseSelected] = useState(null)
+  const [_unsatRootCauseSelected, set_unsatRootCauseSelected] = useState("")
   const [_unsatRootCauseSelectItems, set_unsatRootCauseSelectItems] = useState(
     []
   )
@@ -76,19 +147,9 @@ const PAWTrackerAddUpdate = ({
       pawLevel: (modelData && modelData.pawLevel) || "",
       pawAssessment: (modelData && modelData.pawAssessment) || "",
       par: (modelData && modelData.par) || "",
-      finding: (modelData && modelData.finding) || "",
-      descriptionShort: (modelData && modelData.descriptionShort) || "",
-      pawResponse: (modelData && modelData.pawResponse) || "",
-      dateClosedByPar:
-        (modelData &&
-          modelData?.dateClosedByPar &&
-          moment(modelData?.dateClosedByPar).format("YYYY-MM-DD")) ||
-        null,
-      responseBy: (modelData && modelData.responseBy) || "",
-      comments: (modelData && modelData.comments) || "",
       modNumber: (modelData && modelData.modNumber) || "",
       annex: (modelData && modelData.annex) || "",
-      specItem1: (modelData && modelData.specItem1) || "",
+      specItem1: (modelData && modelData.specItem) || "",
       title: (modelData && modelData.title) || "",
       dateReceived:
         (modelData &&
@@ -101,18 +162,24 @@ const PAWTrackerAddUpdate = ({
           moment(modelData?.dateAcknowledged).format("YYYY-MM-DD")) ||
         null,
       validity: (modelData && modelData.validity) || "",
-      pawStatus: (modelData && modelData.pawStatus) || "",
-      unsatCondition: (modelData && modelData.unsatCondition) || "",
-      unsatRootCause: (modelData && modelData.unsatRootCause) || "",
       description: (modelData && modelData.description) || "",
-      pawRating: (modelData && modelData.pawRating) || "",
-      toNumber: (modelData && modelData.toNumber) || "",
+      descriptionShort: (modelData && modelData.descriptionShort) || "",
       dateSentToPar:
         (modelData &&
-          modelData?.dateSentToPar &&
-          moment(modelData?.dateSentToPar).format("YYYY-MM-DD")) ||
+          modelData?.dateReceived &&
+          moment(modelData?.dateReceived).format("YYYY-MM-DD")) ||
         null,
-      pastDueFromPar: (modelData && modelData.pastDueFromPar) || "",
+      dateClosedByPar:
+        (modelData &&
+          modelData?.dateClosedByPar &&
+          moment(modelData?.dateClosedByPar).format("YYYY-MM-DD")) ||
+        null,
+      responseBy: (modelData && modelData.responseBy) || "",
+      pawStatus: (modelData && modelData.status) || "",
+      unsatCondition: (modelData && modelData.unsatCondition) || "",
+      unsatRootCause: (modelData && modelData.unsatRootCause) || "",
+      pawResponse: (modelData && modelData.pawResponse) || "",
+      comments: (modelData && modelData.comments) || "",
     },
     validationSchema: Yup.object({
       // id: Yup.string().required("id is required"),
@@ -123,12 +190,6 @@ const PAWTrackerAddUpdate = ({
       // pawLevel: Yup.string().required("pawLevel is required"),
       // pawAssessment: Yup.string().required("pawAssessment is required"),
       // par: Yup.string().required("par is required"),
-      // finding: Yup.string().required("finding is required"),
-      // descriptionShort: Yup.string().required("descriptionShort is required"),
-      // pawResponse: Yup.string().required("pawResponse is required"),
-      // dateClosedByPar: Yup.string().required("dateClosedByPar is required"),
-      // responseBy: Yup.string().required("responseBy is required"),
-      // comments: Yup.string().required("comments is required"),
       // modNumber: Yup.string().required("modNumber is required"),
       // annex: Yup.string().required("annex is required"),
       // specItem1: Yup.string().required("specItem1 is required"),
@@ -136,14 +197,16 @@ const PAWTrackerAddUpdate = ({
       // dateReceived: Yup.string().required("dateReceived is required"),
       // dateAcknowledged: Yup.string().required("dateAcknowledged is required"),
       // validity: Yup.string().required("validity is required"),
+      // description: Yup.string().required("description is required"),
+      // descriptionShort: Yup.string().required("descriptionShort is required"),
+      // dateSentToPar: Yup.string().required("dateSentToPar is required"),
+      // dateClosedByPar: Yup.string().required("dateClosedByPar is required"),
+      // responseBy: Yup.string().required("responseBy is required"),
       // pawStatus: Yup.string().required("pawStatus is required"),
       // unsatCondition: Yup.string().required("unsatCondition is required"),
       // unsatRootCause: Yup.string().required("unsatRootCause is required"),
-      // description: Yup.string().required("description is required"),
-      // pawRating: Yup.string().required("pawRating is required"),
-      // toNumber: Yup.string().required("toNumber is required"),
-      // dateSentToPar: Yup.string().required("dateSentToPar is required"),
-      // pastDueFromPar: Yup.string().required("pastDueFromPar is required"),
+      // pawResponse: Yup.string().required("pawResponse is required"),
+      // comments: Yup.string().required("comments is required"),
     }),
 
     onSubmit: values => {
@@ -151,50 +214,46 @@ const PAWTrackerAddUpdate = ({
 
       const submitModel = {
         id: values.id,
-        site: _siteSelected,
+        site: _siteSelected.value,
         pawNumber: values.pawNumber,
         woNumber: values.woNumber,
         location: values.location,
-        pawLevel: _pawLevelSelected,
-        pawAssessment: _pawAssessmentSelected,
-        par: _parSelected,
-        finding: values.finding,
-        descriptionShort: values.descriptionShort,
-        pawResponse: values.pawResponse,
-        dateClosedByPar: values.dateClosedByPar,
-        responseBy: _responseBySelected,
-        comments: values.comments,
+        pawLevel: _pawLevelSelected.value,
+        pawAssessment: _pawAssessmentSelected.value,
+        par: _parSelected.value,
         modNumber: values.modNumber,
-        annex: _annexSelected,
-        specItem1: _specItem1Selected,
-        title: _titleSelected,
+        annex: _annexSelected.value,
+        specItem1: _specItem1Selected.value,
+        title: _titleSelected.value,
         dateReceived: values.dateReceived,
         dateAcknowledged: values.dateAcknowledged,
-        validity: _validitySelected,
-        pawStatus: _pawStatusSelected,
-        unsatCondition: _unsatConditionSelected,
-        unsatRootCause: _unsatRootCauseSelected,
+        validity: _validitySelected.value,
         description: values.description,
-        pawRating: values.pawRating,
-        toNumber: values.toNumber,
+        descriptionShort: values.descriptionShort,
         dateSentToPar: values.dateSentToPar,
-        pastDueFromPar: values.pastDueFromPar,
+        dateClosedByPar: values.dateClosedByPar,
+        responseBy: _responseBySelected.value,
+        pawStatus: _pawStatusSelected.value,
+        unsatCondition: _unsatConditionSelected.value,
+        unsatRootCause: _unsatRootCauseSelected.value,
+        pawResponse: values.pawResponse,
+        comments: values.comments,
       }
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
-        editPAWTrackerAddUpdate(submitModel)
+        editPAWTrackerAddUpdate(submitModel?.id, submitModel)
           .then(res => {
             console.log("submit model create response: ", res)
             if (res.data.id > 0) {
-              toastr.success("Data successfully saved.", "NINETRAX")
+              toastr.success("Data successfully updated.", "NINETRAX")
               setIsSaving(false)
               validation.resetForm()
               onSaveClick(res.data)
               onCancelClick(false)
             } else {
               setIsSaving(false)
-              toastr.warning("Failed to save data.", "NINETRAX")
+              toastr.warning("Failed to update data.", "NINETRAX")
             }
           })
           .catch(error => {
@@ -207,14 +266,14 @@ const PAWTrackerAddUpdate = ({
           .then(res => {
             console.log("submit model update response: ", res)
             if (res.data.id > 0) {
-              toastr.success("Data successfully saved.", "NINETRAX")
+              toastr.success("Data successfully created.", "NINETRAX")
               setIsSaving(false)
               validation.resetForm()
               onSaveClick(res.data)
               onCancelClick(false)
             } else {
               setIsSaving(false)
-              toastr.warning("Failed to save data.", "NINETRAX")
+              toastr.warning("Failed to create data.", "NINETRAX")
             }
           })
           .catch(error => {
@@ -227,11 +286,9 @@ const PAWTrackerAddUpdate = ({
 
   return (
     <>
-      <Modal isOpen={open}>
+      <Modal isOpen={open} className="modal-dialog modal-lg">
         <ModalHeader tag="h4">
-          {modelData?.id > 0
-            ? "Update PAWTrackerAddUpdate"
-            : "New PAWTrackerAddUpdate"}
+          {modelData?.id > 0 ? "Update PAW Tracker" : "New PAW Tracker"}
         </ModalHeader>
         <ModalBody>
           <Form
@@ -254,210 +311,439 @@ const PAWTrackerAddUpdate = ({
                     defaultValue={validation.values.id || 0}
                   />
                 </div>
+                <Row>
+                  <Col className="col-md-6 col-sm-12">
+                    <div className="mb-3">
+                      <Label>Site</Label>
+                      <Select
+                        id="site"
+                        name="site"
+                        type="text"
+                        onChange={e => {
+                          set_siteSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_siteSelectItems}
+                        defaultValue={_siteSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Site"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.site && validation.errors.site ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.site}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">PAW Number</Label>
+                      <Input
+                        id="pawNumber"
+                        name="pawNumber"
+                        type="text"
+                        placeholder="PAW Number"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.pawNumber || ""}
+                        invalid={
+                          validation.touched.pawNumber &&
+                          validation.errors.pawNumber
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.pawNumber &&
+                      validation.errors.pawNumber ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.pawNumber}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">WO Number</Label>
+                      <Input
+                        id="woNumber"
+                        name="woNumber"
+                        type="text"
+                        placeholder="WO Number"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.woNumber || ""}
+                        invalid={
+                          validation.touched.woNumber &&
+                          validation.errors.woNumber
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.woNumber &&
+                      validation.errors.woNumber ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.woNumber}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">Location</Label>
+                      <Input
+                        id="location"
+                        name="location"
+                        type="text"
+                        placeholder="Location"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.location || ""}
+                        invalid={
+                          validation.touched.location &&
+                          validation.errors.location
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.location &&
+                      validation.errors.location ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.location}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>PAW Level</Label>
+                      <Select
+                        id="pawLevel"
+                        name="pawLevel"
+                        type="text"
+                        onChange={e => {
+                          set_pawLevelSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_pawLevelSelectItems}
+                        defaultValue={_pawLevelSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select PAW Level"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.pawLevel &&
+                      validation.errors.pawLevel ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.pawLevel}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>PAW Assessment</Label>
+                      <Select
+                        id="pawAssessment"
+                        name="pawAssessment"
+                        type="text"
+                        onChange={e => {
+                          set_pawAssessmentSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_pawAssessmentSelectItems}
+                        defaultValue={_pawAssessmentSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select PAW Assessment"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.pawAssessment &&
+                      validation.errors.pawAssessment ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.pawAssessment}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>PAR</Label>
+                      <Select
+                        id="par"
+                        name="par"
+                        type="text"
+                        onChange={e => {
+                          set_parSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_parSelectItems}
+                        defaultValue={_parSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select PAR"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.par && validation.errors.par ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.par}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-md-6 col-sm-12">
+                    <div className="mb-3">
+                      <Label className="form-label">MOD Number</Label>
+                      <Input
+                        id="modNumber"
+                        name="modNumber"
+                        type="text"
+                        placeholder="MOD Number"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.modNumber || ""}
+                        invalid={
+                          validation.touched.modNumber &&
+                          validation.errors.modNumber
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.modNumber &&
+                      validation.errors.modNumber ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.modNumber}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Annex</Label>
+                      <Select
+                        id="annex"
+                        name="annex"
+                        type="text"
+                        onChange={e => {
+                          set_annexSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_annexSelectItems}
+                        defaultValue={_annexSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Annex"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.annex && validation.errors.annex ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.annex}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Spec Item</Label>
+                      <Select
+                        id="specItem1"
+                        name="specItem1"
+                        type="text"
+                        onChange={e => {
+                          set_specItem1Selected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_specItem1SelectItems}
+                        defaultValue={_specItem1Selected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Spec Item"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.specItem1 &&
+                      validation.errors.specItem1 ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.specItem1}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Title</Label>
+                      <Select
+                        id="title"
+                        name="title"
+                        type="text"
+                        onChange={e => {
+                          set_titleSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_titleSelectItems}
+                        defaultValue={_titleSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Title"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.title && validation.errors.title ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.title}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">Date Received</Label>
+                      <Input
+                        id="dateReceived"
+                        name="dateReceived"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="dateReceived"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.dateReceived || ""}
+                        invalid={
+                          validation.touched.dateReceived &&
+                          validation.errors.dateReceived
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.dateReceived &&
+                      validation.errors.dateReceived ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.dateReceived}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">Date Acknowledged</Label>
+                      <Input
+                        id="dateAcknowledged"
+                        name="dateAcknowledged"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="dateAcknowledged"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.dateAcknowledged || ""}
+                        invalid={
+                          validation.touched.dateAcknowledged &&
+                          validation.errors.dateAcknowledged
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.dateAcknowledged &&
+                      validation.errors.dateAcknowledged ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.dateAcknowledged}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Validity</Label>
+                      <Select
+                        id="validity"
+                        name="validity"
+                        type="text"
+                        onChange={e => {
+                          set_validitySelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_validitySelectItems}
+                        defaultValue={_validitySelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Validity"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.validity &&
+                      validation.errors.validity ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.validity}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+
                 <div className="mb-3">
-                  <Label>site</Label>
-                  <Select
-                    id="site"
-                    name="site"
-                    type="text"
-                    onChange={e => {
-                      set_siteSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_siteSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select site"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.site && validation.errors.site ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.site}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pawNumber</Label>
+                  <Label className="form-label">Finding</Label>
                   <Input
-                    id="pawNumber"
-                    name="pawNumber"
-                    type="text"
-                    placeholder="pawNumber"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pawNumber || ""}
-                    invalid={
-                      validation.touched.pawNumber &&
-                      validation.errors.pawNumber
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pawNumber &&
-                  validation.errors.pawNumber ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawNumber}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">woNumber</Label>
-                  <Input
-                    id="woNumber"
-                    name="woNumber"
-                    type="text"
-                    placeholder="woNumber"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.woNumber || ""}
-                    invalid={
-                      validation.touched.woNumber && validation.errors.woNumber
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.woNumber && validation.errors.woNumber ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.woNumber}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">location</Label>
-                  <Input
-                    id="location"
-                    name="location"
-                    type="text"
-                    placeholder="location"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.location || ""}
-                    invalid={
-                      validation.touched.location && validation.errors.location
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.location && validation.errors.location ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.location}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>pawLevel</Label>
-                  <Select
-                    id="pawLevel"
-                    name="pawLevel"
-                    type="text"
-                    onChange={e => {
-                      set_pawLevelSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_pawLevelSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select pawLevel"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.pawLevel && validation.errors.pawLevel ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawLevel}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>pawAssessment</Label>
-                  <Select
-                    id="pawAssessment"
-                    name="pawAssessment"
-                    type="text"
-                    onChange={e => {
-                      set_pawAssessmentSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_pawAssessmentSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select pawAssessment"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.pawAssessment &&
-                  validation.errors.pawAssessment ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawAssessment}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>par</Label>
-                  <Select
-                    id="par"
-                    name="par"
-                    type="text"
-                    onChange={e => {
-                      set_parSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_parSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select par"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.par && validation.errors.par ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.par}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">finding</Label>
-                  <Input
-                    id="finding"
-                    name="finding"
+                    id="description"
+                    name="description"
                     type="textarea"
-                    placeholder="finding"
+                    placeholder="Finding"
                     maxLength="225"
-                    rows="3"
+                    rows="5"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.finding || ""}
+                    value={validation.values.description || ""}
                     invalid={
-                      validation.touched.finding && validation.errors.finding
+                      validation.touched.description &&
+                      validation.errors.description
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.finding && validation.errors.finding ? (
+                  {validation.touched.description &&
+                  validation.errors.description ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.finding}
+                      {validation.errors.description}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">descriptionShort</Label>
+                  <Label className="form-label">
+                    Description Short Version
+                  </Label>
                   <Input
                     id="descriptionShort"
                     name="descriptionShort"
                     type="textarea"
-                    placeholder="descriptionShort"
+                    placeholder="Description Short Version"
                     maxLength="225"
                     rows="3"
                     onChange={validation.handleChange}
@@ -477,15 +763,198 @@ const PAWTrackerAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
+
+                <Row>
+                  <Col className="col-md-6 col-sm-12">
+                    <div className="mb-3">
+                      <Label className="form-label">Responded To PAR</Label>
+                      <Input
+                        id="dateSentToPar"
+                        name="dateSentToPar"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="dateSentToPar"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.dateSentToPar || ""}
+                        invalid={
+                          validation.touched.dateSentToPar &&
+                          validation.errors.dateSentToPar
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.dateSentToPar &&
+                      validation.errors.dateSentToPar ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.dateSentToPar}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label className="form-label">Date Closed By PAR</Label>
+                      <Input
+                        id="dateClosedByPar"
+                        name="dateClosedByPar"
+                        type="date"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                        placeholder="dateClosedByPar"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.dateClosedByPar || ""}
+                        invalid={
+                          validation.touched.dateClosedByPar &&
+                          validation.errors.dateClosedByPar
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.touched.dateClosedByPar &&
+                      validation.errors.dateClosedByPar ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.dateClosedByPar}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Responded By</Label>
+                      <Select
+                        id="responseBy"
+                        name="responseBy"
+                        type="text"
+                        onChange={e => {
+                          set_responseBySelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_responseBySelectItems}
+                        defaultValue={_responseBySelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Response By"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.responseBy &&
+                      validation.errors.responseBy ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.responseBy}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <Col className="col-md-6 col-sm-12">
+                    <div className="mb-3">
+                      <Label>PAW Status</Label>
+                      <Select
+                        id="pawStatus"
+                        name="pawStatus"
+                        type="text"
+                        onChange={e => {
+                          set_pawStatusSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_pawStatusSelectItems}
+                        defaultValue={_pawStatusSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select PAW Status"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.pawStatus &&
+                      validation.errors.pawStatus ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.pawStatus}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Unsat Condition</Label>
+                      <Select
+                        id="unsatCondition"
+                        name="unsatCondition"
+                        type="text"
+                        onChange={e => {
+                          set_unsatConditionSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_unsatConditionSelectItems}
+                        defaultValue={_unsatConditionSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Unsat Condition"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.unsatCondition &&
+                      validation.errors.unsatCondition ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.unsatCondition}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label>Unsat Root Cause</Label>
+                      <Select
+                        id="unsatRootCause"
+                        name="unsatRootCause"
+                        type="text"
+                        onChange={e => {
+                          set_unsatRootCauseSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
+                        onBlur={validation.handleBlur}
+                        options={_unsatRootCauseSelectItems}
+                        defaultValue={_unsatRootCauseSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select Unsat Root Cause"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
+                      />
+                      {validation.touched.unsatRootCause &&
+                      validation.errors.unsatRootCause ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.unsatRootCause}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+
                 <div className="mb-3">
-                  <Label className="form-label">pawResponse</Label>
+                  <Label className="form-label">PAW Response</Label>
                   <Input
                     id="pawResponse"
                     name="pawResponse"
                     type="textarea"
-                    placeholder="pawResponse"
+                    placeholder="PAW Response"
                     maxLength="225"
-                    rows="3"
+                    rows="5"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pawResponse || ""}
@@ -504,64 +973,12 @@ const PAWTrackerAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">dateClosedByPar</Label>
-                  <Input
-                    id="dateClosedByPar"
-                    name="dateClosedByPar"
-                    type="date"
-                    pattern="\d{4}-\d{2}-\d{2}"
-                    placeholder="dateClosedByPar"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.dateClosedByPar || ""}
-                    invalid={
-                      validation.touched.dateClosedByPar &&
-                      validation.errors.dateClosedByPar
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.dateClosedByPar &&
-                  validation.errors.dateClosedByPar ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.dateClosedByPar}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>responseBy</Label>
-                  <Select
-                    id="responseBy"
-                    name="responseBy"
-                    type="text"
-                    onChange={e => {
-                      set_responseBySelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_responseBySelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select responseBy"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.responseBy &&
-                  validation.errors.responseBy ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.responseBy}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">comments</Label>
+                  <Label className="form-label">QC Comments</Label>
                   <Input
                     id="comments"
                     name="comments"
                     type="textarea"
-                    placeholder="comments"
+                    placeholder="QC Comments"
                     maxLength="225"
                     rows="3"
                     onChange={validation.handleChange}
@@ -576,385 +993,6 @@ const PAWTrackerAddUpdate = ({
                   {validation.touched.comments && validation.errors.comments ? (
                     <FormFeedback type="invalid">
                       {validation.errors.comments}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">modNumber</Label>
-                  <Input
-                    id="modNumber"
-                    name="modNumber"
-                    type="text"
-                    placeholder="modNumber"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.modNumber || ""}
-                    invalid={
-                      validation.touched.modNumber &&
-                      validation.errors.modNumber
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.modNumber &&
-                  validation.errors.modNumber ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.modNumber}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>annex</Label>
-                  <Select
-                    id="annex"
-                    name="annex"
-                    type="text"
-                    onChange={e => {
-                      set_annexSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_annexSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select annex"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.annex && validation.errors.annex ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.annex}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>specItem1</Label>
-                  <Select
-                    id="specItem1"
-                    name="specItem1"
-                    type="text"
-                    onChange={e => {
-                      set_specItem1Selected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_specItem1SelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select specItem1"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.specItem1 &&
-                  validation.errors.specItem1 ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.specItem1}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>title</Label>
-                  <Select
-                    id="title"
-                    name="title"
-                    type="text"
-                    onChange={e => {
-                      set_titleSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_titleSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select title"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.title && validation.errors.title ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.title}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">dateReceived</Label>
-                  <Input
-                    id="dateReceived"
-                    name="dateReceived"
-                    type="date"
-                    pattern="\d{4}-\d{2}-\d{2}"
-                    placeholder="dateReceived"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.dateReceived || ""}
-                    invalid={
-                      validation.touched.dateReceived &&
-                      validation.errors.dateReceived
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.dateReceived &&
-                  validation.errors.dateReceived ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.dateReceived}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">dateAcknowledged</Label>
-                  <Input
-                    id="dateAcknowledged"
-                    name="dateAcknowledged"
-                    type="date"
-                    pattern="\d{4}-\d{2}-\d{2}"
-                    placeholder="dateAcknowledged"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.dateAcknowledged || ""}
-                    invalid={
-                      validation.touched.dateAcknowledged &&
-                      validation.errors.dateAcknowledged
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.dateAcknowledged &&
-                  validation.errors.dateAcknowledged ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.dateAcknowledged}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>validity</Label>
-                  <Select
-                    id="validity"
-                    name="validity"
-                    type="text"
-                    onChange={e => {
-                      set_validitySelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_validitySelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select validity"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.validity && validation.errors.validity ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.validity}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>pawStatus</Label>
-                  <Select
-                    id="pawStatus"
-                    name="pawStatus"
-                    type="text"
-                    onChange={e => {
-                      set_pawStatusSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_pawStatusSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select pawStatus"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.pawStatus &&
-                  validation.errors.pawStatus ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawStatus}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>unsatCondition</Label>
-                  <Select
-                    id="unsatCondition"
-                    name="unsatCondition"
-                    type="text"
-                    onChange={e => {
-                      set_unsatConditionSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_unsatConditionSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select unsatCondition"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.unsatCondition &&
-                  validation.errors.unsatCondition ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.unsatCondition}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label>unsatRootCause</Label>
-                  <Select
-                    id="unsatRootCause"
-                    name="unsatRootCause"
-                    type="text"
-                    onChange={e => {
-                      set_unsatRootCauseSelected(e.value)
-                    }}
-                    onBlur={validation.handleBlur}
-                    options={_unsatRootCauseSelectItems}
-                    className="basic-single"
-                    classNamePrefix="select"
-                    placeholder="Select unsatRootCause"
-                    isClearable={false}
-                    isSearchable={true}
-                    isLoading={false}
-                    loadingMessage={() => "Fetching Data..."}
-                    noOptionsMessage={() => "No Data Found."}
-                  />
-                  {validation.touched.unsatRootCause &&
-                  validation.errors.unsatRootCause ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.unsatRootCause}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">description</Label>
-                  <Input
-                    id="description"
-                    name="description"
-                    type="text"
-                    placeholder="description"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.description || ""}
-                    invalid={
-                      validation.touched.description &&
-                      validation.errors.description
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.description &&
-                  validation.errors.description ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.description}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pawRating</Label>
-                  <Input
-                    id="pawRating"
-                    name="pawRating"
-                    type="text"
-                    placeholder="pawRating"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pawRating || ""}
-                    invalid={
-                      validation.touched.pawRating &&
-                      validation.errors.pawRating
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pawRating &&
-                  validation.errors.pawRating ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawRating}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">toNumber</Label>
-                  <Input
-                    id="toNumber"
-                    name="toNumber"
-                    type="text"
-                    placeholder="toNumber"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.toNumber || ""}
-                    invalid={
-                      validation.touched.toNumber && validation.errors.toNumber
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.toNumber && validation.errors.toNumber ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.toNumber}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">dateSentToPar</Label>
-                  <Input
-                    id="dateSentToPar"
-                    name="dateSentToPar"
-                    type="date"
-                    pattern="\d{4}-\d{2}-\d{2}"
-                    placeholder="dateSentToPar"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.dateSentToPar || ""}
-                    invalid={
-                      validation.touched.dateSentToPar &&
-                      validation.errors.dateSentToPar
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.dateSentToPar &&
-                  validation.errors.dateSentToPar ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.dateSentToPar}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pastDueFromPar</Label>
-                  <Input
-                    id="pastDueFromPar"
-                    name="pastDueFromPar"
-                    type="text"
-                    placeholder="pastDueFromPar"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pastDueFromPar || ""}
-                    invalid={
-                      validation.touched.pastDueFromPar &&
-                      validation.errors.pastDueFromPar
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pastDueFromPar &&
-                  validation.errors.pastDueFromPar ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pastDueFromPar}
                     </FormFeedback>
                   ) : null}
                 </div>

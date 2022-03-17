@@ -17,5 +17,11 @@ namespace DataLayer.Models.ViewModels
         public DateTime? DateClosed { get; set; }
         public string? Status { get; set; }
         public string? Notes { get; set; }
+
+        //
+        public string? discrepancyshort { get; set; }
+        public string? isitvalid { get; set; }
+        public string? considerations { get; set; }
+
     }
 }

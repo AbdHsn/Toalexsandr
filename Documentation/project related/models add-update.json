@@ -24,16 +24,16 @@ responsiblePersone: string;
 responsibleDiscipline: string;
 responsibleSub: string;
 dateCapDue: date;
-status:string;
+status:short;
 comments: byte;
-site: string;
+//site: string;
 }
 
 CDRTrackerAddUpdate {
 id : long {@Id};
 cdrnumber: string;
 datereceived:  date;
-responseduedate:  date;
+responseduedate:  date; //Date Due
 dateclosed:  date;
 status: short; //CDR Status
 discrepancy: byte;
@@ -42,7 +42,7 @@ responsedate:  date;
 responseby:  short;
 isitvalid: short;
 memonumber: string;
-response: byte;
+response: byte; //FM Response
 notes: byte;
 
 // functionalmanager: string;
@@ -62,18 +62,18 @@ annex: short;
 specItem1: short;
 title: short;
 fmBldgManager: short;
-detailOfComplaint: byte;
-comments: byte;
-detailOfComplaintShort: byte;
-issuedBy: string;
-dateResponded: date;
-dateClosed: date;
-responseBy: short;
-status: short;
-isitvalid: short;
-unsatCondition: short;
-unsatRootCause: short;
-ccrResponse: string;
+detailOfComplaint: byte; //Description of complaint
+comments: byte; //Comments From PAR
+detailOfComplaintShort: byte; //Description of complaint Short Version for Reports
+dateResponded: date; //Date Sent to PAR
+dateClosed: date; //Date Closed by PAR
+responseBy: short; //Responded By
+status: short; // CCR Status
+isitvalid: short; //Is it valid
+unsatCondition: short; //Unsat Condition
+unsatRootCause: short; //Unsat Root Cause
+ccrResponse: byte;
+//issuedBy: string;
 
 // description: string;
 // specItem3: string;
@@ -100,9 +100,9 @@ validity: short;
 description: byte;  //Findings
 descriptionShort: byte; //Short Description
 
-dateSentToPar: date;
+dateSentToPar: date; //responded to par
 dateClosedByPar: date;
-responseBy: short;
+responseBy: short; //responded by
 pawStatus: short; //from db
 unsatCondition: short; //from db
 unsatRootCause: short; //from db
@@ -128,7 +128,7 @@ dateCompleted: date;
 dateIssued: date;
 dateDue: date;
 dateReinspected: date;
-status: string; //PDR Status from db
+status: short; //PDR Status from db
  fmname: short; //Functional Maanager from db
  fmtitle: short; //FM Title from db
   techsName: string;
@@ -142,7 +142,7 @@ unsatFindings: byte; //Deficiencies Noted
 fmResponse: byte; //FM Response
 closedBy: short;
 dateClosed: date;
-qcComments: short;
+qcComments: byte;
 causeCode: short;
 rootCause: short;
 
@@ -263,6 +263,7 @@ PDR Tracker, IDIQ Tracker, Inspection,
 [
       { value: "ON TIME", label: "ON TIME" },
       { value: "LATE", label: "LATE" },
+   
     ]
 ///
 

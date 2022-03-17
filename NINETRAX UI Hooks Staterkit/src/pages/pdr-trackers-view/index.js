@@ -24,6 +24,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getPDRTrackersView,
   exportPDRTrackersView,
+  deletePDRTracker,
 } from "../../services/pdr-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -255,7 +256,7 @@ const PDRTrackersView = props => {
 
   const onDeleteConfirmed = () => {
     if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
+      deletePDRTracker(modelData.id)
         .then(res => {
           if (res.data) {
             toastr.success("Selected item successfully deleted.", "NINETRAX")

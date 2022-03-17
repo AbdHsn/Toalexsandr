@@ -35,7 +35,7 @@ const ${entity.name} = ({
 #foreach($attribute in $entity.attributes )
 	#if($attribute.type == "Short")
     modelData && modelData?.$attribute.name != null
-      ? set_$attribute.name+Selected({ label: modelData?.$attribute.name, value: "" })
+      ? set_$attribute.name+Selected({ label: modelData?.$attribute.name, value: modelData?.$attribute.name })
       : set_$attribute.name+Selected("")
 
 	#end
@@ -118,18 +118,18 @@ const ${entity.name} = ({
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
-        edit${entity.name}(submitModel)
+        edit${entity.name}(submitModel?.id, submitModel)
           .then(res => {
             console.log("submit model create response: ", res)
             if (res.data.id > 0) {
-              toastr.success("Data successfully saved.", "NINETRAX")
+              toastr.success("Data successfully updated.", "NINETRAX")
               setIsSaving(false)
               validation.resetForm()
               onSaveClick(res.data)
               onCancelClick(false)
             } else {
               setIsSaving(false)
-              toastr.warning("Failed to save data.", "NINETRAX")
+              toastr.warning("Failed to update data.", "NINETRAX")
             }
           })
           .catch(error => {
@@ -142,14 +142,14 @@ const ${entity.name} = ({
           .then(res => {
             console.log("submit model update response: ", res)
             if (res.data.id > 0) {
-              toastr.success("Data successfully saved.", "NINETRAX")
+              toastr.success("Data successfully created.", "NINETRAX")
               setIsSaving(false)
               validation.resetForm()
               onSaveClick(res.data)
               onCancelClick(false)
             } else {
               setIsSaving(false)
-              toastr.warning("Failed to save data.", "NINETRAX")
+              toastr.warning("Failed to create data.", "NINETRAX")
             }
           })
           .catch(error => {
@@ -162,7 +162,7 @@ const ${entity.name} = ({
 
   return (
     <>
-      <Modal isOpen={open}>
+      <Modal isOpen={open} className="modal-dialog modal-lg">
         <ModalHeader tag="h4">
           {modelData?.id > 0 ? "Update ${entity.name}" : "New ${entity.name}"}
         </ModalHeader>

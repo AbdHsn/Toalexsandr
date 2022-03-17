@@ -19,5 +19,20 @@ namespace DataLayer.Models.ViewModels
         public string? WOStatus { get; set; }
         public string? Comments { get; set; }
         public string? TaskCompleted { get; set; }
+
+
+        public DateTime? ApprovedStartDate { get; set; }
+        public DateTime? ApprovedEndDate { get; set; }
+        public DateTime? ActualCompletionDate { get; set; }
+        public string? TaskCompletedOnTime { get; set; }
+        public DateTime? QCReceivedDate { get; set; }
+        public string? ClosedBy { get; set; }
+        public DateTime? DateSentToWorkControl { get; set; }
+        public string? SubContractorInHouse { get; set; }
+        public string? SubContractorName { get; set; }
+        public DateTime? DateWoWasClosed { get; set; }
+        public string? UnsatNotes { get; set; }
+        public string? RootCause { get; set; }
+        public string? CauseCode { get; set; }
     }
 }

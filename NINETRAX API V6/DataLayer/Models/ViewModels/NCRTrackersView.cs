@@ -19,5 +19,22 @@ namespace DataLayer.Models.ViewModels
         public string? Title { get; set; }
         public string? ResponsiblePerson { get; set; }
         public string? ResponsibleSub { get; set; }
+
+        //
+
+        public string? site { get; set; }
+        public string? qcfrNumber { get; set; }
+        public string? assessmentType { get; set; }
+        public string? nonconformanceType { get; set; }
+        public string? requirement1 { get; set; }
+        public string? observation1 { get; set; }
+        public string? requirement2 { get; set; }
+        public string? observation2 { get; set; }
+        public string? requirement3 { get; set; }
+        public string? observation3 { get; set; }
+        public string? requirement4 { get; set; }
+        public string? observation4 { get; set; }
+        public string? responsibleDiscipline { get; set; }
+        public string? comments { get; set; }
     }
 }

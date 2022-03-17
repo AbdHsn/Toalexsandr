@@ -25,6 +25,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getPAWTrackersView,
   exportPAWTrackersView,
+  deletePAWTracker,
 } from "../../services/paw-trackers-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
@@ -258,7 +259,7 @@ const PAWTrackersView = props => {
 
   const onDeleteConfirmed = () => {
     if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
+      deletePAWTracker(modelData.id)
         .then(res => {
           if (res.data) {
             toastr.success("Selected item successfully deleted.", "NINETRAX")
