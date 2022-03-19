@@ -2134,6 +2134,16 @@ namespace RepositoryLayer
             {
                 a.ToView("CDRTrackersView");
             });
+            
+            modelBuilder.Entity<TbDropDownMenusView>(a =>
+            {
+                a.ToView("TbDropDownMenusView");
+            });
+            
+            modelBuilder.Entity<ATbNasbmdannexTablesView>(a =>
+            {
+                a.ToView("ATbNasbmdannexTablesView");
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }
@@ -2194,6 +2204,8 @@ namespace RepositoryLayer
         public DbSet<CCRTrackersView> CCRTrackersView { get; set; }
         public DbSet<NCRTrackersView> NCRTrackersView { get; set; }
         public DbSet<CDRTrackersView> CDRTrackersView { get; set; }
+        public DbSet<TbDropDownMenusView> TbDropDownMenusView { get; set; }
+        public DbSet<ATbNasbmdannexTablesView> ATbNasbmdannexTablesView { get; set; }
         #endregion ViewEntity
 
         #region SPEntity

@@ -1,8 +1,145 @@
-----IDIQ Tracker----
-WO Type: tb_Menu_IDIQ_WOType
-Estimator: NOT FOUND
-Done/YN: Static-YES,NO
-OnTime: Static-ON TIME, LATE
+NCRTrackerAddUpdate {
+qcInspector: short; user...
+annex: short;DO
+specItem: short;DO
+title: short;DO
+assessmentType: short; static: INSPECTION,SURVEILLANCE,ASSESSMENT,OTHER
+nonconformanceType: short; static: SERVICE/PROCESS,ITEM
+status:short; static: OPEN, CLOSED, RESCINDED
+}
+
+CDRTrackerAddUpdate {
+status: short; // table:tb_DropDownMenu-CCRStatusMenu
+responseby:  short; //tb_users
+isitvalid: short; //table:tb_Menu_ValidStatus-Status
+}
+
+CCRTrackerAddUpdate {
+par: short; // table:tb_DropDownMenu-JAX_PAR
+valid: short; static: VALID,NON-VALID
+annex: short;DO
+specItem1: short;DO
+title: short;DO
+fmBldgManager: short; //table: tb_Menu_CustomerFMBldgManagers-FullName
+responseBy: short; //Responded By
+status: short; // table:tb_Menu_CustomerCCRStatus-Status
+isitvalid: short; //table:tb_Menu_ValidStatus-Status
+unsatCondition: short; //table:tb_Menu_InspectionCauseCode-Status
+unsatRootCause: short; //table:tb_Menu_InspectionCauseRoot-Status
+}
+
+IDIQTracker {
+woType: short; table:tb_Menu_IDIQ_WOType
+estimator: short; table:tb_DropDownMenu-ESTIMATORS
+taskCompleted: short; static: YES, NO
+taskCompletedOnTime: short; static: ON TIME, LATE
+closedBy: short; // table:tb_Users-full_name
+verifiedBy: short; //table:tb_Users-full_name
+parAssigned: short; // table:tb_DropDownMenu-JAX_PAR
+subcontractorInHouse: short; static: In house, Subcontractor
+WO Status: short; static:OPEN,CLOSED,WAITING COMPLETION,
+causeCode: short; // table:tb_Menu_InspectionCauseCode-Status
+rootCause: short; // table:tb_Menu_InspectionCauseRoot-Status
+}
+
+PDRTrackerAddUpdate {
+inspectionFailReason:short;// table:tb_Menu_InspectionCauseCode-Status
+qcInspector: short;//table:tb_Users-full_name
+surveillanceType: short; //table:tb_Menu_InspectionType-Status
+surveillanceResults: short; //table:tb_Menu_InspectionSurvResults-Status
+status: short; //table:tb_Menu_InspectionPDRStatus-Status
+fmname: short; //table:tb_DirectoryNames-PersonName
+fmtitle: short;//table:tb_DirectoryNames-PersonTitle
+subcontractorName: short;// null
+annex: short; //table:A_tb_NASBMDAnnexTable-Annex
+specItem: short;//table:A_tb_NASBMDAnnexTable-SpecItem
+title: short;//table:A_tb_NASBMDAnnexTable-Title
+closedBy: short;// table:tb_Users-full_name
+causeCode: short; // table:tb_Menu_InspectionCauseCode-Status
+rootCause: short; // table:tb_Menu_InspectionCauseRoot-Status
+}
+
+PAWTrackerAddUpdate {
+site: short; static: NASJAX,BUMED
+pawLevel: short; //table:tb_Menu_CustomerPAWLevel-Status
+pawAssessment: short; //table: tb_Menu_CustomerPAWAssessment-Status
+par: short; //table:tb_DropDownMenu-JAX_PAR
+annex: short; Do
+specItem1: short;Do
+title: short;Do
+validity: short; ////table:tb_DropDownMenu-Validity
+responseBy: short; //responded by
+pawStatus: short; //table:tb_Menu_CustomerPAWStatus-Status
+unsatCondition: short; //table:tb_Menu_InspectionCauseCode-Status
+unsatRootCause: short; //table:tb_Menu_InspectionCauseRoot-Status
+}
+
+InspectionAddUpdate {
+id: long {@Id};
+workOrder: string;
+location: string;
+status: string;
+elin: string;
+annex: short;
+specItem: short;
+title: short;
+description: byte;
+
+workType: string;
+subWorkType: string;
+//elin: string;
+//pointofcontact: string;
+//POC phone: string;
+asset: string;
+//assetDescription: string;
+
+crew: string;
+lead: string;
+targetStart: date;
+targetFinish: date;
+actualStart: date;
+actualFinish: date;
+statusDate: date;
+
+qcInspector: short;
+//qcStatus: short;
+inspectionDate: date;
+enteredDate: date;
+causeCode: short;
+rootCause: short;
 
 
+// priority: string;
+// glAccount: string;
+// inspectionResults: string;
+// unsatFindings: string;
+// correctiveActions: string;
+// reinspectionDate: date;
+// reinspectionStatus: string;
+// qccomments: string;
+
+  // selected": tru;
+  // task": tru;
+  // isDelete": tru;
+  // deletedBy": "strin;
+}
+
+long = Number
+byte = TextArea
+short = SelectList
+string = Input
+date = DateTime picker
+boolean = checkbox
+
+
+CCRTracker-Done
+CDRTracker-Done
+NCRTracker-Done
+PAWTracker-Done
+PDRTracker-Done
+IDIQTracker-working...
+ManualInspection-
+
+
+PDR Tracker, IDIQ Tracker, Inspection,
 

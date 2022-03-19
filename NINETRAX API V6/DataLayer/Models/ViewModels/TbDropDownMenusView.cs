@@ -5,24 +5,24 @@ namespace DataLayer.Models.EntityModels
 {
     public partial class TbDropDownMenusView
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string? CauseCode { get; set; }
         public string? RootCause { get; set; }
         public string? CorrectiveAction { get; set; }
-        public string? Qcstatus { get; set; }
-        public string? PdrstatusMenu { get; set; }
-        public string? PawstatusMenu { get; set; }
-        public string? Pawrating { get; set; }
-        public string? PawAssessment { get; set; }
-        public string? CcrstatusMenu { get; set; }
+        public string? QCStatus { get; set; }
+        public string? PDRStatusMenu { get; set; }
+        public string? PAWStatusMenu { get; set; }
+        public string? PAWRating { get; set; }
+        public string? PAWAssessment { get; set; }
+        public string? CCRStatusMenu { get; set; }
         public string? Validity { get; set; }
-        public string? Qctechs { get; set; }
-        public string? MptPar { get; set; }
-        public string? MptAsgnCode { get; set; }
-        public string? JaxPar { get; set; }
-        public string? Pawunsat { get; set; }
-        public string? PawrootCause { get; set; }
-        public string? FmBldgManager { get; set; }
+        public string? QCTechs { get; set; }
+        public string? MPT_PAR { get; set; }
+        public string? MPT_ASGN_Code { get; set; }
+        public string? JAX_PAR { get; set; }
+        public string? PAWUnsat { get; set; }
+        public string? PAWRootCause { get; set; }
+        public string? FM_BLDG_MANAGER { get; set; }
         public string? Estimators { get; set; }
     }
 }
