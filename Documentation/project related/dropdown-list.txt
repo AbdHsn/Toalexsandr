@@ -40,6 +40,7 @@ subcontractorInHouse: short; static: In house, Subcontractor
 WO Status: short; static:OPEN,CLOSED,WAITING COMPLETION,
 causeCode: short; // table:tb_Menu_InspectionCauseCode-Status
 rootCause: short; // table:tb_Menu_InspectionCauseRoot-Status
+
 }
 
 PDRTrackerAddUpdate {

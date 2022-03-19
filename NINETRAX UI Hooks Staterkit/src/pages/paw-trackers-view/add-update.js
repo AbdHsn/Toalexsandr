@@ -22,6 +22,8 @@ import {
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
+import { getDDL } from "../../services/common-service"
+
 const PAWTrackerAddUpdate = ({
   open,
   modelData,
@@ -101,6 +103,9 @@ const PAWTrackerAddUpdate = ({
           value: modelData?.unsatRootCause,
         })
       : set_unsatRootCauseSelected("")
+
+    //Call dropdown data
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -283,6 +288,163 @@ const PAWTrackerAddUpdate = ({
       }
     },
   })
+
+  const initializeDropdownData = () => {
+    //SITE
+    getDDL("SITE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_siteSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SITE_DDL: ", error)
+      })
+
+    //PAWLEVEL
+    getDDL("PAWLEVEL")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_pawLevelSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed PAWLEVEL_DDL: ", error)
+      })
+
+    //PAWASSESSMENT
+    getDDL("PAWASSESSMENT")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_pawAssessmentSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed PAWASSESSMENT_DDL: ", error)
+      })
+
+    //JAXPAR
+    getDDL("JAXPAR")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_parSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed JAXPAR_DDL: ", error)
+      })
+
+    //ANNEX
+    getDDL("ANNEX")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_annexSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ANNEX_DDL: ", error)
+      })
+
+    //SPECITEM
+    getDDL("SPECITEM")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_specItem1SelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SPECITEM_DDL: ", error)
+      })
+
+    //TITLE
+    getDDL("TITLE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_titleSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed TITLE_DDL: ", error)
+      })
+
+    //INSPECTIONSURVRESULTS
+    getDDL("INSPECTIONSURVRESULTS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_surveillanceResultsSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed INSPECTIONSURVRESULTS_DDL: ", error)
+      })
+
+    //INSPECTIONPDRSTATUS
+    getDDL("INSPECTIONPDRSTATUS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_statusSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed INSPECTIONPDRSTATUS_DDL: ", error)
+      })
+
+    //DIRECTORYNAMES
+    getDDL("DIRECTORYNAMES")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_fmnameSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed DIRECTORYNAMES_DDL: ", error)
+      })
+
+    //DIRECTORYNAMETITLES
+    getDDL("DIRECTORYNAMETITLES")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_fmtitleSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed DIRECTORYNAMETITLES_DDL: ", error)
+      })
+
+    //USERS
+    getDDL("USERS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_closedBySelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed USERS_DDL: ", error)
+      })
+
+    //CAUSECODE
+    getDDL("CAUSECODE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_causeCodeSelectItems(res.data)
+          set_inspectionFailReasonSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CAUSECODE_DDL: ", error)
+      })
+
+    //ROOTCAUSE
+    getDDL("ROOTCAUSE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_rootCauseSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ROOTCAUSE_DDL: ", error)
+      })
+  }
 
   return (
     <>

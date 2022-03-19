@@ -23,10 +23,7 @@ import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
 
-import {
-  idiqIsTaskCompleted,
-  idiqIsTaskCompletedOnTime,
-} from "../../services/common-service"
+import { getDDL } from "../../services/common-service"
 const IDIQTrackerAddUpdate = ({
   open,
   modelData,
@@ -35,10 +32,6 @@ const IDIQTrackerAddUpdate = ({
 }) => {
   useEffect(() => {
     //set existing selected value
-
-    set_taskCompletedSelectItems(idiqIsTaskCompleted)
-    set_taskCompletedOnTimeSelectItems(idiqIsTaskCompletedOnTime)
-
     modelData && modelData?.woType != null
       ? set_woTypeSelected({
           label: modelData?.woType,
@@ -108,6 +101,16 @@ const IDIQTrackerAddUpdate = ({
           value: modelData?.rootCause,
         })
       : set_rootCauseSelected("")
+
+    modelData && modelData?.woStatus != null
+      ? set_woStatusSelected({
+          label: modelData?.woStatus,
+          value: modelData?.woStatus,
+        })
+      : set_woStatusSelected("")
+
+    //Call dropdown data
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -138,6 +141,9 @@ const IDIQTrackerAddUpdate = ({
   const [_causeCodeSelectItems, set_causeCodeSelectItems] = useState([])
   const [_rootCauseSelected, set_rootCauseSelected] = useState("")
   const [_rootCauseSelectItems, set_rootCauseSelectItems] = useState([])
+
+  const [_woStatusSelected, set_woStatusSelected] = useState("")
+  const [_woStatusSelectItems, set_woStatusSelectItems] = useState([])
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -265,7 +271,7 @@ const IDIQTrackerAddUpdate = ({
         subcontractorInHouse: _subcontractorInHouseSelected.value,
         subcontractorName: formData.subcontractorName,
         dateWoWasClosed: formData.dateWoWasClosed,
-        woStatus: formData.woStatus,
+        woStatus: _woStatusSelected.value,
         comments: formData.comments,
         unsatNotes: formData.unsatNotes,
         causeCode: _causeCodeSelected.value,
@@ -317,6 +323,119 @@ const IDIQTrackerAddUpdate = ({
       }
     },
   })
+
+  const initializeDropdownData = () => {
+    //WOTYPE
+    getDDL("WOTYPE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_woTypeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed WOTYPE_DDL: ", error)
+      })
+
+    //ESTIMATORS
+    getDDL("ESTIMATORS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_estimatorSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ESTIMATORS_DDL: ", error)
+      })
+
+    //ISTASKCOMPLETED
+    getDDL("ISTASKCOMPLETED")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_taskCompletedSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ISTASKCOMPLETED_DDL: ", error)
+      })
+
+    //ISTASKCOMPLETEDONTIME
+    getDDL("ISTASKCOMPLETEDONTIME")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_taskCompletedOnTimeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ISTASKCOMPLETEDONTIME_DDL: ", error)
+      })
+
+    //USERS
+    getDDL("USERS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_closedBySelectItems(res.data)
+          set_verifiedBySelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed USERS_DDL: ", error)
+      })
+
+    //JAXPAR
+    getDDL("JAXPAR")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_parAssignedSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed JAXPAR_DDL: ", error)
+      })
+
+    //SUBCONTRACTORINHOUSE
+    getDDL("SUBCONTRACTORINHOUSE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_subcontractorInHouseSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SUBCONTRACTORINHOUSE_DDL: ", error)
+      })
+
+    //WOSTATUS
+    getDDL("WOSTATUS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_woStatusSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed WOSTATUS_DDL: ", error)
+      })
+
+    //CAUSECODE
+    getDDL("CAUSECODE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_causeCodeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CAUSECODE_DDL: ", error)
+      })
+
+    //ROOTCAUSE
+    getDDL("ROOTCAUSE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_rootCauseSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ROOTCAUSE_DDL: ", error)
+      })
+  }
 
   return (
     <>
@@ -933,20 +1052,27 @@ const IDIQTrackerAddUpdate = ({
                     </div>
                     <div className="mb-3">
                       <Label className="form-label">WO Status</Label>
-                      <Input
+                      <Select
                         id="woStatus"
                         name="woStatus"
                         type="text"
-                        placeholder="WO Status"
-                        onChange={validation.handleChange}
+                        onChange={e => {
+                          set_woStatusSelected({
+                            label: e.label,
+                            value: e.value,
+                          })
+                        }}
                         onBlur={validation.handleBlur}
-                        value={validation.values.woStatus || ""}
-                        invalid={
-                          validation.touched.woStatus &&
-                          validation.errors.woStatus
-                            ? true
-                            : false
-                        }
+                        options={_woStatusSelectItems}
+                        defaultValue={_woStatusSelected}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        placeholder="Select WO Status"
+                        isClearable={false}
+                        isSearchable={true}
+                        isLoading={false}
+                        loadingMessage={() => "Fetching Data..."}
+                        noOptionsMessage={() => "No Data Found."}
                       />
                       {validation.touched.woStatus &&
                       validation.errors.woStatus ? (

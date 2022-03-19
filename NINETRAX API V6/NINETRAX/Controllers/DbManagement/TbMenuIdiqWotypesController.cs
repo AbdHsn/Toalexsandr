@@ -268,5 +268,25 @@ namespace NINETRAX.Controllers.DbManagement
 
         #endregion
 
+        #region GetIDIQ Wotypes DDL
+        [HttpGet("GetIDIQWOtypeDDL")]
+        public async Task<ActionResult<IEnumerable<object>>> GetIDIQWOtypeDDL()
+        {
+            try
+            {
+                var ddl = await _context.TbMenuIdiqWotypes.Where(w => w.Active == "Yes").Select(s => new
+                {
+                    label = s.WoType,
+                    value = s.WoType,
+                }).ToListAsync();
+
+                return ddl;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
+        }
+        #endregion
     }
 }

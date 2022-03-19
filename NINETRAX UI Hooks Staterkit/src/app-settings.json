@@ -1,4 +1,4 @@
 {
-  "BASE_URL_LOCAL": "http://localhost:7074/api",
-  "BASE_URL": "http://54.175.155.238:81/api"
+  "BASE_URL": "http://localhost:7074/api",
+  "BASE_URL_LIVE": "http://54.175.155.238:81/api"
 }
