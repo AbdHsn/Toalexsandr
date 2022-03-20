@@ -15,7 +15,7 @@ export const dashboardFilteringOptions = [
   { label: "Last Year", value: 8 },
 ]
 
-export const lst = [
+export const lstOfSatisfactory = [
   { label: "Satisfactory", value: 10 },
   { label: "Unsatisfactory", value: 41 },
   { label: "Workmanship", value: 21 },
