@@ -28,7 +28,7 @@ import {
   exportCDRTrackersView,
   deleteCDRTracker,
 } from "../../services/cdr-trackers-service"
-import { rowSizes as rowSizeDdl } from "../../services/common-service"
+import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
 
@@ -262,7 +262,7 @@ const CDRTrackersView = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>CDR Trackers | NINETRAX | QC Management</title>
+          <title>CDR Trackers | {appTitle}</title>
         </MetaTags>
 
         <Container fluid>

@@ -27,7 +27,7 @@ import {
   fetchTableView,
   exportTableView,
 } from "../../services/wo-inspect-service"
-import { rowSizes as rowSizeDdl } from "../../services/common-service"
+import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
 import InspectionAddUpdate from "./add-update"
 import DeleteModal from "../../components/Common/DeleteModal"
@@ -394,7 +394,7 @@ const workOrderInspections = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>Work Order Inspect | NINETRAX | QC Management</title>
+          <title>WO Inspection | {appTitle}</title>
         </MetaTags>
 
         <Container fluid>

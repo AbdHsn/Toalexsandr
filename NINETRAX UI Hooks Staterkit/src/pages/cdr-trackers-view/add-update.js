@@ -22,6 +22,8 @@ import {
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
+import { getDDL } from "../../services/common-service"
+
 const CDRTrackerAddUpdate = ({
   open,
   modelData,
@@ -50,6 +52,9 @@ const CDRTrackerAddUpdate = ({
           value: modelData?.isitvalid,
         })
       : set_isitvalidSelected("")
+
+    //call dropdown data to be initalized
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -80,16 +85,16 @@ const CDRTrackerAddUpdate = ({
         null,
       dateclosed:
         (modelData &&
-          modelData?.dateclosed &&
-          moment(modelData?.dateclosed).format("YYYY-MM-DD")) ||
+          modelData?.dateClosed &&
+          moment(modelData?.dateClosed).format("YYYY-MM-DD")) ||
         null,
       status: (modelData && modelData.status) || "",
       discrepancy: (modelData && modelData.discrepancy) || "",
       discrepancyshort: (modelData && modelData.discrepancyshort) || "",
       responsedate:
         (modelData &&
-          modelData?.responsedate &&
-          moment(modelData?.responsedate).format("YYYY-MM-DD")) ||
+          modelData?.responseDate &&
+          moment(modelData?.responseDate).format("YYYY-MM-DD")) ||
         null,
       responseby: (modelData && modelData.responseby) || "",
       isitvalid: (modelData && modelData.isitvalid) || "",
@@ -177,6 +182,41 @@ const CDRTrackerAddUpdate = ({
       }
     },
   })
+
+  const initializeDropdownData = () => {
+    //VALIDITY
+    getDDL("VALIDITY")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_isitvalidSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed VALIDITY_DDL: ", error)
+      })
+
+    //CCRSTATUS
+    getDDL("CCRSTATUS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_statusSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CCRSTATUS_DDL: ", error)
+      })
+
+    //USERS
+    getDDL("USERS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_responsebySelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed USERS_DDL: ", error)
+      })
+  }
 
   return (
     <>

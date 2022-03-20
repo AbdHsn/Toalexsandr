@@ -58,10 +58,10 @@ const PAWTrackerAddUpdate = ({
       ? set_annexSelected({ label: modelData?.annex, value: modelData?.annex })
       : set_annexSelected("")
 
-    modelData && modelData?.specItem1 != null
+    modelData && modelData?.specItem != null
       ? set_specItem1Selected({
-          label: modelData?.specItem1,
-          value: modelData?.specItem1,
+          label: modelData?.specItem,
+          value: modelData?.specItem,
         })
       : set_specItem1Selected("")
 
@@ -83,10 +83,10 @@ const PAWTrackerAddUpdate = ({
         })
       : set_responseBySelected("")
 
-    modelData && modelData?.pawStatus != null
+    modelData && modelData?.status != null
       ? set_pawStatusSelected({
-          label: modelData?.pawStatus,
-          value: modelData?.pawStatus,
+          label: modelData?.status,
+          value: modelData?.status,
         })
       : set_pawStatusSelected("")
 
@@ -367,67 +367,44 @@ const PAWTrackerAddUpdate = ({
         console.log("Failed TITLE_DDL: ", error)
       })
 
-    //INSPECTIONSURVRESULTS
-    getDDL("INSPECTIONSURVRESULTS")
+    //VALIDITY
+    getDDL("VALIDITY")
       .then(res => {
         if (res.data.length > 0) {
-          set_surveillanceResultsSelectItems(res.data)
+          set_validitySelectItems(res.data)
         }
       })
       .catch(error => {
-        console.log("Failed INSPECTIONSURVRESULTS_DDL: ", error)
+        console.log("Failed VALIDITY_DDL: ", error)
       })
 
-    //INSPECTIONPDRSTATUS
-    getDDL("INSPECTIONPDRSTATUS")
+    //PAWSTATUS
+    getDDL("PAWSTATUS")
       .then(res => {
         if (res.data.length > 0) {
-          set_statusSelectItems(res.data)
+          set_pawStatusSelectItems(res.data)
         }
       })
       .catch(error => {
-        console.log("Failed INSPECTIONPDRSTATUS_DDL: ", error)
-      })
-
-    //DIRECTORYNAMES
-    getDDL("DIRECTORYNAMES")
-      .then(res => {
-        if (res.data.length > 0) {
-          set_fmnameSelectItems(res.data)
-        }
-      })
-      .catch(error => {
-        console.log("Failed DIRECTORYNAMES_DDL: ", error)
-      })
-
-    //DIRECTORYNAMETITLES
-    getDDL("DIRECTORYNAMETITLES")
-      .then(res => {
-        if (res.data.length > 0) {
-          set_fmtitleSelectItems(res.data)
-        }
-      })
-      .catch(error => {
-        console.log("Failed DIRECTORYNAMETITLES_DDL: ", error)
+        console.log("Failed PAWSTATUS_DDL: ", error)
       })
 
     //USERS
-    getDDL("USERS")
-      .then(res => {
-        if (res.data.length > 0) {
-          set_closedBySelectItems(res.data)
-        }
-      })
-      .catch(error => {
-        console.log("Failed USERS_DDL: ", error)
-      })
+    // getDDL("USERS")
+    //   .then(res => {
+    //     if (res.data.length > 0) {
+    //       set_closedBySelectItems(res.data)
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log("Failed USERS_DDL: ", error)
+    //   })
 
     //CAUSECODE
     getDDL("CAUSECODE")
       .then(res => {
         if (res.data.length > 0) {
-          set_causeCodeSelectItems(res.data)
-          set_inspectionFailReasonSelectItems(res.data)
+          set_unsatConditionSelectItems(res.data)
         }
       })
       .catch(error => {
@@ -438,7 +415,7 @@ const PAWTrackerAddUpdate = ({
     getDDL("ROOTCAUSE")
       .then(res => {
         if (res.data.length > 0) {
-          set_rootCauseSelectItems(res.data)
+          set_unsatRootCauseSelectItems(res.data)
         }
       })
       .catch(error => {

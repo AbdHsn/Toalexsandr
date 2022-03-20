@@ -27,7 +27,7 @@ import {
   exportPAWTrackersView,
   deletePAWTracker,
 } from "../../services/paw-trackers-service"
-import { rowSizes as rowSizeDdl } from "../../services/common-service"
+import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
 import PAWTrackerAddUpdate from "./add-update"
@@ -281,7 +281,7 @@ const PAWTrackersView = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>PAW Trackers | NINETRAX | QC Management</title>
+          <title>PAW Trackers | {appTitle}</title>
         </MetaTags>
 
         <Container fluid>

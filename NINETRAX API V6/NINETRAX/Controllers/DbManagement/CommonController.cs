@@ -40,7 +40,7 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpGet("GetDropDownMenuDDL")]
         public async Task<ActionResult<IEnumerable<object>>> GetDropDownMenuDDL(string ddlIndicator)
         {
-            #region Call Repository Function
+            #region DropDownList Fetching Codes
             if (!string.IsNullOrEmpty(ddlIndicator))
             {
                var getDropDownMenu = await _context.TbDropDownMenus.ToListAsync();
@@ -85,6 +85,37 @@ namespace NINETRAX.Controllers.DbManagement
                             new { value = "CLOSED", label = "CLOSED" },
                             new { value = "WAITING", label = "WAITING" },
                             new { value = "COMPLETION", label = "COMPLETION" },
+                        };
+                        break;
+                    case "VALIDNONVALID":
+                        returnLst = new List<object>()
+                        {
+                           new { value= "VALID", label= "VALID" },
+                           new { value= "NON-VALID", label= "NON-VALID" }
+                        };
+                        break;
+                    case "NCRASSESSMENTTYPE":
+                        returnLst = new List<object>()
+                        {
+                           new { value= "INSPECTION", label= "INSPECTION" },
+                           new { value= "SURVEILLANCE", label= "SURVEILLANCE" },
+                           new { value= "ASSESSMENT", label= "ASSESSMENT" },
+                           new { value= "OTHER", label= "OTHER" }
+                        };
+                        break;
+                    case "NONCONFORMANCETYPE":
+                        returnLst = new List<object>()
+                        {
+                           new { value= "SERVICE/PROCESS", label= "SERVICE/PROCESS" },
+                           new { value= "ITEM", label= "ITEM" }
+                        };
+                        break;
+                    case "NCRSTATUS":
+                        returnLst = new List<object>()
+                        {
+                           new { value= "OPEN", label= "OPEN" },
+                           new { value= "CLOSED", label= "CLOSED" },
+                           new { value= "RESCINDED", label= "RESCINDED" }
                         };
                         break;
                     case "ESTIMATORS":
@@ -246,13 +277,34 @@ namespace NINETRAX.Controllers.DbManagement
                             value = s.Status,
                         }).ToListAsync();
                         break;
+                    case "CUSTOMERCCRSTATUS":
+                        returnLst = await _context.TbMenuCustomerCcrstatuses.Select(s => new
+                        {
+                            label = s.Status,
+                            value = s.Status,
+                        }).ToListAsync();
+                        break;
+                    case "CUSTOMERFMBLDGMANAGERS":
+                        returnLst = await _context.TbMenuCustomerFmbldgManagers.Select(s => new
+                        {
+                            label = s.FullName,
+                            value = s.FullName,
+                        }).ToListAsync();
+                        break;
+                    case "CCRSTATUS":
+                        returnLst = await _context.TbMenuCustomerCcrstatuses.Select(s => new
+                        {
+                            label = s.Status,
+                            value = s.Status,
+                        }).ToListAsync();
+                        break;
 
                     default:
                         break;
                 }
                 return StatusCode(200, returnLst);
             }
-            #endregion Call Repository Function
+            #endregion DropDownList Fetching Codes
             return StatusCode(400, null);
         }
 

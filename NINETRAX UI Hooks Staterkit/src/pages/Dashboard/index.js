@@ -27,25 +27,16 @@ import React from "react"
 import MetaTags from "react-meta-tags"
 import { Container } from "reactstrap"
 import PropTypes from "prop-types"
-
-//Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb"
+import { appTitle } from "../../services/common-service"
 
 const Dashboard = props => {
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>Dashboard | Skote - React Admin & Dashboard Template</title>
+          <title>{appTitle}</title>
         </MetaTags>
-        <Container fluid>
-          dashboard
-          {/* Render Breadcrumb */}
-          {/* <Breadcrumbs
-            title={props.t("Dashboards")}
-            breadcrumbItem={props.t("Dashboard")}
-          /> */}
-        </Container>
+        <Container fluid></Container>
       </div>
     </React.Fragment>
   )

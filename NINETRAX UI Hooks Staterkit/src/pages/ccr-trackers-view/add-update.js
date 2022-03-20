@@ -22,6 +22,8 @@ import {
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
+import { getDDL } from "../../services/common-service"
+
 const CCRTrackerAddUpdate = ({
   open,
   modelData,
@@ -42,10 +44,10 @@ const CCRTrackerAddUpdate = ({
       ? set_annexSelected({ label: modelData?.annex, value: modelData?.annex })
       : set_annexSelected("")
 
-    modelData && modelData?.specItem1 != null
+    modelData && modelData?.specItem != null
       ? set_specItem1Selected({
-          label: modelData?.specItem1,
-          value: modelData?.specItem1,
+          label: modelData?.specItem,
+          value: modelData?.specItem,
         })
       : set_specItem1Selected("")
 
@@ -53,10 +55,10 @@ const CCRTrackerAddUpdate = ({
       ? set_titleSelected({ label: modelData?.title, value: modelData?.title })
       : set_titleSelected("")
 
-    modelData && modelData?.fmBldgManager != null
+    modelData && modelData?.fmManager != null
       ? set_fmBldgManagerSelected({
-          label: modelData?.fmBldgManager,
-          value: modelData?.fmBldgManager,
+          label: modelData?.fmManager,
+          value: modelData?.fmManager,
         })
       : set_fmBldgManagerSelected("")
 
@@ -74,10 +76,10 @@ const CCRTrackerAddUpdate = ({
         })
       : set_statusSelected("")
 
-    modelData && modelData?.isitvalid != null
+    modelData && modelData?.validity != null
       ? set_isitvalidSelected({
-          label: modelData?.isitvalid,
-          value: modelData?.isitvalid,
+          label: modelData?.validity,
+          value: modelData?.validity,
         })
       : set_isitvalidSelected("")
 
@@ -94,6 +96,9 @@ const CCRTrackerAddUpdate = ({
           value: modelData?.unsatRootCause,
         })
       : set_unsatRootCauseSelected("")
+
+    //Call dropdown data
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -269,6 +274,129 @@ const CCRTrackerAddUpdate = ({
       }
     },
   })
+
+  const initializeDropdownData = () => {
+    //VALIDNONVALID
+    getDDL("VALIDNONVALID")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_validSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed VALIDNONVALID_DDL: ", error)
+      })
+
+    //JAXPAR
+    getDDL("JAXPAR")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_parSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed JAXPAR_DDL: ", error)
+      })
+
+    //ANNEX
+    getDDL("ANNEX")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_annexSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ANNEX_DDL: ", error)
+      })
+
+    //SPECITEM
+    getDDL("SPECITEM")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_specItem1SelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SPECITEM_DDL: ", error)
+      })
+
+    //TITLE
+    getDDL("TITLE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_titleSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed TITLE_DDL: ", error)
+      })
+
+    //VALIDITY
+    getDDL("VALIDITY")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_isitvalidSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed VALIDITY_DDL: ", error)
+      })
+
+    //CUSTOMERCCRSTATUS
+    getDDL("CUSTOMERCCRSTATUS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_statusSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CUSTOMERCCRSTATUS_DDL: ", error)
+      })
+
+    //CUSTOMERFMBLDGMANAGERS
+    getDDL("CUSTOMERFMBLDGMANAGERS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_fmBldgManagerSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CUSTOMERFMBLDGMANAGERS_DDL: ", error)
+      })
+
+    //USERS
+    // getDDL("USERS")
+    //   .then(res => {
+    //     if (res.data.length > 0) {
+    //       set_closedBySelectItems(res.data)
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log("Failed USERS_DDL: ", error)
+    //   })
+
+    //CAUSECODE
+    getDDL("CAUSECODE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_unsatConditionSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CAUSECODE_DDL: ", error)
+      })
+
+    //ROOTCAUSE
+    getDDL("ROOTCAUSE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_unsatRootCauseSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ROOTCAUSE_DDL: ", error)
+      })
+  }
 
   return (
     <>

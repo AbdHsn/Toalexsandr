@@ -26,7 +26,7 @@ import {
   exportIDIQTrackersView,
   deleteIDIQTracker,
 } from "../../services/idiq-trackers-service"
-import { rowSizes as rowSizeDdl } from "../../services/common-service"
+import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
 import IDIQTrackerAddUpdate from "./add-update"
 import DeleteModal from "../../components/Common/DeleteModal"
@@ -267,7 +267,7 @@ const IDIQTrackersView = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>IDIQ Trackers | NINETRAX | QC Management</title>
+          <title>IDIQ Trackers | {appTitle}</title>
         </MetaTags>
 
         <Container fluid>

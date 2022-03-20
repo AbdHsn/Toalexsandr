@@ -22,6 +22,8 @@ import {
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
+import { getDDL } from "../../services/common-service"
+
 const NCRTrackerAddUpdate = ({
   open,
   modelData,
@@ -72,6 +74,9 @@ const NCRTrackerAddUpdate = ({
           value: modelData?.nonconformanceType,
         })
       : set_nonconformanceTypeSelected("")
+
+    //Call dropdown data
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -244,6 +249,85 @@ const NCRTrackerAddUpdate = ({
       }
     },
   })
+
+  const initializeDropdownData = () => {
+    //ANNEX
+    getDDL("ANNEX")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_annexSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ANNEX_DDL: ", error)
+      })
+
+    //SPECITEM
+    getDDL("SPECITEM")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_specItemSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SPECITEM_DDL: ", error)
+      })
+
+    //TITLE
+    getDDL("TITLE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_titleSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed TITLE_DDL: ", error)
+      })
+
+    //NONCONFORMANCETYPE
+    getDDL("NONCONFORMANCETYPE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_nonconformanceTypeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed NONCONFORMANCETYPE_DDL: ", error)
+      })
+
+    //NCRASSESSMENTTYPE
+    getDDL("NCRASSESSMENTTYPE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_assessmentTypeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed NCRASSESSMENTTYPE_DDL: ", error)
+      })
+
+    //NCRSTATUS
+    getDDL("NCRSTATUS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_statusSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed NCRSTATUS_DDL: ", error)
+      })
+
+    //USERS
+    getDDL("USERS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_qcInspectorSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed USERS_DDL: ", error)
+      })
+  }
 
   return (
     <>

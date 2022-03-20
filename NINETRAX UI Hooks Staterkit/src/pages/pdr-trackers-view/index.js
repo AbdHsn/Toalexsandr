@@ -26,7 +26,7 @@ import {
   exportPDRTrackersView,
   deletePDRTracker,
 } from "../../services/pdr-trackers-service"
-import { rowSizes as rowSizeDdl } from "../../services/common-service"
+import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
 import PDRTrackerAddUpdate from "./add-update"
 import DeleteModal from "../../components/Common/DeleteModal"
@@ -278,7 +278,7 @@ const PDRTrackersView = props => {
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>PDR Trackers | NINETRAX | QC Management</title>
+          <title>PDR Trackers | {appTitle}</title>
         </MetaTags>
 
         <Container fluid>

@@ -1,6 +1,8 @@
 import http from "./http-handler"
 import appSettings from "../app-settings.json"
 
+export const appTitle = appSettings.APP_TITLE
+
 export const rowSizes = ["10", "30", "50", "100", "All"]
 
 export const getDDL = async ddlIndicator => {
