@@ -56,7 +56,7 @@ const LineChart = () => {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [80, 23, 56, 65, 23, 35, 85, 25, 92, 36],
+        data: [80, 23, 56, 65, 23, null, null, 50, 20],
       },
     ],
   }

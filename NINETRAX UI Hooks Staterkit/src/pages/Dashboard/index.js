@@ -1,7 +1,7 @@
 import MetaTags from "react-meta-tags"
 import PropTypes from "prop-types"
 import { appTitle } from "../../services/common-service"
-import { Pie } from "react-chartjs-2"
+import { Line } from "react-chartjs-2"
 import {
   Button,
   Card,
@@ -29,6 +29,32 @@ const Dashboard = props => {
   const fromDate = useRef(false)
   const toDate = useRef(false)
 
+  const [dashboardInspectionData, setDashboardInspectionData] = useState([])
+  const [isFetching, setIsFetching] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+
+  useEffect(() => {
+    loadView()
+  }, [])
+
+  const loadView = (fromDate, toDate, inspectResult) => {
+    setIsFetching(true)
+    getDashboardInspectionData(fromDate, toDate, inspectResult)
+      .then(res => {
+        setDashboardInspectionData(res.data)
+        if (res.data.length <= 0) {
+          setIsFetching(false)
+          toastr.warning("No data found", "NINETRAX")
+        } else {
+          setIsFetching(false)
+        }
+      })
+      .catch(error => {
+        setIsFetching(false)
+        toastr.error("Failed to fetch data.", "NINETRAX")
+      })
+  }
+
   const pieChartData = {
     labels: ["SAT", "UNSAT", "INSPECTION", "PAW", "IDIQ"],
 
@@ -52,6 +78,79 @@ const Dashboard = props => {
         hoverBorderColor: "#fff",
       },
     ],
+  }
+
+  const satUnsatLineChartData = {
+    labels: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+    ],
+    datasets: [
+      {
+        label: "SAT",
+        fill: true,
+        lineTension: 0.5,
+        backgroundColor: "rgba(85, 110, 230, 0.2)",
+        borderColor: "green",
+        borderCapStyle: "butt",
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: "miter",
+        pointBorderColor: "#556ee6",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "#556ee6",
+        pointHoverBorderColor: "#fff",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: [65, 59, 80, 81, 56, 55, 40, 55, 30, 80],
+      },
+      {
+        label: "UNSAT",
+        fill: true,
+        lineTension: 0.5,
+        backgroundColor: "rgba(235, 239, 242, 0.2)",
+        borderColor: "red",
+        borderCapStyle: "butt",
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: "miter",
+        pointBorderColor: "#ebeff2",
+        pointBackgroundColor: "#fff",
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "#ebeff2",
+        pointHoverBorderColor: "#eef0f2",
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: [80, 23, 56, 65, 23, 35, 85, 25, 92, 36],
+      },
+    ],
+  }
+
+  const satUnsatLineChartOption = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            max: 100,
+            min: 20,
+            stepSize: 10,
+          },
+        },
+      ],
+    },
   }
 
   const getDashboardData = async selectedValue => {
@@ -129,9 +228,7 @@ const Dashboard = props => {
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
                         <i
-                        // className={
-                        //   "bx " + report.iconClass + " font-size-24"
-                        // }
+                          className={"bx " + "bx-happy-alt " + " font-size-24"}
                         ></i>
                       </span>
                     </div>
@@ -149,11 +246,7 @@ const Dashboard = props => {
                     </div>
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
-                        <i
-                        // className={
-                        //   "bx " + report.iconClass + " font-size-24"
-                        // }
-                        ></i>
+                        <i className={"bx " + "bx-sad " + " font-size-24"}></i>
                       </span>
                     </div>
                   </div>
@@ -171,9 +264,7 @@ const Dashboard = props => {
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
                         <i
-                        // className={
-                        //   "bx " + report.iconClass + " font-size-24"
-                        // }
+                          className={"bx " + "bx-search-alt " + " font-size-24"}
                         ></i>
                       </span>
                     </div>
@@ -192,9 +283,7 @@ const Dashboard = props => {
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
                         <i
-                        // className={
-                        //   "bx " + report.iconClass + " font-size-24"
-                        // }
+                          className={"bx " + "bx-line-chart " + " font-size-24"}
                         ></i>
                       </span>
                     </div>
@@ -213,9 +302,7 @@ const Dashboard = props => {
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
                         <i
-                        // className={
-                        //   "bx " + report.iconClass + " font-size-24"
-                        // }
+                          className={"bx " + "bxs-truck" + " font-size-24"}
                         ></i>
                       </span>
                     </div>
@@ -229,8 +316,20 @@ const Dashboard = props => {
             <Col xl="3">
               <Card>
                 <CardBody>
-                  <CardTitle className="h4"> </CardTitle>
-                  <Pie width={474} height={260} data={pieChartData} />
+                  <CardTitle className="h4 text-center">INSPECTIONS</CardTitle>
+
+                  <hr />
+                  <Line
+                    width={474}
+                    height={300}
+                    data={satUnsatLineChartData}
+                    options={satUnsatLineChartOption}
+                  />
+
+                  <CardTitle className="h4 text-center">
+                    UNSATISFACTORY Breakdown
+                  </CardTitle>
+                  {/* <Pie width={474} height={260} data={pieChartData} /> */}
                 </CardBody>
               </Card>
             </Col>

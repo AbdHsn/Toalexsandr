@@ -2144,6 +2144,11 @@ namespace RepositoryLayer
             {
                 a.ToView("ATbNasbmdannexTablesView");
             });
+            
+            modelBuilder.Entity<DashboardInspectionView>(a =>
+            {
+                a.ToView("DashboardInspectionView");
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }
@@ -2197,6 +2202,7 @@ namespace RepositoryLayer
         #endregion TableEntity
 
         #region ViewEntity
+        public DbSet<DashboardInspectionView> DashboardInspectionView { get; set; }
         public DbSet<TbDirectoryNamesView> TbDirectoryNamesView { get; set; }
         public DbSet<PDRTrackersView> PDRTrackersView { get; set; }
         public DbSet<IDIQTrackersView> IDIQTrackersView { get; set; }
