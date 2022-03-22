@@ -35,13 +35,7 @@ export const getDashboardInspectionData = async (
 ) => {
   return http
     .get(
-      appSettings.BASE_URL +
-        "/Dashboard/GetDashboardInspectionData?fromDate=" +
-        fromDate +
-        "&toDate=" +
-        toDate +
-        "&inspectionResult=" +
-        inspectionResult
+      `${appSettings.BASE_URL}/Dashboard/GetDashboardInspectionData?fromDate=${fromDate}&toDate=${toDate}&inspectionResult=${inspectionResult}`
     )
     .catch(error => {
       throw error.response.data
