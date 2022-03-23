@@ -37,32 +37,40 @@ const Dashboard = props => {
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
 
-  const onChangeActualFinishDateRangeCriteria = async (e, inputType) => {
-    let fromdate = actualFinishFromDate.current || null
-    let todate = actualFinishToDate.current || null
+  const onDateRangeChange = async (e, inputType) => {
+    let fromdate = fromDate.current || null
+    let todate = toDate.current || null
 
     switch (e.target.value) {
-      case "Last2Days":
+      case 1: //Today
         fromdate = moment().subtract(2, "d").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "Last1Week":
+      case 2: //Last Day
         fromdate = moment().subtract(1, "w").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "Last2Weeks":
+      case "3": //Current Week
         fromdate = moment().subtract(2, "w").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "Last30Days":
+      case "4": //Last Week
         fromdate = moment().subtract(30, "d").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "Last90Days":
+      case "5": //Current Month
         fromdate = moment().subtract(90, "d").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "Last6Months":
+      case "6": //Last Month
+        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "7": //Current Year
+        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "8": //Last Year
         fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
@@ -264,7 +272,7 @@ const Dashboard = props => {
                           key={item.value}
                           onClick={() => {
                             filteringOptionSelected.current = item.label
-                            getDashboardData(item.value)
+                            //getDashboardData(item.value)
                           }}
                           className={""}
                         >
