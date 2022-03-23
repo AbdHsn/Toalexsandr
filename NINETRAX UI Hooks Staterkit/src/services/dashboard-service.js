@@ -28,14 +28,10 @@ import appSettings from "../app-settings.json"
 //     })
 // }
 
-export const getDashboardInspectionData = async (
-  fromDate,
-  toDate,
-  inspectionResult
-) => {
+export const getDashboardInspectionData = async (fromDate, toDate) => {
   return http
     .get(
-      `${appSettings.BASE_URL}/Dashboard/GetDashboardInspectionData?fromDate=${fromDate}&toDate=${toDate}&inspectionResult=${inspectionResult}`
+      `${appSettings.BASE_URL}/Dashboard/GetDashboardInspectionData?fromDate=${fromDate}&toDate=${toDate}`
     )
     .catch(error => {
       throw error.response.data

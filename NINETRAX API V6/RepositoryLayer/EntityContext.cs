@@ -2150,6 +2150,11 @@ namespace RepositoryLayer
                 a.ToView("DashboardInspectionView");
             });
 
+            modelBuilder.Entity<DashboardUnsatBreakDownView>(a =>
+            {
+                a.HasNoKey();
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 
@@ -2203,6 +2208,7 @@ namespace RepositoryLayer
 
         #region ViewEntity
         public DbSet<DashboardInspectionView> DashboardInspectionView { get; set; }
+        public DbSet<DashboardUnsatBreakDownView> DashboardUnsatBreakDownView { get; set; }
         public DbSet<TbDirectoryNamesView> TbDirectoryNamesView { get; set; }
         public DbSet<PDRTrackersView> PDRTrackersView { get; set; }
         public DbSet<IDIQTrackersView> IDIQTrackersView { get; set; }

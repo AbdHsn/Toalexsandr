@@ -22,24 +22,86 @@ import {
 } from "reactstrap"
 import React, { useEffect, useRef, useState } from "react"
 import { dashboardFilteringOptions } from "../../services/common-service"
-
+import { getDashboardInspectionData } from "../../services/dashboard-service"
+import * as moment from "moment"
+import toastr from "toastr"
+import "toastr/build/toastr.min.css"
 const Dashboard = props => {
   const [filteringOptionsDDL, setFilteringOptionsDDL] = useState(false)
   const filteringOptionSelected = useRef(false)
+
   const fromDate = useRef(false)
   const toDate = useRef(false)
 
-  const [dashboardInspectionData, setDashboardInspectionData] = useState([])
+  const [dashboardInspectionData, setDashboardInspectionData] = useState({})
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
+
+  const onChangeActualFinishDateRangeCriteria = async (e, inputType) => {
+    let fromdate = actualFinishFromDate.current || null
+    let todate = actualFinishToDate.current || null
+
+    switch (e.target.value) {
+      case "Last2Days":
+        fromdate = moment().subtract(2, "d").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "Last1Week":
+        fromdate = moment().subtract(1, "w").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "Last2Weeks":
+        fromdate = moment().subtract(2, "w").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "Last30Days":
+        fromdate = moment().subtract(30, "d").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "Last90Days":
+        fromdate = moment().subtract(90, "d").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "Last6Months":
+        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
+        todate = moment().format("YYYY-MM-DD")
+        break
+      case "-1":
+        fromdate = ""
+        todate = ""
+        break
+      default:
+        break
+    }
+
+    if (inputType === "sActualFinishFromDate") fromdate = e.target.value
+
+    if (inputType === "sActualFinishToDate") todate = e.target.value
+
+    actualFinishFromDate.current = fromdate
+    actualFinishToDate.current = todate
+
+    if (
+      actualFinishFromDate.current &&
+      actualFinishToDate.current &&
+      moment(actualFinishToDate.current).diff(
+        moment(actualFinishFromDate.current)
+      ) >= 0
+    ) {
+      start.current = 0
+      loadView()
+    } else {
+      //toastr.warning("Invalid date range.", "NINETRAX")
+    }
+  }
 
   useEffect(() => {
     loadView()
   }, [])
 
-  const loadView = (fromDate, toDate, inspectResult) => {
+  const loadView = (fromDate, toDate) => {
     setIsFetching(true)
-    getDashboardInspectionData(fromDate, toDate, inspectResult)
+    getDashboardInspectionData(fromDate, toDate)
       .then(res => {
         setDashboardInspectionData(res.data)
         if (res.data.length <= 0) {
