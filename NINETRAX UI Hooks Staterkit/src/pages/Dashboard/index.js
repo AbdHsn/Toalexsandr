@@ -30,88 +30,98 @@ const Dashboard = props => {
   const [filteringOptionsDDL, setFilteringOptionsDDL] = useState(false)
   const filteringOptionSelected = useRef(false)
 
-  const fromDate = useRef(false)
-  const toDate = useRef(false)
+  const fromDate = useRef(new Date())
+  const toDate = useRef(new Date())
 
   const [dashboardInspectionData, setDashboardInspectionData] = useState({})
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
 
-  const onDateRangeChange = async (e, inputType) => {
+  const onDateOptionChange = async selectedOption => {
     let fromdate = fromDate.current || null
     let todate = toDate.current || null
 
-    switch (e.target.value) {
+    switch (selectedOption) {
       case 1: //Today
-        fromdate = moment().subtract(2, "d").format("YYYY-MM-DD")
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
       case 2: //Last Day
-        fromdate = moment().subtract(1, "w").format("YYYY-MM-DD")
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().subtract(1, "d").format("YYYY-MM-DD")
+        todate = moment().subtract(1, "d").format("YYYY-MM-DD")
+        break
+      case 3: //Current Week
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().startOf("week").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "3": //Current Week
-        fromdate = moment().subtract(2, "w").format("YYYY-MM-DD")
+      case 4: //Last Week
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment()
+          .startOf("week")
+          .subtract(1, "w")
+          .format("YYYY-MM-DD")
+        todate = moment().startOf("week").format("YYYY-MM-DD")
+        break
+      case 5: //Current Month
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().startOf("month").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "4": //Last Week
-        fromdate = moment().subtract(30, "d").format("YYYY-MM-DD")
+      case 6: //Last Month
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().subtract(1, "month").date(1).format("YYYY-MM-DD")
+        todate = moment().startOf("month").format("YYYY-MM-DD")
+        break
+      case 7: //Current Year
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().subtract(0, "y").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
-      case "5": //Current Month
-        fromdate = moment().subtract(90, "d").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "6": //Last Month
-        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "7": //Current Year
-        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "8": //Last Year
-        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "-1":
-        fromdate = ""
-        todate = ""
+      case 8: //Last Year
+        console.log("Lavel---> ", selectedOption, fromdate, todate)
+        fromdate = moment().subtract(1, "y").format("YYYY-MM-DD")
+        fromdate = moment().subtract(1, "y").format("YYYY-MM-DD")
         break
       default:
         break
     }
 
-    if (inputType === "sActualFinishFromDate") fromdate = e.target.value
+    console.log("Selected date range---> ", fromdate, todate)
 
-    if (inputType === "sActualFinishToDate") todate = e.target.value
+    // if (inputType === "sActualFinishFromDate") fromdate = e.target.value
 
-    actualFinishFromDate.current = fromdate
-    actualFinishToDate.current = todate
+    // if (inputType === "sActualFinishToDate") todate = e.target.value
 
-    if (
-      actualFinishFromDate.current &&
-      actualFinishToDate.current &&
-      moment(actualFinishToDate.current).diff(
-        moment(actualFinishFromDate.current)
-      ) >= 0
-    ) {
-      start.current = 0
-      loadView()
-    } else {
-      //toastr.warning("Invalid date range.", "NINETRAX")
-    }
+    // actualFinishFromDate.current = fromdate
+    // actualFinishToDate.current = todate
+
+    // if (
+    //   fromdate.current &&
+    //   todate.current &&
+    //   moment(todate.current).diff(moment(fromdate.current)) >= 0
+    // ) {
+    //   //start.current = 0
+    //   loadView(
+    //     moment(fromdate.current).format("YYYY-MM-DD"),
+    //     moment(todate.current).format("YYYY-MM-DD")
+    //   )
+    // } else {
+    //   toastr.warning("Invalid date.", "NINETRAX")
+    // }
   }
 
   useEffect(() => {
-    loadView()
+    loadView(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
   }, [])
 
   const loadView = (fromDate, toDate) => {
     setIsFetching(true)
     getDashboardInspectionData(fromDate, toDate)
       .then(res => {
-        setDashboardInspectionData(res.data)
+        dashboardInspectionData(res.data)
         if (res.data.length <= 0) {
           setIsFetching(false)
           toastr.warning("No data found", "NINETRAX")
@@ -273,6 +283,7 @@ const Dashboard = props => {
                           onClick={() => {
                             filteringOptionSelected.current = item.label
                             //getDashboardData(item.value)
+                            onDateOptionChange(item.value)
                           }}
                           className={""}
                         >

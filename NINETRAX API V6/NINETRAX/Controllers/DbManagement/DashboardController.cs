@@ -55,12 +55,12 @@ namespace NINETRAX.Controllers.DbManagement
                         unsatData = getUnsatData,
                         unsatBreakDown = new
                         {
-                            Workmanship = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Workmanship").FirstOrDefault()?.Total : 0,
-                            Incomplete = getUnsatBreakDownData.Count > 0 ?  getUnsatBreakDownData.Where(f => f.CauseCode == "Incomplete").FirstOrDefault()?.Total: 0,
-                            Documentation = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Documentation").FirstOrDefault()?.Total: 0,
-                            Timeliness = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Timeliness").FirstOrDefault()?.Total: 0,
-                            Housekeeping = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Housekeeping").FirstOrDefault()?.Total: 0,
-                            Communication = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Communication").FirstOrDefault()?.Total: 0,
+                            Workmanship = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Workmanship").FirstOrDefault()?.Total ?? 0 : 0,
+                            Incomplete = getUnsatBreakDownData.Count > 0 ?  getUnsatBreakDownData.Where(f => f.CauseCode == "Incomplete").FirstOrDefault()?.Total ?? 0: 0,
+                            Documentation = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Documentation").FirstOrDefault()?.Total ?? 0: 0,
+                            Timeliness = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Timeliness").FirstOrDefault()?.Total ?? 0: 0,
+                            Housekeeping = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Housekeeping").FirstOrDefault()?.Total ?? 0: 0,
+                            Communication = getUnsatBreakDownData.Count > 0 ? getUnsatBreakDownData.Where(f => f.CauseCode == "Communication").FirstOrDefault()?.Total ?? 0: 0,
                             //Procedural = 0,
                         }
                     };
