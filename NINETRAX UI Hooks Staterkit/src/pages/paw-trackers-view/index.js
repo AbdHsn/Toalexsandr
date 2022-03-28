@@ -847,7 +847,18 @@ const PAWTrackersView = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{item.pawNumber}</td>
+                                  <td>
+                                    {item.pawNumber ? (
+                                      <Button
+                                        type="button"
+                                        color="info"
+                                        className="btn-sm btn-rounded"
+                                        onClick={e => onEditClick(item)}
+                                      >
+                                        {item.pawNumber}
+                                      </Button>
+                                    ) : null}
+                                  </td>
                                   <td>{item.location}</td>
                                   <td>{item.description}</td>
                                   <td>{item.par}</td>
@@ -881,7 +892,7 @@ const PAWTrackersView = props => {
                                   <td>{item.pawResponse}</td>
 
                                   <td>
-                                    <button
+                                    {/* <button
                                       type="button"
                                       className="btn btn-sm btn-outline-primary ml-2"
                                       onClick={e => onEditClick(item)}
@@ -889,7 +900,7 @@ const PAWTrackersView = props => {
                                       data-target=".bs-example-modal-center"
                                     >
                                       <i className="far fa-edit"></i> Edit
-                                    </button>{" "}
+                                    </button>{" "} */}
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-outline-danger ml-2"

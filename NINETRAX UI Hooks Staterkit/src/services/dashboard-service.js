@@ -38,12 +38,15 @@ export const getDashboardInspectionData = async (fromDate, toDate) => {
     })
 }
 
-// export const exportCCRTrackersView = async postData => {
-//   return http
-//     .post(appSettings.BASE_URL + "/d/TbCcrtrackers/ExportToExcel", postData, {
-//       responseType: "blob",
-//     })
-//     .catch(error => {
-//       throw error.response.data
-//     })
-// }
+export const exportSatUnsatData = async (fromDate, toDate, result) => {
+  return http
+    .get(
+      `${appSettings.BASE_URL}/Dashboard/ExportToExcel?fromDate=${fromDate}&toDate=${toDate}&result=${result}`,
+      {
+        responseType: "blob",
+      }
+    )
+    .catch(error => {
+      throw error.response.data
+    })
+}

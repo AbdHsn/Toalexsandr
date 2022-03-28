@@ -1,7 +1,9 @@
 import MetaTags from "react-meta-tags"
 import PropTypes from "prop-types"
 import { appTitle } from "../../services/common-service"
-import { Line } from "react-chartjs-2"
+import { Bar, Pie } from "react-chartjs-2"
+import Loader from "../../components/Common/Loader"
+
 import {
   Button,
   Card,
@@ -22,43 +24,49 @@ import {
 } from "reactstrap"
 import React, { useEffect, useRef, useState } from "react"
 import { dashboardFilteringOptions } from "../../services/common-service"
-import { getDashboardInspectionData } from "../../services/dashboard-service"
+import {
+  getDashboardInspectionData,
+  exportSatUnsatData,
+} from "../../services/dashboard-service"
 import * as moment from "moment"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
+import BtnExporting from "../../components/Common/BtnExporting"
+
 const Dashboard = props => {
   const [filteringOptionsDDL, setFilteringOptionsDDL] = useState(false)
   const filteringOptionSelected = useRef(false)
 
-  const fromDate = useRef(new Date())
-  const toDate = useRef(new Date())
+  const fromDate = useRef(moment(new Date()).format("YYYY-MM-DD"))
+  const toDate = useRef(moment(new Date()).format("YYYY-MM-DD"))
 
   const [dashboardInspectionData, setDashboardInspectionData] = useState({})
   const [isFetching, setIsFetching] = useState(false)
-  const [isExporting, setIsExporting] = useState(false)
+  const [isSatExporting, setIsSatExporting] = useState(false)
+  const [isUnsatExporting, setIsUnsatExporting] = useState(false)
 
   const onDateOptionChange = async selectedOption => {
-    let fromdate = fromDate.current || null
-    let todate = toDate.current || null
+    let fromdate = null
+    let todate = null
 
     switch (selectedOption) {
+      case 0: //Custom
+        fromdate = moment(fromDate.current).format("YYYY-MM-DD")
+        todate = moment(toDate.current).format("YYYY-MM-DD")
+        break
       case 1: //Today
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
         fromdate = moment().format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
       case 2: //Last Day
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
         fromdate = moment().subtract(1, "d").format("YYYY-MM-DD")
         todate = moment().subtract(1, "d").format("YYYY-MM-DD")
         break
       case 3: //Current Week
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
         fromdate = moment().startOf("week").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
       case 4: //Last Week
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
         fromdate = moment()
           .startOf("week")
           .subtract(1, "w")
@@ -66,68 +74,54 @@ const Dashboard = props => {
         todate = moment().startOf("week").format("YYYY-MM-DD")
         break
       case 5: //Current Month
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
         fromdate = moment().startOf("month").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
       case 6: //Last Month
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
-        fromdate = moment().subtract(1, "month").date(1).format("YYYY-MM-DD")
-        todate = moment().startOf("month").format("YYYY-MM-DD")
+        fromdate = moment()
+          .subtract(1, "month")
+          .startOf("month")
+          .format("YYYY-MM-DD")
+        todate = moment()
+          .subtract(1, "month")
+          .endOf("month")
+          .format("YYYY-MM-DD")
         break
       case 7: //Current Year
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
-        fromdate = moment().subtract(0, "y").format("YYYY-MM-DD")
+        fromdate = moment().startOf("year").format("YYYY-MM-DD")
         todate = moment().format("YYYY-MM-DD")
         break
       case 8: //Last Year
-        console.log("Lavel---> ", selectedOption, fromdate, todate)
-        fromdate = moment().subtract(1, "y").format("YYYY-MM-DD")
-        fromdate = moment().subtract(1, "y").format("YYYY-MM-DD")
+        fromdate = moment()
+          .subtract(1, "year")
+          .startOf("year")
+          .format("YYYY-MM-DD")
+        todate = moment().subtract(1, "year").endOf("year").format("YYYY-MM-DD")
         break
       default:
         break
     }
 
-    console.log("Selected date range---> ", fromdate, todate)
-
-    // if (inputType === "sActualFinishFromDate") fromdate = e.target.value
-
-    // if (inputType === "sActualFinishToDate") todate = e.target.value
-
-    // actualFinishFromDate.current = fromdate
-    // actualFinishToDate.current = todate
-
-    // if (
-    //   fromdate.current &&
-    //   todate.current &&
-    //   moment(todate.current).diff(moment(fromdate.current)) >= 0
-    // ) {
-    //   //start.current = 0
-    //   loadView(
-    //     moment(fromdate.current).format("YYYY-MM-DD"),
-    //     moment(todate.current).format("YYYY-MM-DD")
-    //   )
-    // } else {
-    //   toastr.warning("Invalid date.", "NINETRAX")
-    // }
+    if (moment(todate).diff(moment(fromdate)) >= 0) {
+      //Call loadView
+      fromDate.current = fromdate
+      toDate.current = todate
+      loadView()
+    } else {
+      toastr.warning("Invalid date.", "NINETRAX")
+    }
   }
 
   useEffect(() => {
-    loadView(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
+    loadView()
   }, [])
 
-  const loadView = (fromDate, toDate) => {
+  const loadView = () => {
     setIsFetching(true)
-    getDashboardInspectionData(fromDate, toDate)
+    getDashboardInspectionData(fromDate.current, toDate.current)
       .then(res => {
-        dashboardInspectionData(res.data)
-        if (res.data.length <= 0) {
-          setIsFetching(false)
-          toastr.warning("No data found", "NINETRAX")
-        } else {
-          setIsFetching(false)
-        }
+        setDashboardInspectionData(res.data)
+        setIsFetching(false)
       })
       .catch(error => {
         setIsFetching(false)
@@ -135,12 +129,62 @@ const Dashboard = props => {
       })
   }
 
+  const satUnsatBarChartData = {
+    labels: ["Sat & Unsat Analytics"],
+    datasets: [
+      {
+        label: "Satisfactory",
+        backgroundColor: "rgba(52, 195, 143, 0.8)",
+        borderColor: "rgba(52, 195, 143, 0.8)",
+        borderWidth: 1,
+        hoverBackgroundColor: "rgba(52, 195, 143, 0.9)",
+        hoverBorderColor: "rgba(52, 195, 143, 0.9)",
+        data: [dashboardInspectionData?.satData?.length ?? 0],
+      },
+      {
+        label: "Unsatisfactory",
+        backgroundColor: "rgba(255, 0, 0, 0.8)",
+        borderColor: "rgba(245, 0, 0, 0.8)",
+        borderWidth: 1,
+        hoverBackgroundColor: "rgba(244, 0, 0, 0.9)",
+        hoverBorderColor: "rgba(222, 0, 0, 0.9)",
+        data: [dashboardInspectionData?.unsatData?.length ?? 0],
+      },
+    ],
+  }
+
   const pieChartData = {
-    labels: ["SAT", "UNSAT", "INSPECTION", "PAW", "IDIQ"],
+    labels: [
+      `Communication (${
+        dashboardInspectionData?.unsatBreakDown?.communication ?? 0
+      })`,
+      `Documentation (${
+        dashboardInspectionData?.unsatBreakDown?.documentation ?? 0
+      })`,
+      `Housekeeping (${
+        dashboardInspectionData?.unsatBreakDown?.housekeeping ?? 0
+      })`,
+      `Incomplete (${
+        dashboardInspectionData?.unsatBreakDown?.incomplete ?? 0
+      })`,
+      `Timeliness (${
+        dashboardInspectionData?.unsatBreakDown?.timeliness ?? 0
+      })`,
+      `Workmanship (${
+        dashboardInspectionData?.unsatBreakDown?.workmanship ?? 0
+      })`,
+    ],
 
     datasets: [
       {
-        data: [10, 8, 5, 3, 2],
+        data: [
+          dashboardInspectionData?.unsatBreakDown?.communication ?? 0,
+          dashboardInspectionData?.unsatBreakDown?.documentation ?? 0,
+          dashboardInspectionData?.unsatBreakDown?.housekeeping ?? 0,
+          dashboardInspectionData?.unsatBreakDown?.incomplete ?? 0,
+          dashboardInspectionData?.unsatBreakDown?.timeliness ?? 0,
+          dashboardInspectionData?.unsatBreakDown?.workmanship ?? 0,
+        ],
         backgroundColor: [
           "#dae87f",
           "#a04fd4",
@@ -160,81 +204,33 @@ const Dashboard = props => {
     ],
   }
 
-  const satUnsatLineChartData = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-    ],
-    datasets: [
-      {
-        label: "SAT",
-        fill: true,
-        lineTension: 0.5,
-        backgroundColor: "rgba(85, 110, 230, 0.2)",
-        borderColor: "green",
-        borderCapStyle: "butt",
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: "miter",
-        pointBorderColor: "#556ee6",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "#556ee6",
-        pointHoverBorderColor: "#fff",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40, 55, 30, 80],
-      },
-      {
-        label: "UNSAT",
-        fill: true,
-        lineTension: 0.5,
-        backgroundColor: "rgba(235, 239, 242, 0.2)",
-        borderColor: "red",
-        borderCapStyle: "butt",
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: "miter",
-        pointBorderColor: "#ebeff2",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "#ebeff2",
-        pointHoverBorderColor: "#eef0f2",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [80, 23, 56, 65, 23, 35, 85, 25, 92, 36],
-      },
-    ],
-  }
+  const onExportClick = result => {
+    result === "SAT" ? setIsSatExporting(true) : setIsUnsatExporting(true)
+    exportSatUnsatData(fromDate.current, toDate.current, result)
+      .then(res => {
+        let downloadLink = document.createElement("a")
+        downloadLink.href = window.URL.createObjectURL(
+          new Blob([res.data], {
+            type: "application/vnd.ms-excel",
+          })
+        )
 
-  const satUnsatLineChartOption = {
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            max: 100,
-            min: 20,
-            stepSize: 10,
-          },
-        },
-      ],
-    },
-  }
+        let fileName = ""
+        result === "SAT"
+          ? (fileName = "Satisfactory.xlsx")
+          : (fileName = "Unsatisfactory.xlsx")
 
-  const getDashboardData = async selectedValue => {
-    console.log("getting dashboard data", selectedValue)
+        downloadLink.setAttribute("download", fileName)
+        document.body.appendChild(downloadLink)
+        downloadLink.click()
+
+        result === "SAT" ? setIsSatExporting(false) : setIsUnsatExporting(false)
+        toastr.success("Export succeeded.", "NINETRAX")
+      })
+      .catch(error => {
+        result === "SAT" ? setIsSatExporting(false) : setIsUnsatExporting(false)
+        toastr.error("Failed to export data.", "NINETRAX")
+      })
   }
 
   return (
@@ -252,16 +248,24 @@ const Dashboard = props => {
                   id="dashboardStart"
                   name="dashboardStart"
                   type="date"
+                  value={moment(fromDate.current).format("YYYY-MM-DD")}
                   pattern="\d{4}-\d{2}-\d{2}"
-                  onChange={e => (fromDate.current = e.target.value)}
+                  onChange={e => {
+                    fromDate.current = e.target.value
+                    onDateOptionChange(0)
+                  }}
                 />
 
                 <Input
                   id="dashboardEnd"
                   name="dashboardEnd"
                   type="date"
+                  value={moment(toDate.current).format("YYYY-MM-DD")}
                   pattern="\d{4}-\d{2}-\d{2}"
-                  onChange={e => (toDate.current = e.target.value)}
+                  onChange={e => {
+                    toDate.current = e.target.value
+                    onDateOptionChange(0)
+                  }}
                 />
 
                 <ButtonDropdown
@@ -304,7 +308,9 @@ const Dashboard = props => {
                   <div className="d-flex">
                     <div className="flex-grow-1">
                       <p className="text-muted fw-medium">SAT</p>
-                      <h4 className="mb-0">10</h4>
+                      <h4 className="mb-0">
+                        {dashboardInspectionData?.summaryData?.totalSat}
+                      </h4>
                     </div>
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
@@ -323,7 +329,9 @@ const Dashboard = props => {
                   <div className="d-flex">
                     <div className="flex-grow-1">
                       <p className="text-muted fw-medium">UNSAT</p>
-                      <h4 className="mb-0">8</h4>
+                      <h4 className="mb-0">
+                        {dashboardInspectionData?.summaryData?.totalUnsat}
+                      </h4>
                     </div>
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
@@ -340,7 +348,10 @@ const Dashboard = props => {
                   <div className="d-flex">
                     <div className="flex-grow-1">
                       <p className="text-muted fw-medium">INSPECTION</p>
-                      <h4 className="mb-0">5</h4>
+                      <h4 className="mb-0">
+                        {" "}
+                        {dashboardInspectionData?.summaryData?.totalInspection}
+                      </h4>
                     </div>
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
@@ -359,7 +370,9 @@ const Dashboard = props => {
                   <div className="d-flex">
                     <div className="flex-grow-1">
                       <p className="text-muted fw-medium">PAW</p>
-                      <h4 className="mb-0">3</h4>
+                      <h4 className="mb-0">
+                        {dashboardInspectionData?.summaryData?.totalPAW}
+                      </h4>
                     </div>
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
@@ -378,7 +391,9 @@ const Dashboard = props => {
                   <div className="d-flex">
                     <div className="flex-grow-1">
                       <p className="text-muted fw-medium">IDIQ</p>
-                      <h4 className="mb-0">2</h4>
+                      <h4 className="mb-0">
+                        {dashboardInspectionData?.summaryData?.totalIDIQ}
+                      </h4>
                     </div>
                     <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                       <span className="avatar-title rounded-circle bg-primary">
@@ -398,46 +413,213 @@ const Dashboard = props => {
               <Card>
                 <CardBody>
                   <CardTitle className="h4 text-center">INSPECTIONS</CardTitle>
-
                   <hr />
-                  <Line
-                    width={474}
-                    height={300}
-                    data={satUnsatLineChartData}
-                    options={satUnsatLineChartOption}
-                  />
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                      Satisfactory
+                      <label className="label label-success">
+                        {" "}
+                        {dashboardInspectionData?.satData?.length ?? 0}
+                      </label>
+                    </li>
+                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                      Unsatisfactory
+                      <label className="label label-success">
+                        {" "}
+                        {dashboardInspectionData?.unsatData?.length ?? 0}
+                      </label>
+                    </li>
+                  </ul>
+                  <Bar width={474} height={300} data={satUnsatBarChartData} />
 
+                  <br />
                   <CardTitle className="h4 text-center">
                     UNSATISFACTORY Breakdown
                   </CardTitle>
-                  {/* <Pie width={474} height={260} data={pieChartData} /> */}
+                  <hr />
+                  <Pie width={474} height={460} data={pieChartData} />
                 </CardBody>
               </Card>
             </Col>
             <Col xl="9">
-              {/* <Row>
-                <Col md="4">
-                  <Card className="mini-stats-wid">
-                    <CardBody>
-                      <div className="d-flex">
-                        <div className="flex-grow-1">
-                          <p className="text-muted fw-medium">title...</p>
-                          <h4 className="mb-0">dd</h4>
-                        </div>
-                        <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                          <span className="avatar-title rounded-circle bg-primary">
-                            <i
-                            // className={
-                            //   "bx " + report.iconClass + " font-size-24"
-                            // }
-                            ></i>
-                          </span>
-                        </div>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row> */}
+              <Card>
+                <CardBody>
+                  <CardTitle className="h4 text-center">SAT Data</CardTitle>
+                  {isSatExporting === true ? (
+                    <BtnExporting isExporting={isSatExporting} />
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => onExportClick("SAT")}
+                    >
+                      <i className="bx bx-file"></i> Export
+                    </button>
+                  )}
+                  <hr />
+                  <Row>
+                    <div
+                      className="table-responsive"
+                      style={{ overflowY: "auto", height: "250px" }}
+                    >
+                      <Table
+                        data-simplebar={true}
+                        className="table table-sm m-0"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Crew</th>
+                            <th>WO</th>
+                            <th>Insp. Date</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th>Lead</th>
+                            <th>Cause Code</th>
+                            <th>Finding</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {isFetching === true ? (
+                            <tr>
+                              <td colSpan={100}>
+                                <Loader isLoading={isFetching} />
+                              </td>
+                            </tr>
+                          ) : null}
+
+                          {dashboardInspectionData.satData &&
+                            dashboardInspectionData.satData.map(
+                              (item, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td>{item.crew}</td>
+                                    <td>{item.workOrder}</td>
+                                    <td>
+                                      {item.inspectionDate
+                                        ? moment(item.inspectionDate).format(
+                                            "MM/DD/YYYY"
+                                          )
+                                        : "No Data"}
+                                    </td>
+                                    <td>{item.description}</td>
+                                    <td>{item.location}</td>p
+                                    <td>{item.lead}</td>
+                                    <td>{item.causeCode}</td>
+                                    <td>{item.finding}</td>
+                                    <td>{item.result}</td>
+                                  </tr>
+                                )
+                              }
+                            )}
+
+                          {dashboardInspectionData.satData &&
+                            dashboardInspectionData.satData.length === 0 && (
+                              <tr>
+                                <td
+                                  colSpan="100%"
+                                  className="text-center text-danger font-weight-bold"
+                                >
+                                  No data
+                                </td>
+                              </tr>
+                            )}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardBody>
+                  <CardTitle className="h4 text-center">UNSAT Data</CardTitle>
+
+                  {isUnsatExporting === true ? (
+                    <BtnExporting isExporting={isUnsatExporting} />
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => onExportClick("UNSAT")}
+                    >
+                      <i className="bx bx-file"></i> Export
+                    </button>
+                  )}
+                  <hr />
+                  <Row>
+                    <div
+                      className="table-responsive"
+                      style={{ overflowY: "auto", height: "250px" }}
+                    >
+                      <Table
+                        data-simplebar={true}
+                        className="table table-sm m-0"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Crew</th>
+                            <th>WO</th>
+                            <th>Insp. Date</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th>Lead</th>
+                            <th>Cause Code</th>
+                            <th>Finding</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {isFetching === true ? (
+                            <tr>
+                              <td colSpan={100}>
+                                <Loader isLoading={isFetching} />
+                              </td>
+                            </tr>
+                          ) : null}
+
+                          {dashboardInspectionData.unsatData &&
+                            dashboardInspectionData.unsatData.map(
+                              (item, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td>{item.crew}</td>
+                                    <td>{item.workOrder}</td>
+                                    <td>
+                                      {item.inspectionDate
+                                        ? moment(item.inspectionDate).format(
+                                            "MM/DD/YYYY"
+                                          )
+                                        : "No Data"}
+                                    </td>
+                                    <td>{item.description}</td>
+                                    <td>{item.location}</td>p
+                                    <td>{item.lead}</td>
+                                    <td>{item.causeCode}</td>
+                                    <td>{item.finding}</td>
+                                    <td>{item.result}</td>
+                                  </tr>
+                                )
+                              }
+                            )}
+
+                          {dashboardInspectionData.unsatData &&
+                            dashboardInspectionData.unsatData.length === 0 && (
+                              <tr>
+                                <td
+                                  colSpan="100%"
+                                  className="text-center text-danger font-weight-bold"
+                                >
+                                  No data
+                                </td>
+                              </tr>
+                            )}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
+                </CardBody>
+              </Card>
             </Col>
           </Row>
 

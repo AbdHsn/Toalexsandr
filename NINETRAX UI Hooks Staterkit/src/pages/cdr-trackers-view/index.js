@@ -742,7 +742,18 @@ const CDRTrackersView = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{item.cdrNumber}</td>
+                                  <td>
+                                    {item.cdrNumber ? (
+                                      <Button
+                                        type="button"
+                                        color="info"
+                                        className="btn-sm btn-rounded"
+                                        onClick={e => onEditClick(item)}
+                                      >
+                                        {item.cdrNumber}
+                                      </Button>
+                                    ) : null}
+                                  </td>
                                   <td>
                                     {item.dateReceived
                                       ? moment(item.dateReceived).format(
@@ -779,7 +790,7 @@ const CDRTrackersView = props => {
                                   <td>{item.notes}</td>
 
                                   <td>
-                                    <button
+                                    {/* <button
                                       type="button"
                                       className="btn btn-sm btn-outline-primary ml-2"
                                       onClick={e => onEditClick(item)}
@@ -787,7 +798,7 @@ const CDRTrackersView = props => {
                                       data-target=".bs-example-modal-center"
                                     >
                                       <i className="far fa-edit"></i> Edit
-                                    </button>{" "}
+                                    </button>{" "} */}
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-outline-danger ml-2"

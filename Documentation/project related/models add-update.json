@@ -192,15 +192,14 @@ elin: string;
 annex: short;
 specItem: short;
 title: short;
-description: byte;
 
 workType: string;
 subWorkType: string;
-//elin: string;
-//pointofcontact: string;
-//POC phone: string;
+elin2: string;
+onBehalfOf: string; //Point of Contact
+phone: string; //POC phone
 asset: string;
-//assetDescription: string;
+assetDescription: string;
 
 crew: string;
 lead: string;
@@ -210,13 +209,21 @@ actualStart: date;
 actualFinish: date;
 statusDate: date;
 
-qcInspector: short;
-//qcStatus: short;
+description: byte;
+longDescription: byte;
+////good 
+
+qcInspector: short; //QC Inspector 
+inspectionResult: short; //QC Status
 inspectionDate: date;
-enteredDate: date;
-causeCode: short;
+enteredDate: date; //Recorded Date
+causeCode: short;  
 rootCause: short;
 
+unsatFindings: byte; //deficienices
+currectiveAction: byte;
+qcComments: byte; //Comments
+}
 
 // priority: string;
 // glAccount: string;

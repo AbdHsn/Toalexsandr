@@ -1,1482 +1,1162 @@
+import PropTypes from "prop-types"
 import React, { useEffect, useRef, useState } from "react"
-import MetaTags from "react-meta-tags"
-import ReactPaginate from "react-paginate"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import Select from "react-select"
 import * as moment from "moment"
-import classnames from "classnames"
+import {
+  Col,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Input,
+  FormFeedback,
+  Label,
+  Form,
+} from "reactstrap"
+import {
+  newInspectionAddUpdate,
+  editInspectionAddUpdate,
+} from "../../services/wo-inspect-service"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
-import "../../assets/scss/custom/_common.scss"
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Row,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Collapse,
-  CardTitle,
-  ButtonDropdown,
-  Table,
-} from "reactstrap"
-import Loader from "../../components/Common/Loader"
-import BtnExporting from "../../components/Common/BtnExporting"
-import {
-  fetchTableView,
-  exportTableView,
-} from "../../services/wo-inspect-service"
-import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
-import Breadcrumbs from "components/Common/Breadcrumb"
-import InspectionAddUpdate from "./add-update"
-import DeleteModal from "../../components/Common/DeleteModal"
-
-const workOrderInspections = props => {
-  const [workOrderInspectionTbl, setWorkOrderInspectionTbl] = useState({})
-  const [pageSizeDrp, setPageSizeDrp] = useState(false)
-  const [modal, setModal] = useState(false)
-  const [modelData, setModelData] = useState({})
-  const [deleteModal, setDeleteModal] = useState(false)
-  const [isFetching, setIsFetching] = useState(false)
-  const [isExporting, setIsExporting] = useState(false)
-  const [filterOptions, setFilterOptions] = useState(false)
-
-  const start = useRef(0)
-  const orderColumn = useRef({
-    column: "Id",
-    order_by: "DESC",
-  })
-  const length = useRef("10")
-
-  const id = useRef("")
-  const annex = useRef("")
-  const specItem = useRef("")
-  const title = useRef("")
-  const workOrder = useRef("")
-  const description = useRef("")
-  const location = useRef("")
-  const asset = useRef("")
-  const crew = useRef("")
-  const lead = useRef("")
-  const workType = useRef("")
-  const subWorkType = useRef("")
-  const actualFinish = useRef("")
-  const qcInspector = useRef("")
-  const inspectionResults = useRef("")
-  const inspectionDate = useRef("")
-  const enteredDate = useRef("")
-  const duration = useRef("")
-  const actualFinishFromDate = useRef("")
-  const actualFinishToDate = useRef("")
-  const multipleWorkOrder = useRef("")
-
+import BtnSaving from "../../components/Common/BtnSaving"
+const InspectionAddUpdate = ({
+  open,
+  modelData,
+  onSaveClick,
+  onCancelClick,
+}) => {
   useEffect(() => {
-    loadView()
-  }, [])
+    //set existing selected value
+    modelData && modelData?.annex != null
+      ? set_annexSelected({ label: modelData?.annex, value: modelData?.annex })
+      : set_annexSelected("")
 
-  const onUpdateSearchFilter = (column, value) => {
-    start.current = 0
-    switch (column) {
-      case "id":
-        id.current = value
-        break
-      case "annex":
-        annex.current = value
-        break
-      case "specItem":
-        specItem.current = value
-        break
-      case "title":
-        title.current = value
-        break
-      case "workOrder":
-        workOrder.current = value
-        break
-      case "description":
-        description.current = value
-        break
-      case "location":
-        location.current = value
-        break
-      case "asset":
-        asset.current = value
-        break
-      case "crew":
-        crew.current = value
-        break
-      case "lead":
-        lead.current = value
-        break
-      case "workType":
-        workType.current = value
-        break
-      case "subWorkType":
-        subWorkType.current = value
-        break
-      case "actualFinish":
-        actualFinish.current = value
-        break
-      case "qcInspector":
-        qcInspector.current = value
-        break
-      case "inspectionResults":
-        inspectionResults.current = value
-        break
-      case "inspectionDate":
-        inspectionDate.current = value
-        break
-      case "enteredDate":
-        enteredDate.current = value
-        break
-      case "multipleWorkOrder":
-        multipleWorkOrder.current = value
-        break
-      case "duration":
-        duration.current = value
-        start.current = 0
-        loadView()
-        break
-      default:
-        break
-    }
-  }
+    modelData && modelData?.specItem != null
+      ? set_specItemSelected({
+          label: modelData?.specItem,
+          value: modelData?.specItem,
+        })
+      : set_specItemSelected("")
 
-  const loadView = () => {
-    let preparePostData = {
-      columns: [],
-      orders: [orderColumn.current],
-      start: start.current,
-      length: length.current,
-      search: {},
-      searches: [
-        { search_by: "Id", value: id.current },
-        { search_by: "Annex", value: annex.current },
-        { search_by: "SpecItem", value: specItem.current },
-        { search_by: "Title", value: title.current },
-        { search_by: "WorkOrder", value: workOrder.current },
-        { search_by: "Description", value: description.current },
-        { search_by: "Location", value: location.current },
-        { search_by: "Asset", value: asset.current },
-        { search_by: "Crew", value: crew.current },
-        { search_by: "Lead", value: lead.current },
-        { search_by: "WorkType", value: workType.current },
-        { search_by: "SubWorkType", value: subWorkType.current },
-        { search_by: "ActualFinish", value: actualFinish.current },
-        { search_by: "QcInspector", value: qcInspector.current },
-        { search_by: "InspectionResults", value: inspectionDate.current },
-        { search_by: "InspectionDate", value: enteredDate.current },
-        { search_by: "EnteredDate", value: inspectionResults.current },
-        { search_by: "MultipleWorkOrder", value: multipleWorkOrder.current },
-        { search_by: "Duration", value: duration.current },
-        {
-          search_by: "ActualFinishDateRange",
-          fromdate: actualFinishFromDate.current || null,
-          todate: actualFinishToDate.current || null,
-        },
-      ],
-    }
+    modelData && modelData?.title != null
+      ? set_titleSelected({ label: modelData?.title, value: modelData?.title })
+      : set_titleSelected("")
 
-    setIsFetching(true)
-    fetchTableView(preparePostData)
-      .then(res => {
-        setWorkOrderInspectionTbl(res.data)
-        if (res.data.data.length <= 0) {
-          setIsFetching(false)
-          toastr.warning("No data found", "NINETRAX")
-        } else {
-          setIsFetching(false)
-        }
-      })
-      .catch(error => {
-        setIsFetching(false)
-        toastr.error("Failed to fetch data.", "NINETRAX")
-      })
-  }
+    modelData && modelData?.qcInspector != null
+      ? set_qcInspectorSelected({
+          label: modelData?.qcInspector,
+          value: modelData?.qcInspector,
+        })
+      : set_qcInspectorSelected("")
 
-  const onPressEnter = async e => {
-    if (e.key === "Enter") {
-      start.current = 0
-      loadView()
-    }
-  }
+    modelData && modelData?.inspectionResult != null
+      ? set_inspectionResultSelected({
+          label: modelData?.inspectionResult,
+          value: modelData?.inspectionResult,
+        })
+      : set_inspectionResultSelected("")
 
-  const onExportClick = () => {
-    let preparePostData = {
-      columns: [],
-      orders: [
-        {
-          column: "Id",
-          order_by: "DESC",
-        },
-      ],
-      start: start.current,
-      length: length.current,
-      search: {},
-      searches: [
-        { search_by: "Id", value: id.current },
-        { search_by: "Annex", value: annex.current },
-        { search_by: "SpecItem", value: specItem.current },
-        { search_by: "Title", value: title.current },
-        { search_by: "WorkOrder", value: workOrder.current },
-        { search_by: "Description", value: description.current },
-        { search_by: "Location", value: location.current },
-        { search_by: "Asset", value: asset.current },
-        { search_by: "Crew", value: crew.current },
-        { search_by: "Lead", value: lead.current },
-        { search_by: "WorkType", value: workType.current },
-        { search_by: "SubWorkType", value: subWorkType.current },
-        { search_by: "ActualFinish", value: actualFinish.current },
-        { search_by: "QcInspector", value: qcInspector.current },
-        { search_by: "InspectionResults", value: inspectionDate.current },
-        { search_by: "InspectionDate", value: enteredDate.current },
-        { search_by: "EnteredDate", value: inspectionResults.current },
-        {
-          search_by: "MultipleWorkOrder",
-          value: multipleWorkOrder.current,
-        },
-        { search_by: "Duration", value: duration.current },
-        {
-          search_by: "ActualFinishDateRange",
-          fromdate: actualFinishFromDate.current || null,
-          todate: actualFinishToDate.current || null,
-        },
-      ],
-    }
+    modelData && modelData?.causeCode != null
+      ? set_causeCodeSelected({
+          label: modelData?.causeCode,
+          value: modelData?.causeCode,
+        })
+      : set_causeCodeSelected("")
 
-    setIsExporting(true)
-    exportTableView(preparePostData)
-      .then(res => {
-        let downloadLink = document.createElement("a")
-        downloadLink.href = window.URL.createObjectURL(
-          new Blob([res.data], {
-            type: "application/vnd.ms-excel",
+    modelData && modelData?.rootCause != null
+      ? set_rootCauseSelected({
+          label: modelData?.rootCause,
+          value: modelData?.rootCause,
+        })
+      : set_rootCauseSelected("")
+  }, [modelData])
+
+  const [isSaving, setIsSaving] = useState(false)
+
+  const [_annexSelected, set_annexSelected] = useState("")
+  const [_annexSelectItems, set_annexSelectItems] = useState([])
+  const [_specItemSelected, set_specItemSelected] = useState("")
+  const [_specItemSelectItems, set_specItemSelectItems] = useState([])
+  const [_titleSelected, set_titleSelected] = useState("")
+  const [_titleSelectItems, set_titleSelectItems] = useState([])
+  const [_qcInspectorSelected, set_qcInspectorSelected] = useState("")
+  const [_qcInspectorSelectItems, set_qcInspectorSelectItems] = useState([])
+  const [_inspectionResultSelected, set_inspectionResultSelected] = useState("")
+  const [_inspectionResultSelectItems, set_inspectionResultSelectItems] =
+    useState([])
+  const [_causeCodeSelected, set_causeCodeSelected] = useState("")
+  const [_causeCodeSelectItems, set_causeCodeSelectItems] = useState([])
+  const [_rootCauseSelected, set_rootCauseSelected] = useState("")
+  const [_rootCauseSelectItems, set_rootCauseSelectItems] = useState([])
+
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      id: (modelData && modelData.id) || 0,
+      workOrder: (modelData && modelData.workOrder) || "",
+      location: (modelData && modelData.location) || "",
+      status: (modelData && modelData.status) || "",
+      elin: (modelData && modelData.elin) || "",
+      annex: (modelData && modelData.annex) || "",
+      specItem: (modelData && modelData.specItem) || "",
+      title: (modelData && modelData.title) || "",
+      workType: (modelData && modelData.workType) || "",
+      subWorkType: (modelData && modelData.subWorkType) || "",
+      elin2: (modelData && modelData.elin2) || "",
+      onBehalfOf: (modelData && modelData.onBehalfOf) || "",
+      phone: (modelData && modelData.phone) || "",
+      asset: (modelData && modelData.asset) || "",
+      assetDescription: (modelData && modelData.assetDescription) || "",
+      crew: (modelData && modelData.crew) || "",
+      lead: (modelData && modelData.lead) || "",
+      targetStart:
+        (modelData &&
+          modelData?.targetStart &&
+          moment(modelData?.targetStart).format("YYYY-MM-DD")) ||
+        null,
+      targetFinish:
+        (modelData &&
+          modelData?.targetFinish &&
+          moment(modelData?.targetFinish).format("YYYY-MM-DD")) ||
+        null,
+      actualStart:
+        (modelData &&
+          modelData?.actualStart &&
+          moment(modelData?.actualStart).format("YYYY-MM-DD")) ||
+        null,
+      actualFinish:
+        (modelData &&
+          modelData?.actualFinish &&
+          moment(modelData?.actualFinish).format("YYYY-MM-DD")) ||
+        null,
+      statusDate:
+        (modelData &&
+          modelData?.statusDate &&
+          moment(modelData?.statusDate).format("YYYY-MM-DD")) ||
+        null,
+      description: (modelData && modelData.description) || "",
+      longDescription: (modelData && modelData.longDescription) || "",
+      qcInspector: (modelData && modelData.qcInspector) || "",
+      inspectionResult: (modelData && modelData.inspectionResult) || "",
+      inspectionDate:
+        (modelData &&
+          modelData?.inspectionDate &&
+          moment(modelData?.inspectionDate).format("YYYY-MM-DD")) ||
+        null,
+      enteredDate:
+        (modelData &&
+          modelData?.enteredDate &&
+          moment(modelData?.enteredDate).format("YYYY-MM-DD")) ||
+        null,
+      causeCode: (modelData && modelData.causeCode) || "",
+      rootCause: (modelData && modelData.rootCause) || "",
+      unsatFindings: (modelData && modelData.unsatFindings) || "",
+      currectiveAction: (modelData && modelData.currectiveAction) || "",
+      qcComments: (modelData && modelData.qcComments) || "",
+    },
+    validationSchema: Yup.object({
+      // id: Yup.string().required("id is required"),
+      // workOrder: Yup.string().required("workOrder is required"),
+      // location: Yup.string().required("location is required"),
+      // status: Yup.string().required("status is required"),
+      // elin: Yup.string().required("elin is required"),
+      // annex: Yup.string().required("annex is required"),
+      // specItem: Yup.string().required("specItem is required"),
+      // title: Yup.string().required("title is required"),
+      // workType: Yup.string().required("workType is required"),
+      // subWorkType: Yup.string().required("subWorkType is required"),
+      // elin2: Yup.string().required("elin2 is required"),
+      // onBehalfOf: Yup.string().required("onBehalfOf is required"),
+      // phone: Yup.string().required("phone is required"),
+      // asset: Yup.string().required("asset is required"),
+      // assetDescription: Yup.string().required("assetDescription is required"),
+      // crew: Yup.string().required("crew is required"),
+      // lead: Yup.string().required("lead is required"),
+      // targetStart: Yup.string().required("targetStart is required"),
+      // targetFinish: Yup.string().required("targetFinish is required"),
+      // actualStart: Yup.string().required("actualStart is required"),
+      // actualFinish: Yup.string().required("actualFinish is required"),
+      // statusDate: Yup.string().required("statusDate is required"),
+      // description: Yup.string().required("description is required"),
+      // longDescription: Yup.string().required("longDescription is required"),
+      // qcInspector: Yup.string().required("qcInspector is required"),
+      // inspectionResult: Yup.string().required("inspectionResult is required"),
+      // inspectionDate: Yup.string().required("inspectionDate is required"),
+      // enteredDate: Yup.string().required("enteredDate is required"),
+      // causeCode: Yup.string().required("causeCode is required"),
+      // rootCause: Yup.string().required("rootCause is required"),
+      // unsatFindings: Yup.string().required("unsatFindings is required"),
+      // currectiveAction: Yup.string().required("currectiveAction is required"),
+      // qcComments: Yup.string().required("qcComments is required"),
+    }),
+
+    onSubmit: values => {
+      console.log("add-update save..01", values)
+
+      const submitModel = {
+        id: values.id,
+        workOrder: values.workOrder,
+        location: values.location,
+        status: values.status,
+        elin: values.elin,
+        annex: _annexSelected.value,
+        specItem: _specItemSelected.value,
+        title: _titleSelected.value,
+        workType: values.workType,
+        subWorkType: values.subWorkType,
+        elin2: values.elin2,
+        onBehalfOf: values.onBehalfOf,
+        phone: values.phone,
+        asset: values.asset,
+        assetDescription: values.assetDescription,
+        crew: values.crew,
+        lead: values.lead,
+        targetStart: values.targetStart,
+        targetFinish: values.targetFinish,
+        actualStart: values.actualStart,
+        actualFinish: values.actualFinish,
+        statusDate: values.statusDate,
+        description: values.description,
+        longDescription: values.longDescription,
+        qcInspector: _qcInspectorSelected.value,
+        inspectionResult: _inspectionResultSelected.value,
+        inspectionDate: values.inspectionDate,
+        enteredDate: values.enteredDate,
+        causeCode: _causeCodeSelected.value,
+        rootCause: _rootCauseSelected.value,
+        unsatFindings: values.unsatFindings,
+        currectiveAction: values.currectiveAction,
+        qcComments: values.qcComments,
+      }
+
+      if (submitModel && submitModel?.id > 0) {
+        setIsSaving(true)
+        editInspectionAddUpdate(submitModel?.id, submitModel)
+          .then(res => {
+            console.log("submit model create response: ", res)
+            if (res.data.id > 0) {
+              toastr.success("Data successfully updated.", "NINETRAX")
+              setIsSaving(false)
+              validation.resetForm()
+              onSaveClick(res.data)
+              onCancelClick(false)
+            } else {
+              setIsSaving(false)
+              toastr.warning("Failed to update data.", "NINETRAX")
+            }
           })
-        )
-
-        downloadLink.setAttribute("download", "WorkOrderInspect.xlsx")
-        document.body.appendChild(downloadLink)
-        downloadLink.click()
-
-        setIsExporting(false)
-        toastr.success("Export succeeded.", "NINETRAX")
-      })
-      .catch(error => {
-        setIsExporting(false)
-        toastr.error("Failed to export data.", "NINETRAX")
-      })
-  }
-
-  const onChangeActualFinishDateRangeCriteria = async (e, inputType) => {
-    let fromdate = actualFinishFromDate.current || null
-    let todate = actualFinishToDate.current || null
-
-    switch (e.target.value) {
-      case "Last2Days":
-        fromdate = moment().subtract(2, "d").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "Last1Week":
-        fromdate = moment().subtract(1, "w").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "Last2Weeks":
-        fromdate = moment().subtract(2, "w").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "Last30Days":
-        fromdate = moment().subtract(30, "d").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "Last90Days":
-        fromdate = moment().subtract(90, "d").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "Last6Months":
-        fromdate = moment().subtract(0.5, "y").format("YYYY-MM-DD")
-        todate = moment().format("YYYY-MM-DD")
-        break
-      case "-1":
-        fromdate = ""
-        todate = ""
-        break
-      default:
-        break
-    }
-
-    if (inputType === "sActualFinishFromDate") fromdate = e.target.value
-
-    if (inputType === "sActualFinishToDate") todate = e.target.value
-
-    actualFinishFromDate.current = fromdate
-    actualFinishToDate.current = todate
-
-    if (
-      actualFinishFromDate.current &&
-      actualFinishToDate.current &&
-      moment(actualFinishToDate.current).diff(
-        moment(actualFinishFromDate.current)
-      ) >= 0
-    ) {
-      start.current = 0
-      loadView()
-    } else {
-      //toastr.warning("Invalid date range.", "NINETRAX")
-    }
-  }
-
-  const onOrderByClick = columnName => {
-    console.log(
-      "old selected column: ",
-      orderColumn.current,
-      orderColumn.current.column,
-      orderColumn.current.order_by,
-      columnName
-    )
-
-    if (orderColumn.current.column === columnName) {
-      if (orderColumn.current.order_by === "DESC")
-        orderColumn.current.order_by = "ASC"
-      else orderColumn.current.order_by = "DESC"
-    } else {
-      orderColumn.current.column = columnName
-      orderColumn.current.order_by = orderColumn.current.order_by
-    }
-
-    console.log(
-      "latest selected column: ",
-      orderColumn.current,
-      orderColumn.current.column,
-      orderColumn.current.order_by,
-      columnName
-    )
-    loadView()
-  }
-
-  const onNewClick = () => {
-    setModal(true)
-    setModelData(null)
-  }
-
-  const onEditClick = item => {
-    setModal(true)
-    setModelData(item)
-  }
-
-  const onAttemptDelete = id => {
-    if (id > 0) {
-      setDeleteModal(true)
-      setModelData({ id: id })
-    }
-  }
-
-  const onDeleteConfirmed = () => {
-    if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
-        .then(res => {
-          if (res.data) {
-            toastr.success("Selected item successfully deleted.", "NINETRAX")
-            setDeleteModal(false)
-            loadView()
-          } else {
-            toastr.warning("Selected item failed to delete.", "NINETRAX")
-          }
-        })
-        .catch(error => {
-          toastr.error("Failed to process data.", "NINETRAX")
-        })
-    } else {
-      toastr.error("Can't process request.", "NINETRAX")
-    }
-  }
+          .catch(error => {
+            setIsSaving(false)
+            toastr.error("Failed to process data.", "NINETRAX")
+          })
+      } else {
+        setIsSaving(true)
+        newInspectionAddUpdate(submitModel)
+          .then(res => {
+            console.log("submit model update response: ", res)
+            if (res.data.id > 0) {
+              toastr.success("Data successfully created.", "NINETRAX")
+              setIsSaving(false)
+              validation.resetForm()
+              onSaveClick(res.data)
+              onCancelClick(false)
+            } else {
+              setIsSaving(false)
+              toastr.warning("Failed to create data.", "NINETRAX")
+            }
+          })
+          .catch(error => {
+            setIsSaving(false)
+            toastr.error("Failed to process data.", "NINETRAX")
+          })
+      }
+    },
+  })
 
   return (
-    <React.Fragment>
-      <div className="page-content">
-        <MetaTags>
-          <title>WO Inspection | {appTitle}</title>
-        </MetaTags>
-
-        <Container fluid>
-          <Breadcrumbs title="Work Order Inspect" breadcrumbItem="WO Inspect" />
-
-          <Row>
-            <Col xs="12">
-              <Card>
-                <CardBody>
-                  <CardTitle className="h4"> </CardTitle>
-
-                  <div className="d-flex flex-wrap">
-                    <div className="btn-group">
-                      <ButtonDropdown
-                        isOpen={pageSizeDrp}
-                        toggle={() => setPageSizeDrp(!pageSizeDrp)}
-                      >
-                        <Button id="caret" color="info" disabled>
-                          Row Size: {length.current}
-                        </Button>
-                        <DropdownToggle caret color="info">
-                          <i className="mdi mdi-chevron-down" />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          {rowSizeDdl.map((item, index) => {
-                            return (
-                              <DropdownItem
-                                key={index}
-                                onClick={() => {
-                                  length.current = item
-                                  loadView()
-                                }}
-                                title={
-                                  item === "All"
-                                    ? "Not recommended on large data"
-                                    : ``
-                                }
-                                className={item === "All" ? `text-warning` : ``}
-                              >
-                                {item}
-                              </DropdownItem>
-                            )
-                          })}
-                        </DropdownMenu>
-                      </ButtonDropdown>
-
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary w-xs"
-                        onClick={onNewClick}
-                      >
-                        <i className="bx bx-plus"></i> New
-                      </button>
-
-                      {isExporting === true ? (
-                        <BtnExporting isExporting={isExporting} />
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary w-xs"
-                          onClick={onExportClick}
-                        >
-                          <i className="bx bx-file"></i> Export
-                        </button>
-                      )}
-                      {/* <button
-                        type="button"
-                        className="btn btn-outline-danger w-xs"
-                        //onClick={onBulkDeleteClick}
-                      >
-                        <i className="bx bx-trash"></i> Bulk Delete
-                      </button> */}
-                    </div>
-                  </div>
-
-                  <Row className="my-2">
-                    <div className="accordion-flush" id="accordion">
-                      <div className="accordion-item">
-                        <h2 className="accordion-header" id="headingOne">
-                          <button
-                            className={classnames(
-                              "accordion-button",
-                              "p-1 py-3",
-                              "fw-medium",
-                              { collapsed: !filterOptions }
-                            )}
-                            type="button"
-                            onClick={() => setFilterOptions(!filterOptions)}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Additional Filter Options
-                          </button>
-                        </h2>
-
-                        <Collapse
-                          isOpen={filterOptions}
-                          className="accordion-collapse"
-                        >
-                          <div className="accordion-body">
-                            <Row>
-                              <Col xl={4}>
-                                <div className="row">
-                                  <label className="mb-0 mt-2 p-0">
-                                    Seach WO by finish dates
-                                  </label>
-
-                                  <input
-                                    type="date"
-                                    style={{ width: "50%" }}
-                                    placeholder="Start Date"
-                                    name="sActualFinishFromDate"
-                                    id="sActualFinishFromDate"
-                                    pattern="\d{4}-\d{2}-\d{2}"
-                                    value={actualFinishFromDate.current || ""}
-                                    onChange={e =>
-                                      onChangeActualFinishDateRangeCriteria(
-                                        e,
-                                        "sActualFinishFromDate"
-                                      )
-                                    }
-                                  />
-                                  <input
-                                    type="date"
-                                    style={{ width: "50%" }}
-                                    placeholder="End Date"
-                                    name="sActualFinishToDate"
-                                    id="sActualFinishToDate"
-                                    pattern="\d{4}-\d{2}-\d{2}"
-                                    value={actualFinishToDate.current || ""}
-                                    onChange={e =>
-                                      onChangeActualFinishDateRangeCriteria(
-                                        e,
-                                        "sActualFinishToDate"
-                                      )
-                                    }
-                                  />
-                                </div>
-                                <div className="row">
-                                  <label className="mb-0 mt-2 p-0">
-                                    Choose date criteria{" "}
-                                  </label>
-                                  <select
-                                    name="dateRangeCriteria"
-                                    id="dateRangeCriteria"
-                                    onChange={
-                                      onChangeActualFinishDateRangeCriteria
-                                    }
-                                  >
-                                    <option value="-1">
-                                      Date Range Criteria
-                                    </option>
-                                    <option value="Last2Days">
-                                      Last 2 days
-                                    </option>
-                                    <option value="Last1Week">
-                                      Last 1 week
-                                    </option>
-                                    <option value="Last2Weeks">
-                                      Last 2 weeks
-                                    </option>
-                                    <option value="Last30Days">
-                                      Last 30 days
-                                    </option>
-                                    <option value="Last90Days">
-                                      Last 90 days
-                                    </option>
-                                    <option value="Last6Months">
-                                      Last 6 months
-                                    </option>
-                                  </select>
-                                </div>
-                                <div className="row">
-                                  <label className="mb-0 mt-2 p-0">
-                                    **Multiple WO Search
-                                  </label>
-                                  <input
-                                    type="text"
-                                    style={{ width: "100%" }}
-                                    placeholder="Multi Work Order"
-                                    name="sMultipleWorkOrder"
-                                    id="sMultipleWorkOrder"
-                                    onChange={e =>
-                                      onUpdateSearchFilter(
-                                        "multipleWorkOrder",
-                                        e.target.value
-                                      )
-                                    }
-                                    onKeyUp={onPressEnter}
-                                  />
-                                </div>
-                              </Col>
-                              <Col xl={8}>
-                                <div className="row">
-                                  <Col xs={3}>
-                                    <label>Select Base Site</label>
-                                    <div className="border border-primary p-2 py-3">
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="radio"
-                                          name="baseSite"
-                                          id="radioAll"
-                                          value="all"
-                                          defaultChecked
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="radioAll"
-                                        >
-                                          All
-                                        </label>
-                                      </div>
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="radio"
-                                          name="baseSite"
-                                          id="notIncludeBMD"
-                                          value="notIncludeBMD"
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="notIncludeBMD"
-                                        >
-                                          Do not include BMD
-                                        </label>
-                                      </div>
-                                      <div className="form-check">
-                                        <input
-                                          className="form-check-input"
-                                          type="radio"
-                                          name="baseSite"
-                                          id="onlyMBD"
-                                          value="onlyMBD"
-                                        />
-                                        <label
-                                          className="form-check-label"
-                                          htmlFor="onlyMBD"
-                                        >
-                                          Only BMD
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </Col>
-                                  <Col xs={6}>
-                                    <label>Select Frequency</label>
-                                    <div className="row border border-primary p-2 py-3">
-                                      <Col xs="6">
-                                        <div className="form-check">
-                                          <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="rdoFrequency"
-                                            id="frequencyAll"
-                                            value="all"
-                                            defaultChecked
-                                            onChange={e =>
-                                              onUpdateSearchFilter(
-                                                "duration",
-                                                ""
-                                              )
-                                            }
-                                          />
-                                          <label
-                                            className="form-check-label"
-                                            htmlFor="frequencyAll"
-                                          >
-                                            All
-                                          </label>
-                                        </div>
-                                        <div className="form-check">
-                                          <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="rdoFrequency"
-                                            id="SemiA"
-                                            value="SemiA"
-                                            onChange={e =>
-                                              onUpdateSearchFilter(
-                                                "duration",
-                                                "960:00"
-                                              )
-                                            }
-                                          />
-                                          <label
-                                            className="form-check-label"
-                                            htmlFor="SemiA"
-                                          >
-                                            Semi/A
-                                          </label>
-                                        </div>
-                                        <div className="form-check">
-                                          <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="rdoFrequency"
-                                            id="monthly"
-                                            value="monthly"
-                                            onChange={e =>
-                                              onUpdateSearchFilter(
-                                                "duration",
-                                                "720:00"
-                                              )
-                                            }
-                                          />
-                                          <label
-                                            className="form-check-label"
-                                            htmlFor="monthly"
-                                          >
-                                            Monthly
-                                          </label>
-                                        </div>
-                                      </Col>
-                                      <Col xs="6">
-                                        <div className="form-check">
-                                          <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="rdoFrequency"
-                                            id="Anually"
-                                            value="Anually"
-                                            onChange={e =>
-                                              onUpdateSearchFilter(
-                                                "duration",
-                                                "1440:00"
-                                              )
-                                            }
-                                          />
-                                          <label
-                                            className="form-check-label"
-                                            htmlFor="Anually"
-                                          >
-                                            Anually
-                                          </label>
-                                        </div>
-                                        <div className="form-check">
-                                          <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="rdoFrequency"
-                                            id="quarterly"
-                                            value="quarterly"
-                                            onChange={e =>
-                                              onUpdateSearchFilter(
-                                                "duration",
-                                                "480:00"
-                                              )
-                                            }
-                                          />
-                                          <label
-                                            className="form-check-label"
-                                            htmlFor="quarterly"
-                                          >
-                                            Quarterly
-                                          </label>
-                                        </div>
-                                        <div className="form-check">
-                                          <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="rdoFrequency"
-                                            id="weekly"
-                                            value="weekly"
-                                            onClick={e =>
-                                              onUpdateSearchFilter(
-                                                "duration",
-                                                "168:00"
-                                              )
-                                            }
-                                          />
-                                          <label
-                                            className="form-check-label"
-                                            htmlFor="weekly"
-                                          >
-                                            Weekly
-                                          </label>
-                                        </div>
-                                      </Col>
-                                    </div>
-                                  </Col>
-                                  <Col xs={3}>
-                                    <label>Work Orders Copies</label>
-                                    <textarea
-                                      className="form-control text-primary"
-                                      id="workOrdersCopies"
-                                      rows="4"
-                                    ></textarea>
-                                  </Col>
-                                </div>
-                              </Col>
-                            </Row>
-                          </div>
-                        </Collapse>
-                      </div>
-                    </div>
-                  </Row>
-
-                  <Row>
-                    <div className="table-responsive">
-                      <Table
-                        data-simplebar={true}
-                        className="table table-sm m-0"
-                      >
-                        <thead>
-                          <tr>
-                            {/* <th>Id</th> */}
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Annex")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Annex"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Annex
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("SpecItem")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "SpecItem"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Spec Item
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Title")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Title"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Title
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("WorkOrder")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "WorkOrder"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Work Order
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Description")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Description"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Description
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Location")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Location"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Location
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Asset")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Asset"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Asset
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Crew")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Crew"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Crew
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("Lead")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "Lead"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Lead
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("WorkType")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "WorkType"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Work Type
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("SubWorkType")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "SubWorkType"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Sub WorkType
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("ActualFinish")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "ActualFinish"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Actual Finish
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("QcInspector")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "QcInspector"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              QC Inspector
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("InspectionResults")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "InspectionResults"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Inspection Results
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("InspectionDate")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "InspectionDate"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Inspection Date
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("EnteredDate")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "EnteredDate"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Entered Date
-                            </th>
-
-                            <th></th>
-                          </tr>
-                          <tr>
-                            {/* <th>
-                            {" "}
-                            <input
-                              type="text"
-                              placeholder="Id"
-                              name="sId"
-                              id="sId"
-                              onChange={e => setId(e.target.value)}
-                              onKeyUp={onPressEnter}
-                            />
-                          </th> */}
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "80px" }}
-                                type="text"
-                                placeholder="Annex"
-                                name="sAnnex"
-                                id="sAnnex"
-                                onChange={e =>
-                                  onUpdateSearchFilter("annex", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Spec Item"
-                                name="sSpecItem"
-                                id="sSpecItem"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "specItem",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Title"
-                                name="sTitle"
-                                id="sTitle"
-                                onChange={e =>
-                                  onUpdateSearchFilter("title", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "80px" }}
-                                type="text"
-                                placeholder="Work Order"
-                                name="sWorkOrder"
-                                id="sWorkOrder"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "workOrder",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "250px" }}
-                                placeholder="Description"
-                                name="sDescription"
-                                id="sDescription"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "description",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "120px" }}
-                                placeholder="Location"
-                                name="sLocation"
-                                id="sLocation"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "location",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "80px" }}
-                                placeholder="Asset"
-                                name="sAsset"
-                                id="sAsset"
-                                onChange={e =>
-                                  onUpdateSearchFilter("asset", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "80px" }}
-                                placeholder="Crew"
-                                name="sCrew"
-                                id="sCrew"
-                                onChange={e =>
-                                  onUpdateSearchFilter("crew", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "80px" }}
-                                placeholder="Lead"
-                                name="sLead"
-                                id="sLead"
-                                onChange={e =>
-                                  onUpdateSearchFilter("lead", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "80px" }}
-                                placeholder="Work Type"
-                                name="sWorkType"
-                                id="sWorkType"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "workType",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "100px" }}
-                                placeholder="SubWork Type"
-                                name="sSubWorkType"
-                                id="sSubWorkType"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "subWorkType",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Actual Finish"
-                                name="sActualFinish"
-                                id="sActualFinish"
-                                pattern="\d{4}-\d{2}-\d{2}"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "actualFinish",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "100px" }}
-                                placeholder="QC Inspector"
-                                name="sQcInspector"
-                                id="sQcInspector"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "qcInspector",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="text"
-                                style={{ width: "100px" }}
-                                placeholder="Inspection Results"
-                                name="sInspectionResults"
-                                id="sInspectionResults"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "inspectionResults",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Inspection Date"
-                                name="sInspectionDate"
-                                id="sInspectionDate"
-                                pattern="\d{4}-\d{2}-\d{2}"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "inspectionDate",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Record Date"
-                                name="sEnteredDate"
-                                id="sEnteredDate"
-                                pattern="\d{4}-\d{2}-\d{2}"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "enteredDate",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {isFetching === true ? (
-                            <tr>
-                              <td colSpan={100}>
-                                <Loader isLoading={isFetching} />
-                              </td>
-                            </tr>
-                          ) : null}
-
-                          {workOrderInspectionTbl.data &&
-                            workOrderInspectionTbl.data.map((item, index) => {
-                              return (
-                                <tr key={index}>
-                                  {/* <td>{item.id}</td> */}
-                                  <td>{item.annex}</td>
-                                  <td>{item.specItem}</td>
-                                  <td>{item.title}</td>
-                                  <td>{item.workOrder}</td>
-                                  <td>{item.description}</td>
-                                  <td>{item.location}</td>
-                                  <td>{item.asset}</td>
-                                  <td>{item.crew}</td>
-                                  <td>{item.lead}</td>
-                                  <td>{item.workType}</td>
-                                  <td>{item.subWorkType}</td>
-                                  <td>
-                                    {moment(item.actualFinish).format(
-                                      "MM/DD/YYYY"
-                                    )}
-                                  </td>
-                                  <td>{item.qcInspector}</td>
-                                  <td>{item.inspectionResults}</td>
-                                  <td>
-                                    {item.inspectionDate
-                                      ? moment(item.inspectionDate).format(
-                                          "MM/DD/YYYY"
-                                        )
-                                      : "No Data"}
-                                  </td>
-                                  <td>
-                                    {item.enteredDate
-                                      ? moment(item.enteredDate).format(
-                                          "MM/DD/YYYY"
-                                        )
-                                      : "No Data"}
-                                  </td>
-
-                                  <td>
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-outline-primary ml-2"
-                                      onClick={e => onEditClick(item)}
-                                      data-toggle="modal"
-                                      data-target=".bs-example-modal-center"
-                                    >
-                                      <i className="far fa-edit"></i> Edit
-                                    </button>{" "}
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-outline-danger ml-2"
-                                      onClick={() => onAttemptDelete(item.id)}
-                                      data-toggle="modal"
-                                      data-target=".bs-example-modal-center"
-                                    >
-                                      <i className="far fa-trash-alt"></i>{" "}
-                                      Delete
-                                    </button>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-
-                          {workOrderInspectionTbl.data &&
-                            workOrderInspectionTbl.data.length === 0 && (
-                              <tr>
-                                <td
-                                  colSpan="100%"
-                                  className="text-center text-danger font-weight-bold"
-                                >
-                                  No data
-                                </td>
-                              </tr>
-                            )}
-                        </tbody>
-                      </Table>
-                    </div>
-                  </Row>
-
-                  <Row>
-                    <Col className="p-0" xs={12} md={8}>
-                      <div className="mt-2">
-                        <ReactPaginate
-                          containerClassName={"pagination justify-content-left"}
-                          previousLabel={"Previous"}
-                          previousClassName={"page-item"}
-                          previousLinkClassName={"page-link"}
-                          nextLabel={"Next"}
-                          nextClassName={"page-item"}
-                          nextLinkClassName={"page-link"}
-                          breakLabel={"..."}
-                          breakClassName={"page-item"}
-                          breakLinkClassName={"page-link"}
-                          pageCount={Math.floor(
-                            workOrderInspectionTbl.totalRecords /
-                              +length.current
-                          )}
-                          marginPagesDisplayed={2}
-                          pageRangeDisplayed={3}
-                          onPageChange={e => {
-                            ;(start.current = Math.floor(
-                              e.selected * length.current
-                            )),
-                              loadView()
-                          }}
-                          pageClassName={"page-item"}
-                          pageLinkClassName={"page-link"}
-                          activeClassName={"active"}
-                        />
-                      </div>
-                    </Col>
-                    <Col className="p-0 mt-2" xs={6} md={4}>
-                      <div className="mt-2 float-end">
-                        Total Records: {workOrderInspectionTbl.totalRecords}
-                      </div>
-                    </Col>
-                  </Row>
-                  <DeleteModal
-                    show={deleteModal}
-                    onDeleteClick={() => onDeleteConfirmed()}
-                    onCloseClick={() => {
-                      setDeleteModal(false)
-                      setModelData({})
-                    }}
+    <>
+      <Modal isOpen={open} className="modal-dialog modal-lg">
+        <ModalHeader tag="h4">
+          {modelData?.id > 0
+            ? "Update InspectionAddUpdate"
+            : "New InspectionAddUpdate"}
+        </ModalHeader>
+        <ModalBody>
+          <Form
+            onSubmit={e => {
+              e.preventDefault()
+              validation.handleSubmit()
+              return false
+            }}
+          >
+            <Row form>
+              <Col className="col-12">
+                <div className="mb-3">
+                  {/* <Label className="form-label">Id</Label> */}
+                  <Input
+                    id="id"
+                    name="id"
+                    type="number"
+                    placeholder="Id"
+                    hidden={true}
+                    defaultValue={validation.values.id || 0}
                   />
-
-                  <InspectionAddUpdate
-                    open={modal}
-                    modelData={modelData}
-                    onSaveClick={item => {
-                      console.log("onSaveClick from index called...", item)
-                      if (item?.id > 0) {
-                        loadView()
-                      }
-                    }}
-                    onCancelClick={setModal}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">workOrder</Label>
+                  <Input
+                    id="workOrder"
+                    name="workOrder"
+                    type="text"
+                    placeholder="workOrder"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.workOrder || ""}
+                    invalid={
+                      validation.touched.workOrder &&
+                      validation.errors.workOrder
+                        ? true
+                        : false
+                    }
                   />
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    </React.Fragment>
+                  {validation.touched.workOrder &&
+                  validation.errors.workOrder ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.workOrder}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">location</Label>
+                  <Input
+                    id="location"
+                    name="location"
+                    type="text"
+                    placeholder="location"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.location || ""}
+                    invalid={
+                      validation.touched.location && validation.errors.location
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.location && validation.errors.location ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.location}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">status</Label>
+                  <Input
+                    id="status"
+                    name="status"
+                    type="text"
+                    placeholder="status"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.status || ""}
+                    invalid={
+                      validation.touched.status && validation.errors.status
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.status && validation.errors.status ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.status}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">elin</Label>
+                  <Input
+                    id="elin"
+                    name="elin"
+                    type="text"
+                    placeholder="elin"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.elin || ""}
+                    invalid={
+                      validation.touched.elin && validation.errors.elin
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.elin && validation.errors.elin ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.elin}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>annex</Label>
+                  <Select
+                    id="annex"
+                    name="annex"
+                    type="text"
+                    onChange={e => {
+                      set_annexSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_annexSelectItems}
+                    defaultValue={_annexSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select annex"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.annex && validation.errors.annex ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.annex}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>specItem</Label>
+                  <Select
+                    id="specItem"
+                    name="specItem"
+                    type="text"
+                    onChange={e => {
+                      set_specItemSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_specItemSelectItems}
+                    defaultValue={_specItemSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select specItem"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.specItem && validation.errors.specItem ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.specItem}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>title</Label>
+                  <Select
+                    id="title"
+                    name="title"
+                    type="text"
+                    onChange={e => {
+                      set_titleSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_titleSelectItems}
+                    defaultValue={_titleSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select title"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.title && validation.errors.title ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.title}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">workType</Label>
+                  <Input
+                    id="workType"
+                    name="workType"
+                    type="text"
+                    placeholder="workType"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.workType || ""}
+                    invalid={
+                      validation.touched.workType && validation.errors.workType
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.workType && validation.errors.workType ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.workType}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">subWorkType</Label>
+                  <Input
+                    id="subWorkType"
+                    name="subWorkType"
+                    type="text"
+                    placeholder="subWorkType"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.subWorkType || ""}
+                    invalid={
+                      validation.touched.subWorkType &&
+                      validation.errors.subWorkType
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.subWorkType &&
+                  validation.errors.subWorkType ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.subWorkType}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">elin2</Label>
+                  <Input
+                    id="elin2"
+                    name="elin2"
+                    type="text"
+                    placeholder="elin2"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.elin2 || ""}
+                    invalid={
+                      validation.touched.elin2 && validation.errors.elin2
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.elin2 && validation.errors.elin2 ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.elin2}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">onBehalfOf</Label>
+                  <Input
+                    id="onBehalfOf"
+                    name="onBehalfOf"
+                    type="text"
+                    placeholder="onBehalfOf"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.onBehalfOf || ""}
+                    invalid={
+                      validation.touched.onBehalfOf &&
+                      validation.errors.onBehalfOf
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.onBehalfOf &&
+                  validation.errors.onBehalfOf ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.onBehalfOf}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">phone</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="text"
+                    placeholder="phone"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.phone || ""}
+                    invalid={
+                      validation.touched.phone && validation.errors.phone
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.phone && validation.errors.phone ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.phone}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">asset</Label>
+                  <Input
+                    id="asset"
+                    name="asset"
+                    type="text"
+                    placeholder="asset"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.asset || ""}
+                    invalid={
+                      validation.touched.asset && validation.errors.asset
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.asset && validation.errors.asset ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.asset}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">assetDescription</Label>
+                  <Input
+                    id="assetDescription"
+                    name="assetDescription"
+                    type="text"
+                    placeholder="assetDescription"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.assetDescription || ""}
+                    invalid={
+                      validation.touched.assetDescription &&
+                      validation.errors.assetDescription
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.assetDescription &&
+                  validation.errors.assetDescription ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.assetDescription}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">crew</Label>
+                  <Input
+                    id="crew"
+                    name="crew"
+                    type="text"
+                    placeholder="crew"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.crew || ""}
+                    invalid={
+                      validation.touched.crew && validation.errors.crew
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.crew && validation.errors.crew ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.crew}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">lead</Label>
+                  <Input
+                    id="lead"
+                    name="lead"
+                    type="text"
+                    placeholder="lead"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.lead || ""}
+                    invalid={
+                      validation.touched.lead && validation.errors.lead
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.lead && validation.errors.lead ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.lead}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">targetStart</Label>
+                  <Input
+                    id="targetStart"
+                    name="targetStart"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="targetStart"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.targetStart || ""}
+                    invalid={
+                      validation.touched.targetStart &&
+                      validation.errors.targetStart
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.targetStart &&
+                  validation.errors.targetStart ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.targetStart}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">targetFinish</Label>
+                  <Input
+                    id="targetFinish"
+                    name="targetFinish"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="targetFinish"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.targetFinish || ""}
+                    invalid={
+                      validation.touched.targetFinish &&
+                      validation.errors.targetFinish
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.targetFinish &&
+                  validation.errors.targetFinish ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.targetFinish}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">actualStart</Label>
+                  <Input
+                    id="actualStart"
+                    name="actualStart"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="actualStart"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.actualStart || ""}
+                    invalid={
+                      validation.touched.actualStart &&
+                      validation.errors.actualStart
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.actualStart &&
+                  validation.errors.actualStart ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.actualStart}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">actualFinish</Label>
+                  <Input
+                    id="actualFinish"
+                    name="actualFinish"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="actualFinish"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.actualFinish || ""}
+                    invalid={
+                      validation.touched.actualFinish &&
+                      validation.errors.actualFinish
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.actualFinish &&
+                  validation.errors.actualFinish ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.actualFinish}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">statusDate</Label>
+                  <Input
+                    id="statusDate"
+                    name="statusDate"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="statusDate"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.statusDate || ""}
+                    invalid={
+                      validation.touched.statusDate &&
+                      validation.errors.statusDate
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.statusDate &&
+                  validation.errors.statusDate ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.statusDate}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">description</Label>
+                  <Input
+                    id="description"
+                    name="description"
+                    type="textarea"
+                    placeholder="description"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.description || ""}
+                    invalid={
+                      validation.touched.description &&
+                      validation.errors.description
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.description &&
+                  validation.errors.description ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.description}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">longDescription</Label>
+                  <Input
+                    id="longDescription"
+                    name="longDescription"
+                    type="textarea"
+                    placeholder="longDescription"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.longDescription || ""}
+                    invalid={
+                      validation.touched.longDescription &&
+                      validation.errors.longDescription
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.longDescription &&
+                  validation.errors.longDescription ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.longDescription}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>qcInspector</Label>
+                  <Select
+                    id="qcInspector"
+                    name="qcInspector"
+                    type="text"
+                    onChange={e => {
+                      set_qcInspectorSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_qcInspectorSelectItems}
+                    defaultValue={_qcInspectorSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select qcInspector"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.qcInspector &&
+                  validation.errors.qcInspector ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.qcInspector}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>inspectionResult</Label>
+                  <Select
+                    id="inspectionResult"
+                    name="inspectionResult"
+                    type="text"
+                    onChange={e => {
+                      set_inspectionResultSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_inspectionResultSelectItems}
+                    defaultValue={_inspectionResultSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select inspectionResult"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.inspectionResult &&
+                  validation.errors.inspectionResult ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.inspectionResult}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">inspectionDate</Label>
+                  <Input
+                    id="inspectionDate"
+                    name="inspectionDate"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="inspectionDate"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.inspectionDate || ""}
+                    invalid={
+                      validation.touched.inspectionDate &&
+                      validation.errors.inspectionDate
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.inspectionDate &&
+                  validation.errors.inspectionDate ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.inspectionDate}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">enteredDate</Label>
+                  <Input
+                    id="enteredDate"
+                    name="enteredDate"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="enteredDate"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.enteredDate || ""}
+                    invalid={
+                      validation.touched.enteredDate &&
+                      validation.errors.enteredDate
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.enteredDate &&
+                  validation.errors.enteredDate ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.enteredDate}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>causeCode</Label>
+                  <Select
+                    id="causeCode"
+                    name="causeCode"
+                    type="text"
+                    onChange={e => {
+                      set_causeCodeSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_causeCodeSelectItems}
+                    defaultValue={_causeCodeSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select causeCode"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.causeCode &&
+                  validation.errors.causeCode ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.causeCode}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label>rootCause</Label>
+                  <Select
+                    id="rootCause"
+                    name="rootCause"
+                    type="text"
+                    onChange={e => {
+                      set_rootCauseSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_rootCauseSelectItems}
+                    defaultValue={_rootCauseSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select rootCause"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.rootCause &&
+                  validation.errors.rootCause ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.rootCause}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">unsatFindings</Label>
+                  <Input
+                    id="unsatFindings"
+                    name="unsatFindings"
+                    type="textarea"
+                    placeholder="unsatFindings"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.unsatFindings || ""}
+                    invalid={
+                      validation.touched.unsatFindings &&
+                      validation.errors.unsatFindings
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.unsatFindings &&
+                  validation.errors.unsatFindings ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.unsatFindings}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">currectiveAction</Label>
+                  <Input
+                    id="currectiveAction"
+                    name="currectiveAction"
+                    type="textarea"
+                    placeholder="currectiveAction"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.currectiveAction || ""}
+                    invalid={
+                      validation.touched.currectiveAction &&
+                      validation.errors.currectiveAction
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.currectiveAction &&
+                  validation.errors.currectiveAction ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.currectiveAction}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">qcComments</Label>
+                  <Input
+                    id="qcComments"
+                    name="qcComments"
+                    type="textarea"
+                    placeholder="qcComments"
+                    maxLength="225"
+                    rows="3"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.qcComments || ""}
+                    invalid={
+                      validation.touched.qcComments &&
+                      validation.errors.qcComments
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.qcComments &&
+                  validation.errors.qcComments ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.qcComments}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <div className="text-end">
+                  {isSaving === true ? (
+                    <BtnSaving isSaving={isSaving} />
+                  ) : (
+                    <button
+                      type="submit"
+                      className="btn btn-outline-success w-xs"
+                    >
+                      <i className="bx bx-save"></i> SAVE
+                    </button>
+                  )}{" "}
+                  <button
+                    onClick={() => onCancelClick(false)}
+                    type="button"
+                    className="btn btn-danger ml-5"
+                  >
+                    CANCEL
+                  </button>
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </>
   )
 }
 
-export default workOrderInspections
+InspectionAddUpdate.propTypes = {
+  onSaveClick: PropTypes.func,
+  onCancelClick: PropTypes.func,
+  open: PropTypes.bool,
+  modelData: PropTypes.object,
+}
+
+export default InspectionAddUpdate

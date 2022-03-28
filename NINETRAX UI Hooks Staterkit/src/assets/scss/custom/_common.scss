@@ -25,6 +25,19 @@
 .custom-pointer{
   cursor: pointer;
   &:hover{
-    color: rgb(43, 198, 226);
+    color: rgb(219, 6, 159);
   }
+}
+
+.horizontal-scroll{
+  overflow-x: auto;
+  overflow-y: auto;
+ //white-space: nowrap;
+  // &::-webkit-scrollbar{
+  //   display: none;
+  // }
+
+    // overflow-x: auto;
+    // white-space: nowrap;
+
 }

@@ -824,7 +824,18 @@ const NCRTrackersView = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{item.ncrNumber}</td>
+                                  <td>
+                                    {item.ncrNumber ? (
+                                      <Button
+                                        type="button"
+                                        color="info"
+                                        className="btn-sm btn-rounded"
+                                        onClick={e => onEditClick(item)}
+                                      >
+                                        {item.ncrNumber}
+                                      </Button>
+                                    ) : null}
+                                  </td>
                                   <td>{item.pdrNumber}</td>
                                   <td>{item.woNumber}</td>
                                   <td>
@@ -851,7 +862,7 @@ const NCRTrackersView = props => {
                                   <td>{item.responsibleSub}</td>
 
                                   <td>
-                                    <button
+                                    {/* <button
                                       type="button"
                                       className="btn btn-sm btn-outline-primary ml-2"
                                       onClick={e => onEditClick(item)}
@@ -859,7 +870,7 @@ const NCRTrackersView = props => {
                                       data-target=".bs-example-modal-center"
                                     >
                                       <i className="far fa-edit"></i> Edit
-                                    </button>{" "}
+                                    </button>{" "} */}
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-outline-danger ml-2"

@@ -337,7 +337,7 @@ const IDIQTrackersView = props => {
                   </div>
 
                   <Row>
-                    <div className="table-responsive">
+                    <div className="horizontal-scroll table-responsive">
                       <Table
                         data-simplebar={true}
                         className="table table-sm m-0"
@@ -781,7 +781,18 @@ const IDIQTrackersView = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{item.woNumber}</td>
+                                  <td>
+                                    {item.woNumber ? (
+                                      <Button
+                                        type="button"
+                                        color="info"
+                                        className="btn-sm btn-rounded"
+                                        onClick={e => onEditClick(item)}
+                                      >
+                                        {item.woNumber}
+                                      </Button>
+                                    ) : null}
+                                  </td>
                                   <td>{item.idiqsowDescription}</td>
                                   <td>{item.location}</td>
                                   <td>{item.woType}</td>
@@ -813,7 +824,7 @@ const IDIQTrackersView = props => {
                                   <td>{item.comments}</td>
 
                                   <td>
-                                    <button
+                                    {/* <button
                                       type="button"
                                       className="btn btn-sm btn-outline-primary ml-2"
                                       onClick={e => onEditClick(item)}
@@ -821,7 +832,7 @@ const IDIQTrackersView = props => {
                                       data-target=".bs-example-modal-center"
                                     >
                                       <i className="far fa-edit"></i> Edit
-                                    </button>{" "}
+                                    </button>{" "} */}
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-outline-danger ml-2"

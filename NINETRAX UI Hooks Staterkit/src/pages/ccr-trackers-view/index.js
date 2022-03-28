@@ -926,7 +926,18 @@ const CCRTrackersView = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{item.ccrNumber}</td>
+                                  <td>
+                                    {item.ccrNumber ? (
+                                      <Button
+                                        type="button"
+                                        color="info"
+                                        className="btn-sm btn-rounded"
+                                        onClick={e => onEditClick(item)}
+                                      >
+                                        {item.ccrNumber}
+                                      </Button>
+                                    ) : null}
+                                  </td>
                                   <td>{item.location}</td>
                                   <td>{item.fmManager}</td>
                                   <td>{item.detailOfComplaint}</td>
@@ -962,7 +973,7 @@ const CCRTrackersView = props => {
                                   <td>{item.ccrResponse}</td>
 
                                   <td>
-                                    <button
+                                    {/* <button
                                       type="button"
                                       className="btn btn-sm btn-outline-primary ml-2"
                                       onClick={e => onEditClick(item)}
@@ -970,7 +981,7 @@ const CCRTrackersView = props => {
                                       data-target=".bs-example-modal-center"
                                     >
                                       <i className="far fa-edit"></i> Edit
-                                    </button>{" "}
+                                    </button>{" "} */}
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-outline-danger ml-2"
