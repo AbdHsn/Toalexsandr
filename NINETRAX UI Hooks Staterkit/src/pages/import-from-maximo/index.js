@@ -12,10 +12,9 @@ import {
   Label,
   Form,
 } from "reactstrap"
-import * as action from "store/import-from-maximo/actions"
 import { useSelector, useDispatch } from "react-redux"
 
-const importFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
+const ImportFromMaximoModal = ({ show, onCloseClick }) => {
   const [importableFile, setImportableFile] = useState(null)
   const dispatch = useDispatch()
   const SUPPORTED_FORMATS = [
@@ -49,7 +48,7 @@ const importFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
       let formData = new FormData()
       formData.append("importFile", importableFile, importableFile.name)
 
-      dispatch(action.importFromMaximo(formData))
+      //dispatch(action.importFromMaximo(formData))
       // validation.resetForm()
     },
   })
@@ -116,7 +115,7 @@ const importFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
               <button
                 type="button"
                 className="btn btn-success btn-lg ms-2"
-                onClick={onImportClick}
+                // onClick={onImportClick}
               >
                 Import
               </button>
@@ -135,10 +134,10 @@ const importFromMaximoModal = ({ show, onImportClick, onCloseClick }) => {
   )
 }
 
-importFromMaximoModal.propTypes = {
+ImportFromMaximoModal.propTypes = {
   onCloseClick: PropTypes.func,
-  onImportClick: PropTypes.func,
+  // onImportClick: PropTypes.func,
   show: PropTypes.any,
 }
 
-export default importFromMaximoModal
+export default ImportFromMaximoModal

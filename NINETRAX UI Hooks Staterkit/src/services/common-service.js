@@ -37,3 +37,25 @@ export const getDDL = async ddlIndicator => {
       throw error.response.data
     })
 }
+
+export const importFromMaximo = async postData => {
+  return http
+    .post(
+      appSettings.BASE_URL + "/d/ATbNasinspectionsImports/ImportFromMaximo",
+      postData
+    )
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
+export const getSampleExcel = async () => {
+  console.log("getSampleExcel service called.")
+  return http
+    .get(appSettings.BASE_URL + "/d/ATbNasinspectionsImports/GetSampleExcel", {
+      responseType: "blob",
+    })
+    .catch(error => {
+      throw error.response.data
+    })
+}

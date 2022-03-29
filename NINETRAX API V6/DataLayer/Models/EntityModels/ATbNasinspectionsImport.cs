@@ -21,8 +21,6 @@ namespace DataLayer.Models.EntityModels
         public string? OnBehalfOf { get; set; }
         public string? Phone { get; set; }
         public string? Duration { get; set; }
-        //public string? Priority { get; set; }
-       // public string? GlAccount { get; set; }
         public DateTime? TargetStart { get; set; }
         public DateTime? TargetFinish { get; set; }
         public DateTime? ActualStart { get; set; }

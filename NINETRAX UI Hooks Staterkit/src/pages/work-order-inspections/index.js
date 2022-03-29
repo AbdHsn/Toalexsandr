@@ -434,6 +434,14 @@ const workOrderInspections = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
+                      {/* <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={() => setImportFromMaximoModal(true)}
+                      >
+                        <i className="bx bx-plus"></i> Import From Maximo
+                      </button> */}
+
                       <button
                         type="button"
                         className="btn btn-outline-secondary w-xs"
@@ -1466,7 +1474,6 @@ const workOrderInspections = props => {
                     open={modal}
                     modelData={modelData}
                     onSaveClick={item => {
-                      console.log("onSaveClick from index called...", item)
                       if (item?.id > 0) {
                         loadView()
                       }

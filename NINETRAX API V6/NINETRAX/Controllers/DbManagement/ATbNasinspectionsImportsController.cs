@@ -4,7 +4,9 @@ using ExcelDataReader;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer;
-
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NINETRAX.Globals;
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -375,6 +377,96 @@ namespace NINETRAX.Controllers.DbManagement
             {
                 string error = ex.StackTrace.ToString();
                 return StatusCode(500, "Excel importing failed to proceed.");
+            }
+        }
+        #endregion
+
+        #region GetSampleExcel
+        [HttpGet("GetSampleExcel")]
+        public async Task<IActionResult> GetSampleExcelOfImportMaximo()
+        {
+            try
+            {
+                #region Excel data manipulating
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet excelSheet = workbook.CreateSheet("Sheet-01");
+                XSSFCellStyle style = (XSSFCellStyle)workbook.CreateCellStyle();
+                style.WrapText = true;
+                //defining font...
+                IFont boldFont = workbook.CreateFont();
+                boldFont.Boldweight = (short)FontBoldWeight.Bold;
+                ICellStyle boldStyle = workbook.CreateCellStyle();
+                boldStyle.SetFont(boldFont);
+
+                //defining color...
+                boldStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.SkyBlue.Index;
+                boldStyle.FillPattern = FillPattern.SolidForeground;
+
+                //defining column names
+                List<string> columnNames = new List<string>() {
+                     "Work Order",
+                     "Description",
+                     "Long Description",
+                     "WO Location",
+                     "Asset",
+                     "Asset Description",
+                     "Status",
+                     "Crew",
+                     "Lead",
+                     "Work Type",
+                     "Sub Work Type",
+                     "Elin",
+                     "Point Of Contact",
+                     "Phone",
+                     "Duration",
+                     "Target Start",
+                     "Target Finish",
+                     "Actual Start",
+                     "Actual Finish",
+                     "Status Date"
+                };
+
+                //drawing header columns into excel
+                IRow row = excelSheet.CreateRow(0);
+
+                foreach (var column in columnNames)
+                {
+                    var cell = row.CreateCell(columnNames.IndexOf(column));
+                    cell.SetCellValue(column);
+                    cell.CellStyle = boldStyle;
+                }
+                //set header column width
+                excelSheet.SetColumnWidth(0, 6600);
+                excelSheet.SetColumnWidth(1, 6600);
+                excelSheet.SetColumnWidth(2, 6600);
+                excelSheet.SetColumnWidth(3, 6600);
+                excelSheet.SetColumnWidth(4, 6600);
+                excelSheet.SetColumnWidth(5, 6600);
+                excelSheet.SetColumnWidth(6, 6600);
+                excelSheet.SetColumnWidth(7, 6600);
+                excelSheet.SetColumnWidth(8, 6600);
+                excelSheet.SetColumnWidth(9, 6600);
+                excelSheet.SetColumnWidth(10, 6600);
+                excelSheet.SetColumnWidth(11, 6600);
+                excelSheet.SetColumnWidth(12, 6600);
+                excelSheet.SetColumnWidth(13, 6600);
+                excelSheet.SetColumnWidth(14, 6600);
+                excelSheet.SetColumnWidth(15, 6600);
+                excelSheet.SetColumnWidth(16, 6600);
+                excelSheet.SetColumnWidth(17, 6600);
+                excelSheet.SetColumnWidth(18, 6600);
+                excelSheet.SetColumnWidth(19, 6600);
+
+                #endregion
+
+                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
+
+                return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ImportFromMaximoSample.xlsx");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, "Failed to export.");
+                // return null;
             }
         }
         #endregion

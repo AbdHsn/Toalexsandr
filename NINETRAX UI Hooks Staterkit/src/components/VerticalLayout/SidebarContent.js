@@ -1,6 +1,5 @@
 import PropTypes from "prop-types"
 import React, { useEffect, useRef } from "react"
-
 // //Import Scrollbar
 import SimpleBar from "simplebar-react"
 
@@ -12,7 +11,10 @@ import { Link } from "react-router-dom"
 //i18n
 import { withTranslation } from "react-i18next"
 
+//mport ImportFromMaximo from "../Common/ImportFromMaximo"
+
 const SidebarContent = props => {
+  //const [importFromMaximoModal, setImportFromMaximoModal] = useState(false)
   const ref = useRef()
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -107,9 +109,14 @@ const SidebarContent = props => {
               </Link> */}
             </li>
             <li>
-              <Link to="#" className="">
+              <Link
+                to="#"
+                className=""
+                // onClick={() => setImportFromMaximoModal(true)}
+              >
                 <i className="bx bx-import"></i>
-                <span>{props.t("Import from MAXIMO")}</span>
+                {/* <span>{props.t("Import from MAXIMO")}</span> */}
+                <span>Import from MAXIMO</span>
               </Link>
             </li>
             <li>
@@ -232,6 +239,16 @@ const SidebarContent = props => {
           </ul>
         </div>
       </SimpleBar>
+
+      {/* <ImportFromMaximo
+        show={importFromMaximoModal}
+        onSuccessImported={item => {
+          if (item) {
+            setImportFromMaximoModal(false)
+          }
+        }}
+        onCloseClick={() => setImportFromMaximoModal(false)}
+      /> */}
     </React.Fragment>
   )
 }
