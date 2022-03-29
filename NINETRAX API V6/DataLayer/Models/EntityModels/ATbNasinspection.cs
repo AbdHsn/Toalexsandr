@@ -10,6 +10,7 @@ namespace DataLayer.Models.EntityModels
         public string? SpecItem { get; set; }
         public string? Title { get; set; }
         public string? WorkOrder { get; set; }
+        public string? LongDescription { get; set; }
         public string? Description { get; set; }
         public string? Location { get; set; }
         public string? Asset { get; set; }
@@ -18,9 +19,7 @@ namespace DataLayer.Models.EntityModels
         public string? Lead { get; set; }
         public string? WorkType { get; set; }
         public string? SubWorkType { get; set; }
-        public string? Priority { get; set; }
         public string? Elin { get; set; }
-        public string? GlAccount { get; set; }
         public DateTime? TargetStart { get; set; }
         public DateTime? TargetFinish { get; set; }
         public DateTime? ActualStart { get; set; }
@@ -36,10 +35,15 @@ namespace DataLayer.Models.EntityModels
         public string? CorrectiveActions { get; set; }
         public DateTime? ReinspectionDate { get; set; }
         public string? ReinspectionStatus { get; set; }
-        public string? Qccomments { get; set; }
         public bool Selected { get; set; }
         public bool Task { get; set; }
         public bool IsDelete { get; set; }
         public string? DeletedBy { get; set; }
+
+        public string? OnBehalfOf { get; set; }
+        public string? Phone { get; set; }
+        public string? AssetDescription { get; set; }
+        public string? QcComments { get; set; }
+        public string? Duration { get; set; }
     }
 }

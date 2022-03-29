@@ -22,6 +22,7 @@ import {
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
+import { getDDL } from "../../services/common-service"
 const InspectionAddUpdate = ({
   open,
   modelData,
@@ -52,10 +53,10 @@ const InspectionAddUpdate = ({
         })
       : set_qcInspectorSelected("")
 
-    modelData && modelData?.inspectionResult != null
+    modelData && modelData?.inspectionResults != null
       ? set_inspectionResultSelected({
-          label: modelData?.inspectionResult,
-          value: modelData?.inspectionResult,
+          label: modelData?.inspectionResults,
+          value: modelData?.inspectionResults,
         })
       : set_inspectionResultSelected("")
 
@@ -72,6 +73,9 @@ const InspectionAddUpdate = ({
           value: modelData?.rootCause,
         })
       : set_rootCauseSelected("")
+
+    //Call dropdown data
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -100,7 +104,7 @@ const InspectionAddUpdate = ({
       id: (modelData && modelData.id) || 0,
       workOrder: (modelData && modelData.workOrder) || "",
       location: (modelData && modelData.location) || "",
-      status: (modelData && modelData.status) || "",
+      sstatus: (modelData && modelData.status) || "",
       elin: (modelData && modelData.elin) || "",
       annex: (modelData && modelData.annex) || "",
       specItem: (modelData && modelData.specItem) || "",
@@ -142,7 +146,7 @@ const InspectionAddUpdate = ({
       description: (modelData && modelData.description) || "",
       longDescription: (modelData && modelData.longDescription) || "",
       qcInspector: (modelData && modelData.qcInspector) || "",
-      inspectionResult: (modelData && modelData.inspectionResult) || "",
+      inspectionResults: (modelData && modelData.inspectionResults) || "",
       inspectionDate:
         (modelData &&
           modelData?.inspectionDate &&
@@ -156,7 +160,7 @@ const InspectionAddUpdate = ({
       causeCode: (modelData && modelData.causeCode) || "",
       rootCause: (modelData && modelData.rootCause) || "",
       unsatFindings: (modelData && modelData.unsatFindings) || "",
-      currectiveAction: (modelData && modelData.currectiveAction) || "",
+      correctiveActions: (modelData && modelData.correctiveActions) || "",
       qcComments: (modelData && modelData.qcComments) || "",
     },
     validationSchema: Yup.object({
@@ -202,14 +206,13 @@ const InspectionAddUpdate = ({
         id: values.id,
         workOrder: values.workOrder,
         location: values.location,
-        status: values.status,
+        status: values.sstatus,
         elin: values.elin,
         annex: _annexSelected.value,
         specItem: _specItemSelected.value,
         title: _titleSelected.value,
         workType: values.workType,
         subWorkType: values.subWorkType,
-        elin2: values.elin2,
         onBehalfOf: values.onBehalfOf,
         phone: values.phone,
         asset: values.asset,
@@ -224,15 +227,17 @@ const InspectionAddUpdate = ({
         description: values.description,
         longDescription: values.longDescription,
         qcInspector: _qcInspectorSelected.value,
-        inspectionResult: _inspectionResultSelected.value,
+        inspectionResults: _inspectionResultSelected.value,
         inspectionDate: values.inspectionDate,
         enteredDate: values.enteredDate,
         causeCode: _causeCodeSelected.value,
         rootCause: _rootCauseSelected.value,
         unsatFindings: values.unsatFindings,
-        currectiveAction: values.currectiveAction,
+        correctiveActions: values.correctiveActions,
         qcComments: values.qcComments,
       }
+
+      console.log("add-update save..02", submitModel)
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
@@ -277,6 +282,85 @@ const InspectionAddUpdate = ({
       }
     },
   })
+
+  const initializeDropdownData = () => {
+    //QCSTATUS
+    getDDL("QCSTATUS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_inspectionResultSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed QCSTATUS_DDL: ", error)
+      })
+
+    //ANNEX
+    getDDL("ANNEX")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_annexSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ANNEX_DDL: ", error)
+      })
+
+    //SPECITEM
+    getDDL("SPECITEM")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_specItemSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SPECITEM_DDL: ", error)
+      })
+
+    //TITLE
+    getDDL("TITLE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_titleSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed TITLE_DDL: ", error)
+      })
+
+    //USERS
+    getDDL("USERS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_qcInspectorSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed USERS_DDL: ", error)
+      })
+
+    //CAUSECODE
+    getDDL("CAUSECODE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_causeCodeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed CAUSECODE_DDL: ", error)
+      })
+
+    //ROOTCAUSE
+    getDDL("ROOTCAUSE")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_rootCauseSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed ROOTCAUSE_DDL: ", error)
+      })
+  }
 
   return (
     <>
@@ -913,8 +997,8 @@ const InspectionAddUpdate = ({
                 <div className="mb-3">
                   <Label>QC Status</Label>
                   <Select
-                    id="inspectionResult"
-                    name="inspectionResult"
+                    id="inspectionResults"
+                    name="inspectionResults"
                     type="text"
                     onChange={e => {
                       set_inspectionResultSelected({
@@ -934,10 +1018,10 @@ const InspectionAddUpdate = ({
                     loadingMessage={() => "Fetching Data..."}
                     noOptionsMessage={() => "No Data Found."}
                   />
-                  {validation.touched.inspectionResult &&
-                  validation.errors.inspectionResult ? (
+                  {validation.touched.inspectionResults &&
+                  validation.errors.inspectionResults ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.inspectionResult}
+                      {validation.errors.inspectionResults}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -1084,26 +1168,26 @@ const InspectionAddUpdate = ({
                 <div className="mb-3">
                   <Label className="form-label">Corrective Action</Label>
                   <Input
-                    id="currectiveAction"
-                    name="currectiveAction"
+                    id="correctiveActions"
+                    name="correctiveActions"
                     type="textarea"
                     placeholder="Corrective Action"
                     maxLength="225"
                     rows="3"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.currectiveAction || ""}
+                    value={validation.values.correctiveActions || ""}
                     invalid={
-                      validation.touched.currectiveAction &&
-                      validation.errors.currectiveAction
+                      validation.touched.correctiveActions &&
+                      validation.errors.correctiveActions
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.currectiveAction &&
-                  validation.errors.currectiveAction ? (
+                  {validation.touched.correctiveActions &&
+                  validation.errors.correctiveActions ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.currectiveAction}
+                      {validation.errors.correctiveActions}
                     </FormFeedback>
                   ) : null}
                 </div>

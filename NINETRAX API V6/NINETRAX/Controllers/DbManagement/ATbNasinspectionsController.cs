@@ -247,11 +247,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<ATbNasinspection>> CreateATbNasinspection(ATbNasinspection objATbNasinspection)
         {
+            var getLast = await _context.ATbNasinspections.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objATbNasinspection.Id = 1;
+            else
+                objATbNasinspection.Id = getLast.Id + 1;
+
             _context.ATbNasinspections.Add(objATbNasinspection);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objATbNasinspection);
+
+                if (objATbNasinspection.Id > 0)
+                    return StatusCode(200, objATbNasinspection);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {
@@ -265,16 +274,25 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteATbNasinspection(int id)
         {
-            var objATbNasinspection = await _context.ATbNasinspections.FindAsync(id);
-            if (objATbNasinspection == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var objNasInspection = await _context.ATbNasinspections.FindAsync(id);
+                if (objNasInspection == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.ATbNasinspections.Remove(objNasInspection);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
             }
 
-            _context.ATbNasinspections.Remove(objATbNasinspection);
-            await _context.SaveChangesAsync();
 
-            return StatusCode(200, true);
         }
 
         #endregion
@@ -373,7 +391,40 @@ namespace NINETRAX.Controllers.DbManagement
                 boldStyle.FillPattern = FillPattern.SolidForeground;
 
                 //defining column names
-                List<string> columnNames = new List<string>() { "Annex", "Spect Item", "Title" };
+                List<string> columnNames = new List<string>() {
+                    "Id",
+                    "Work Order",
+                    "WO Location",
+                    "Status",
+                    "Elin",
+                    "Annex",
+                    "SpecItem",
+                    "Title",
+                    "Work Type",
+                    "Sub Work Type",
+                    "Point Of Contact",
+                    "Phone",
+                    "Asset",
+                    "Asset Description",
+                    "Crew",
+                    "Lead",
+                    "Target Start",
+                    "Target Finish",
+                    "Actual Start",
+                    "Actual Finish",
+                    "Status Date",
+                    "Description",
+                    "LongDescription",
+                    "QC Inspector",
+                    "QC Status",
+                    "Inspection Date",
+                    "Entered Date",
+                    "Cause Code",
+                    "Root Cause",
+                    "Deficiencies",
+                    "Corrective Action",
+                    "QC Comments"
+                };
 
                 //drawing header columns into excel
                 IRow row = excelSheet.CreateRow(0);
@@ -388,6 +439,35 @@ namespace NINETRAX.Controllers.DbManagement
                 excelSheet.SetColumnWidth(0, 3400);
                 excelSheet.SetColumnWidth(1, 2600);
                 excelSheet.SetColumnWidth(2, 6600);
+                excelSheet.SetColumnWidth(3, 6600);
+                excelSheet.SetColumnWidth(4, 6600);
+                excelSheet.SetColumnWidth(5, 6600);
+                excelSheet.SetColumnWidth(6, 6600);
+                excelSheet.SetColumnWidth(7, 6600);
+                excelSheet.SetColumnWidth(8, 6600);
+                excelSheet.SetColumnWidth(9, 6600);
+                excelSheet.SetColumnWidth(10, 6600);
+                excelSheet.SetColumnWidth(11, 6600);
+                excelSheet.SetColumnWidth(12, 6600);
+                excelSheet.SetColumnWidth(13, 6600);
+                excelSheet.SetColumnWidth(14, 6600);
+                excelSheet.SetColumnWidth(15, 6600);
+                excelSheet.SetColumnWidth(16, 6600);
+                excelSheet.SetColumnWidth(17, 6600);
+                excelSheet.SetColumnWidth(18, 6600);
+                excelSheet.SetColumnWidth(19, 6600);
+                excelSheet.SetColumnWidth(20, 6600);
+                excelSheet.SetColumnWidth(21, 6600);
+                excelSheet.SetColumnWidth(22, 6600);
+                excelSheet.SetColumnWidth(23, 6600);
+                excelSheet.SetColumnWidth(24, 6600);
+                excelSheet.SetColumnWidth(25, 6600);
+                excelSheet.SetColumnWidth(26, 6600);
+                excelSheet.SetColumnWidth(27, 6600);
+                excelSheet.SetColumnWidth(28, 6600);
+                excelSheet.SetColumnWidth(29, 6600);
+                excelSheet.SetColumnWidth(30, 6600);
+                excelSheet.SetColumnWidth(31, 6600);
 
                 //drawing cell data into excel
                 foreach (var item in dataGrid)
@@ -395,22 +475,38 @@ namespace NINETRAX.Controllers.DbManagement
                     row = excelSheet.CreateRow(dataGrid.IndexOf(item) + 1);
 
                     //normal cell defining...
-                    row.CreateCell(0).SetCellValue(item.Annex);
-                    row.CreateCell(1).SetCellValue(item.SpecItem);
-                    row.CreateCell(2).SetCellValue(item.Title);
-
-                    ////define cell with special criteria
-                    //var cell3 = row.CreateCell(3, CellType.String);
-                    //cell3.SetCellValue(item.VehicleName);
-                    ////cell3.CellStyle= style;
-
-                    //row.CreateCell(4).SetCellValue(item.NumberOfRide);
-                    //row.CreateCell(5).SetCellValue(Convert.ToDouble(item.RideAmount));
-                    //row.CreateCell(6).SetCellValue(item.MaximumNumberOfReferral);
-                    //row.CreateCell(7).SetCellValue(Convert.ToDouble(item.Amount));
-                    //row.CreateCell(8).SetCellValue(item.Status);
-                    //row.CreateCell(9).SetCellValue(item.InsertDate.ToString());
-
+                    row.CreateCell(0).SetCellValue(item.Id);
+                    row.CreateCell(1).SetCellValue(item.WorkOrder);
+                    row.CreateCell(2).SetCellValue(item.Location);
+                    row.CreateCell(3).SetCellValue(item.Status);
+                    row.CreateCell(4).SetCellValue(item.Elin);
+                    row.CreateCell(5).SetCellValue(item.Annex);
+                    row.CreateCell(6).SetCellValue(item.SpecItem);
+                    row.CreateCell(7).SetCellValue(item.Title);
+                    row.CreateCell(8).SetCellValue(item.WorkType);
+                    row.CreateCell(9).SetCellValue(item.SubWorkType);
+                    row.CreateCell(10).SetCellValue(item.OnBehalfOf);
+                    row.CreateCell(11).SetCellValue(item.Phone);
+                    row.CreateCell(12).SetCellValue(item.Asset);
+                    row.CreateCell(13).SetCellValue(item.AssetDescription);
+                    row.CreateCell(14).SetCellValue(item.Crew);
+                    row.CreateCell(15).SetCellValue(item.Lead);
+                    row.CreateCell(16).SetCellValue(item.TargetStart.HasValue ? item.TargetStart.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(17).SetCellValue(item.TargetFinish.HasValue ? item.TargetFinish.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(18).SetCellValue(item.ActualStart.HasValue ? item.ActualStart.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(19).SetCellValue(item.ActualStart.HasValue ? item.ActualStart.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(20).SetCellValue(item.StatusDate.HasValue ? item.StatusDate.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(21).SetCellValue(item.Description);
+                    row.CreateCell(22).SetCellValue(item.LongDescription);
+                    row.CreateCell(23).SetCellValue(item.QcInspector);
+                    row.CreateCell(24).SetCellValue(item.InspectionResults);
+                    row.CreateCell(25).SetCellValue(item.InspectionDate.HasValue ? item.InspectionDate.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(26).SetCellValue(item.EnteredDate.HasValue ? item.EnteredDate.Value.ToString("MM/dd/yyyy") : "No data");
+                    row.CreateCell(27).SetCellValue(item.CauseCode);
+                    row.CreateCell(28).SetCellValue(item.RootCause);
+                    row.CreateCell(29).SetCellValue(item.UnsatFindings);
+                    row.CreateCell(30).SetCellValue(item.CorrectiveActions);
+                    row.CreateCell(31).SetCellValue(item.QcComments);
                 }
                 #endregion
 

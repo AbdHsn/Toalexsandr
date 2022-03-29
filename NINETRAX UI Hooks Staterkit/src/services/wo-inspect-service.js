@@ -2,7 +2,6 @@ import http from "../services/http-handler"
 import appSettings from "../app-settings.json"
 
 export const fetchTableView = async postData => {
-  console.log("postData", postData, appSettings.BASE_URL)
   return http
     .post(
       appSettings.BASE_URL + "/d/ATbNasinspections/GetATbNasinspectionsView",
@@ -15,29 +14,24 @@ export const fetchTableView = async postData => {
 }
 
 export const newInspectionAddUpdate = async postData => {
-  console.log("deleteInspection url error due to different url", id)
-
   return http
-    .post(appSettings.BASE_URL + "/d/ATbPdrtrackers", postData)
+    .post(appSettings.BASE_URL + "/d/ATbNasinspections", postData)
     .catch(error => {
       throw error.response.data
     })
 }
 
 export const editInspectionAddUpdate = async (id, postData) => {
-  console.log("deleteInspection url error due to different url", id)
-
   return http
-    .put(appSettings.BASE_URL + "/d/ATbPdrtrackers/" + id, postData)
+    .put(appSettings.BASE_URL + "/d/ATbNasinspections/" + id, postData)
     .catch(error => {
       throw error.response.data
     })
 }
 
 export const deleteInspection = async id => {
-  console.log("deleteInspection url error due to different url", id)
   return http
-    .delete(appSettings.BASE_URL + "/d/ATbPdrtrackers/" + id)
+    .delete(appSettings.BASE_URL + "/d/ATbNasinspections/" + id)
     .catch(error => {
       throw error.response.data
     })

@@ -214,11 +214,6 @@ namespace RepositoryLayer
                     .HasColumnType("date")
                     .HasColumnName("Entered Date");
 
-                entity.Property(e => e.GlAccount)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("GL Account");
-
                 entity.Property(e => e.InspectionDate)
                     .HasColumnType("date")
                     .HasColumnName("Inspection Date");
@@ -236,16 +231,12 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Priority)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.QcInspector)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("QC Inspector");
 
-                entity.Property(e => e.Qccomments)
+                entity.Property(e => e.QcComments)
                     .HasMaxLength(800)
                     .IsUnicode(false)
                     .HasColumnName("QCComments");
@@ -308,7 +299,36 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("Work Type");
-            });
+            entity.Property(e => e.OnBehalfOf)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("On_Behalf_Of");
+            
+            entity.Property(e => e.AssetDescription)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("Asset_Description");            
+            entity.Property(e => e.CorrectiveActions)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("Corrective Actions");            
+            entity.Property(e => e.QcComments)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("QCComments");            
+            entity.Property(e => e.Duration)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("Duration");
+            entity.Property(e => e.Phone)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("Phone");
+                entity.Property(e => e.LongDescription)
+                           .HasMaxLength(255)
+                           .IsUnicode(false)
+                           .HasColumnName("Long_Description");
+    });
 
             modelBuilder.Entity<ATbNasinspectionsArchive>(entity =>
             {

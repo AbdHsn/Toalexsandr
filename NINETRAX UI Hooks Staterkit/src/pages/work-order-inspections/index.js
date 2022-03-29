@@ -26,6 +26,7 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   fetchTableView,
   exportTableView,
+  deleteInspection,
 } from "../../services/wo-inspect-service"
 import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -342,14 +343,6 @@ const workOrderInspections = props => {
       orderColumn.current.column = columnName
       orderColumn.current.order_by = orderColumn.current.order_by
     }
-
-    console.log(
-      "latest selected column: ",
-      orderColumn.current,
-      orderColumn.current.column,
-      orderColumn.current.order_by,
-      columnName
-    )
     loadView()
   }
 
@@ -372,7 +365,7 @@ const workOrderInspections = props => {
 
   const onDeleteConfirmed = () => {
     if (modelData.id > 0) {
-      deleteNCRTracker(modelData.id)
+      deleteInspection(modelData.id)
         .then(res => {
           if (res.data) {
             toastr.success("Selected item successfully deleted.", "NINETRAX")
