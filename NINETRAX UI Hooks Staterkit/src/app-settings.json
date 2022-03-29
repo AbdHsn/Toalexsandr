@@ -1,6 +1,6 @@
 {
-  "BASE_URL": "http://localhost:7074/api",
-  "BASE_URL_LIVE": "http://54.175.155.238:81/api",
+  "BASE_URL": "http://54.175.155.238:81/api",
+  "BASE_URL_Local": "http://localhost:7074/api",
   "APP_TITLE": "NINETRAX QC Management",
   "ADDRESS": "",
   "EMAIL": "",
