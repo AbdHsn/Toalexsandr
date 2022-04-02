@@ -154,19 +154,10 @@ namespace RepositoryLayer
         #endregion "Get Methods Implementation"
 
         #region CAll SP Functions
-        public async Task<int> ExecuteStoreProcedure(string storeProcedure)
+        public async Task<List<T>> ExecuteStoreProcedure(string storeProcedure)
         {
-            try
-            {
-                string s = $"CALL {storeProcedure}";
-                var callSP = await _context.Database.ExecuteSqlRawAsync($"CALL {storeProcedure}");
-                return callSP;
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
-        
+            string sp = $"CALL {storeProcedure}";
+            return await _context.Set<T>().FromSqlRaw(sp).AsNoTracking().ToListAsync();
         }
 
         #endregion

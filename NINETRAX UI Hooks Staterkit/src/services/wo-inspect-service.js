@@ -50,3 +50,13 @@ export const exportTableView = async postData => {
       throw error.response.data
     })
 }
+
+export const getDailyInspectionReport = async (selectedDate, reportType) => {
+  return http
+    .get(
+      `${appSettings.BASE_URL}/d/ATbNasinspections/GetDailyInspectionReport?date=${selectedDate}&reportType=${reportType}`
+    )
+    .catch(error => {
+      throw error.response.data
+    })
+}

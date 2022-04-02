@@ -138,13 +138,13 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to={`/inspection-daily-report/${"NASJAX"}`} className="">
                 <i className="bx bxs-report"></i>
                 <span>{props.t("NASJAX Daily Report")}</span>
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link to={`/inspection-daily-report/${"BUMED"}`} className="">
                 <i className="bx bxs-report"></i>
                 <span>{props.t("BUMED Daily Report")}</span>
               </Link>

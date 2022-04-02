@@ -1,5 +1,6 @@
 using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
+using DataLayer.Models.SPModels;
 using DataLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IRawQueryRepo<ATbNasinspectionsView> _getATbNasinspectionsView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
+        private readonly IRawQueryRepo<GetDailyInspectionReport> _getDailyInspectionReport;
 
         #endregion
 
@@ -37,7 +39,8 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<ATbNasinspection> ATbNasinspectionContext,
             IRawQueryRepo<ATbNasinspectionsView> getATbNasinspectionsView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
-            IRawQueryRepo<Object> getAllByLike
+            IRawQueryRepo<Object> getAllByLike,
+                   IRawQueryRepo<GetDailyInspectionReport> getDailyInspectionReport
         )
         {
             _ATbNasinspectionContext = ATbNasinspectionContext;
@@ -46,6 +49,7 @@ namespace NINETRAX.Controllers.DbManagement
             _getATbNasinspectionsView = getATbNasinspectionsView;
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
+            _getDailyInspectionReport = getDailyInspectionReport;
         }
         #endregion
 
@@ -526,5 +530,26 @@ namespace NINETRAX.Controllers.DbManagement
 
         #endregion
 
+        #region Inspection Daily Report
+        [HttpGet("GetDailyInspectionReport")]
+        public async Task<ActionResult<object>> DailyInspectionReport(DateTime date, string reportType = "BUMED")
+        {
+            try
+            {
+                var getInspectionReport = await _getDailyInspectionReport.ExecuteStoreProcedure($"GetDailyInspectionReport('{date.ToString("yyyy-MM-dd")}', '{reportType}')");
+
+                if (getInspectionReport.Count <= 0)
+                {
+                    return StatusCode(404, "Data not found.");
+                }
+
+                return StatusCode(200, getInspectionReport);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
+        }
+        #endregion
     }
 }

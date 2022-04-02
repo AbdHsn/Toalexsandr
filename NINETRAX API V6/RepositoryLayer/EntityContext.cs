@@ -1,5 +1,6 @@
 ﻿using DataLayer.Models.EntityModels;
 using DataLayer.Models.GlobalModels;
+using DataLayer.Models.SPModels;
 using DataLayer.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -2174,6 +2175,11 @@ namespace RepositoryLayer
             {
                 a.HasNoKey();
             });
+            
+            modelBuilder.Entity<GetDailyInspectionReport>(a =>
+            {
+                a.HasKey(a => a.Id);
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }
@@ -2241,6 +2247,9 @@ namespace RepositoryLayer
         #endregion ViewEntity
 
         #region SPEntity
+        
+        public DbSet<GetDailyInspectionReport> GetDailyInspectionReport { get; set; }
+
         #endregion SPEntity
 
         #region  RawSQL Entity

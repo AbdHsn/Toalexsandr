@@ -7,6 +7,7 @@ using RepositoryLayer;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NINETRAX.Globals;
+using DataLayer.Models.SPModels;
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -34,6 +35,7 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike,
             IRawQueryRepo<Object> callSP
+     
         )
         {
             _ATbNasinspectionsImportContext = ATbNasinspectionsImportContext;
@@ -43,6 +45,7 @@ namespace NINETRAX.Controllers.DbManagement
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
             _callSP = callSP;
+        
         }
         #endregion
 
@@ -470,6 +473,5 @@ namespace NINETRAX.Controllers.DbManagement
             }
         }
         #endregion
-
     }
 }
