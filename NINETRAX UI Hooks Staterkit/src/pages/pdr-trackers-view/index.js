@@ -845,14 +845,12 @@ const PDRTrackersView = props => {
                                   {/* <td>{item.id}</td> */}
                                   <td>
                                     {item.pdrNumber ? (
-                                      <Button
-                                        type="button"
-                                        color="info"
-                                        className="btn-sm btn-rounded"
+                                      <label
+                                        className="label label-info custom-pointer"
                                         onClick={e => onEditClick(item)}
                                       >
                                         {item.pdrNumber}
-                                      </Button>
+                                      </label>
                                     ) : null}
                                   </td>
                                   <td>{item.workOrder}</td>

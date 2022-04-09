@@ -141,6 +141,23 @@ const InspectionDailyReport = props => {
                             })}
                           </DropdownMenu>
                         </ButtonDropdown>
+                        <button
+                          type="button"
+                          className="btn btn-outline-info w-xs"
+                          onClick={() => {
+                            var printContents =
+                              document.getElementById("printableArea").innerHTML
+                            var originalContents = document.body.innerHTML
+
+                            document.body.innerHTML = printContents
+
+                            window.print()
+
+                            document.body.innerHTML = originalContents
+                          }}
+                        >
+                          <i className="bx bx-printer"></i> Print
+                        </button>
                       </InputGroup>
                     </Col>
                   </Row>
@@ -149,9 +166,14 @@ const InspectionDailyReport = props => {
                     <div className="btn-group"></div>
                   </div>
 
-                  <div>
-                    <Row className="bg-info mt-2">
-                      <h4 className="text-center font-weight-bold mt-2">
+                  <div id="printableArea">
+                    <Row
+                      style={{
+                        backgroundColor: `rgb(119, 192, 247)`,
+                        marginTop: `10px`,
+                      }}
+                    >
+                      <h4 className="text-center font-weight-bold mt-4">
                         {selectedReportType.current} Daily Inspection Summary
                         Report
                       </h4>
@@ -160,29 +182,42 @@ const InspectionDailyReport = props => {
                         {moment(selectedDate.current).format("MM/DD/YYYY")}
                       </label>
 
-                      <div className="d-flex justify-content-around">
-                        <div className="d-flex justify-content-between">
-                          <Row>
-                            <Col xs="8">Total Completed Inspection</Col>
-                            <Col xs="2">45</Col>
-                          </Row>
-
-                          {/* <Row>
-                            <Col className="col-8">
-                              Total Completed Inspection
-                            </Col>
-                            <Col className="col-4">40</Col>
-                          </Row> */}
-
-                          {/* <br />
-                          <p>Percent Satisfactory(%)</p> */}
-                        </div>
-                        <div className="d-flex justify-content-between">
-                          Satisfactory Inspection
-                          <br />
-                          Unsatisfactory Inspection
-                        </div>
-                      </div>
+                      <Row>
+                        <Col md="6" lg="6" xl="6">
+                          <div className="d-flex justify-content-around">
+                            <p>Total Completed Inspection</p>
+                            <p className="float-right">
+                              {inspectionReportTbl.total}
+                            </p>
+                          </div>
+                        </Col>
+                        <Col md="6" lg="6" xl="6">
+                          <div className="d-flex justify-content-around">
+                            <p>Satisfactory Inspection</p>
+                            <p className="float-right">
+                              {inspectionReportTbl.totalSatisfactory}
+                            </p>
+                          </div>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="6" lg="6" xl="6">
+                          <div className="d-flex justify-content-around">
+                            <p>Percent Satisfactory(%)</p>
+                            <p className="float-right">
+                              {inspectionReportTbl.satisfactoryPercent}
+                            </p>
+                          </div>
+                        </Col>
+                        <Col md="6" lg="6" xl="6">
+                          <div className="d-flex justify-content-around">
+                            <p>Unsatisfactory Inspection</p>
+                            <p className="float-right">
+                              {inspectionReportTbl.totalUnsatisfactory}
+                            </p>
+                          </div>
+                        </Col>
+                      </Row>
                     </Row>
                     <Row>
                       <div className="table">

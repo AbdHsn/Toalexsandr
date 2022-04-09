@@ -783,14 +783,12 @@ const IDIQTrackersView = props => {
                                   {/* <td>{item.id}</td> */}
                                   <td>
                                     {item.woNumber ? (
-                                      <Button
-                                        type="button"
-                                        color="info"
-                                        className="btn-sm btn-rounded"
+                                      <label
+                                        className="label label-info custom-pointer"
                                         onClick={e => onEditClick(item)}
                                       >
                                         {item.woNumber}
-                                      </Button>
+                                      </label>
                                     ) : null}
                                   </td>
                                   <td>{item.idiqsowDescription}</td>

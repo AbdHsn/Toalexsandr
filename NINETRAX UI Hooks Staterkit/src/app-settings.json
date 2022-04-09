@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
   "BASE_URL_LIVE": "http://54.175.155.238:81/api",
-=======
-  "BASE_URL_Live": "http://54.175.155.238:81/api",
->>>>>>> 008b27d5b5935c5a9b2e6f1a47fe80d24bae7f74
   "BASE_URL": "http://localhost:7074/api",
   "APP_TITLE": "NINETRAX QC Management",
   "ADDRESS": "",

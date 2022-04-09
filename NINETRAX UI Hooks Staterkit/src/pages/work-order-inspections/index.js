@@ -1343,14 +1343,12 @@ const workOrderInspections = props => {
                                   <td>{item.title}</td>
                                   <td>
                                     {item.workOrder ? (
-                                      <Button
-                                        type="button"
-                                        color="info"
-                                        className="btn-sm btn-rounded"
+                                      <label
+                                        className="label label-info custom-pointer"
                                         onClick={e => onEditClick(item)}
                                       >
                                         {item.workOrder}
-                                      </Button>
+                                      </label>
                                     ) : null}
                                   </td>
                                   <td>{item.description}</td>

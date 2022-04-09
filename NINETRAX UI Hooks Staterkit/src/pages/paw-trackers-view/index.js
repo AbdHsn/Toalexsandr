@@ -849,14 +849,12 @@ const PAWTrackersView = props => {
                                   {/* <td>{item.id}</td> */}
                                   <td>
                                     {item.pawNumber ? (
-                                      <Button
-                                        type="button"
-                                        color="info"
-                                        className="btn-sm btn-rounded"
+                                      <label
+                                        className="label label-info custom-pointer"
                                         onClick={e => onEditClick(item)}
                                       >
                                         {item.pawNumber}
-                                      </Button>
+                                      </label>
                                     ) : null}
                                   </td>
                                   <td>{item.location}</td>

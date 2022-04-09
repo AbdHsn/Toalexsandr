@@ -303,143 +303,164 @@ const Dashboard = props => {
 
           <Row className="mt-3">
             <Col md="3">
-              <Card className="mini-stats-wid">
-                <CardBody>
-                  <div className="d-flex">
-                    <div className="flex-grow-1">
-                      <p className="text-muted fw-medium">SAT</p>
-                      <h4 className="mb-0">
-                        {dashboardInspectionData?.summaryData?.totalSat}
-                      </h4>
+              <Row>
+                <Card className="mini-stats-wid">
+                  <CardBody>
+                    <div className="d-flex">
+                      <div className="flex-grow-1">
+                        <p className="text-muted fw-medium">SAT</p>
+                        <h4 className="mb-0">
+                          {dashboardInspectionData?.summaryData?.totalSat}
+                        </h4>
+                      </div>
+                      <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
+                        <span className="avatar-title rounded-circle bg-primary">
+                          <i
+                            className={
+                              "bx " + "bx-happy-alt " + " font-size-24"
+                            }
+                          ></i>
+                        </span>
+                      </div>
                     </div>
-                    <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                      <span className="avatar-title rounded-circle bg-primary">
-                        <i
-                          className={"bx " + "bx-happy-alt " + " font-size-24"}
-                        ></i>
-                      </span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
+                  </CardBody>
+                </Card>
+              </Row>
             </Col>
-            <Col md="2">
-              <Card className="mini-stats-wid">
-                <CardBody>
-                  <div className="d-flex">
-                    <div className="flex-grow-1">
-                      <p className="text-muted fw-medium">UNSAT</p>
-                      <h4 className="mb-0">
-                        {dashboardInspectionData?.summaryData?.totalUnsat}
-                      </h4>
-                    </div>
-                    <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                      <span className="avatar-title rounded-circle bg-primary">
-                        <i className={"bx " + "bx-sad " + " font-size-24"}></i>
-                      </span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md="2">
-              <Card className="mini-stats-wid">
-                <CardBody>
-                  <div className="d-flex">
-                    <div className="flex-grow-1">
-                      <p className="text-muted fw-medium">INSPECTION</p>
-                      <h4 className="mb-0">
-                        {" "}
-                        {dashboardInspectionData?.summaryData?.totalInspection}
-                      </h4>
-                    </div>
-                    <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                      <span className="avatar-title rounded-circle bg-primary">
-                        <i
-                          className={"bx " + "bx-search-alt " + " font-size-24"}
-                        ></i>
-                      </span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md="2">
-              <Card className="mini-stats-wid">
-                <CardBody>
-                  <div className="d-flex">
-                    <div className="flex-grow-1">
-                      <p className="text-muted fw-medium">PAW</p>
-                      <h4 className="mb-0">
-                        {dashboardInspectionData?.summaryData?.totalPAW}
-                      </h4>
-                    </div>
-                    <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                      <span className="avatar-title rounded-circle bg-primary">
-                        <i
-                          className={"bx " + "bx-line-chart " + " font-size-24"}
-                        ></i>
-                      </span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md="3">
-              <Card className="mini-stats-wid">
-                <CardBody>
-                  <div className="d-flex">
-                    <div className="flex-grow-1">
-                      <p className="text-muted fw-medium">IDIQ</p>
-                      <h4 className="mb-0">
-                        {dashboardInspectionData?.summaryData?.totalIDIQ}
-                      </h4>
-                    </div>
-                    <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                      <span className="avatar-title rounded-circle bg-primary">
-                        <i
-                          className={"bx " + "bxs-truck" + " font-size-24"}
-                        ></i>
-                      </span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
+            <Col md="9">
+              <Row>
+                <Col md="3">
+                  <Card className="mini-stats-wid">
+                    <CardBody>
+                      <div className="d-flex">
+                        <div className="flex-grow-1">
+                          <p className="text-muted fw-medium">UNSAT</p>
+                          <h4 className="mb-0">
+                            {dashboardInspectionData?.summaryData?.totalUnsat}
+                          </h4>
+                        </div>
+                        <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
+                          <span className="avatar-title rounded-circle bg-primary">
+                            <i
+                              className={"bx " + "bx-sad " + " font-size-24"}
+                            ></i>
+                          </span>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col md="3">
+                  <Card className="mini-stats-wid">
+                    <CardBody>
+                      <div className="d-flex">
+                        <div className="flex-grow-1">
+                          <p className="text-muted fw-medium">INSPECT</p>
+                          <h4 className="mb-0">
+                            {" "}
+                            {
+                              dashboardInspectionData?.summaryData
+                                ?.totalInspection
+                            }
+                          </h4>
+                        </div>
+                        <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
+                          <span className="avatar-title rounded-circle bg-primary">
+                            <i
+                              className={
+                                "bx " + "bx-search-alt " + " font-size-24"
+                              }
+                            ></i>
+                          </span>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col md="3">
+                  <Card className="mini-stats-wid">
+                    <CardBody>
+                      <div className="d-flex">
+                        <div className="flex-grow-1">
+                          <p className="text-muted fw-medium">PAW</p>
+                          <h4 className="mb-0">
+                            {dashboardInspectionData?.summaryData?.totalPAW}
+                          </h4>
+                        </div>
+                        <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
+                          <span className="avatar-title rounded-circle bg-primary">
+                            <i
+                              className={
+                                "bx " + "bx-line-chart " + " font-size-24"
+                              }
+                            ></i>
+                          </span>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col md="3">
+                  <Card className="mini-stats-wid">
+                    <CardBody>
+                      <div className="d-flex">
+                        <div className="flex-grow-1">
+                          <p className="text-muted fw-medium">IDIQ</p>
+                          <h4 className="mb-0">
+                            {dashboardInspectionData?.summaryData?.totalIDIQ}
+                          </h4>
+                        </div>
+                        <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
+                          <span className="avatar-title rounded-circle bg-primary">
+                            <i
+                              className={"bx " + "bxs-truck" + " font-size-24"}
+                            ></i>
+                          </span>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
             </Col>
           </Row>
 
           <Row className="mt-2">
             <Col xl="3">
-              <Card>
-                <CardBody>
-                  <CardTitle className="h4 text-center">INSPECTIONS</CardTitle>
-                  <hr />
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                      Satisfactory
-                      <label className="label label-success">
-                        {" "}
-                        {dashboardInspectionData?.satData?.length ?? 0}
-                      </label>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                      Unsatisfactory
-                      <label className="label label-success">
-                        {" "}
-                        {dashboardInspectionData?.unsatData?.length ?? 0}
-                      </label>
-                    </li>
-                  </ul>
-                  <Bar width={474} height={300} data={satUnsatBarChartData} />
+              <Row>
+                <Card>
+                  <CardBody>
+                    <CardTitle className="h4 text-center">
+                      INSPECTIONS
+                    </CardTitle>
+                    <hr />
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item d-flex justify-content-between align-items-center">
+                        Satisfactory
+                        <label className="label label-success">
+                          {" "}
+                          {dashboardInspectionData?.satData?.length ?? 0}
+                        </label>
+                      </li>
+                      <li className="list-group-item d-flex justify-content-between align-items-center">
+                        Unsatisfactory
+                        <label className="label label-success">
+                          {" "}
+                          {dashboardInspectionData?.unsatData?.length ?? 0}
+                        </label>
+                      </li>
+                    </ul>
+                    <Bar width={474} height={300} data={satUnsatBarChartData} />
 
-                  <br />
-                  <CardTitle className="h4 text-center">
-                    UNSATISFACTORY Breakdown
-                  </CardTitle>
-                  <hr />
-                  <Pie width={474} height={460} data={pieChartData} />
-                </CardBody>
-              </Card>
+                    <br />
+                    <CardTitle className="h4 text-center">
+                      UNSATISFACTORY Breakdown
+                    </CardTitle>
+                    <hr />
+                    <Pie width={474} height={460} data={pieChartData} />
+                  </CardBody>
+                </Card>
+              </Row>
             </Col>
             <Col xl="9">
               <Card>

@@ -928,14 +928,12 @@ const CCRTrackersView = props => {
                                   {/* <td>{item.id}</td> */}
                                   <td>
                                     {item.ccrNumber ? (
-                                      <Button
-                                        type="button"
-                                        color="info"
-                                        className="btn-sm btn-rounded"
+                                      <label
+                                        className="label label-info custom-pointer"
                                         onClick={e => onEditClick(item)}
                                       >
                                         {item.ccrNumber}
-                                      </Button>
+                                      </label>
                                     ) : null}
                                   </td>
                                   <td>{item.location}</td>

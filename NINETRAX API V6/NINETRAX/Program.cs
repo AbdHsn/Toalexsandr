@@ -8,11 +8,32 @@ string CorsPolicy = "CorsPolicy";
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+           options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+           );
 
 builder.Services.AddDbContext<EntityContext>(options =>
 {
     //options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
     options.UseMySql(builder.Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+});
+
+//Get jwtSetting section
+builder.Services.Configure<appsettings>(Configuration.GetSection("Jwt"));
+services.Configure<appsettings>(Configuration.GetSection("ClientSettings"));
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+options.TokenValidationParameters = new TokenValidationParameters
+{
+ValidateIssuer = true,
+ValidateAudience = true,
+ValidateLifetime = true,
+ValidateIssuerSigningKey = true,
+ValidIssuer = Configuration["Jwt:Issuer"],
+ValidAudience = Configuration["Jwt:Audience"],
+IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+};
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

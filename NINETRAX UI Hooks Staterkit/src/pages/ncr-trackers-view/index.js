@@ -826,14 +826,12 @@ const NCRTrackersView = props => {
                                   {/* <td>{item.id}</td> */}
                                   <td>
                                     {item.ncrNumber ? (
-                                      <Button
-                                        type="button"
-                                        color="info"
-                                        className="btn-sm btn-rounded"
+                                      <label
+                                        className="label label-info custom-pointer"
                                         onClick={e => onEditClick(item)}
                                       >
                                         {item.ncrNumber}
-                                      </Button>
+                                      </label>
                                     ) : null}
                                   </td>
                                   <td>{item.pdrNumber}</td>
