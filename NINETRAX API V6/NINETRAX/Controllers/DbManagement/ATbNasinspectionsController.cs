@@ -543,7 +543,21 @@ namespace NINETRAX.Controllers.DbManagement
                     return StatusCode(404, "Data not found.");
                 }
 
-                return StatusCode(200, getInspectionReport);
+                int totalRecords = getInspectionReport.Count();
+                int totalSatisfactory = getInspectionReport.Where(w => w.InspectionResults == "SAT").Count();
+                int totalUnsatisfactory = totalRecords - totalSatisfactory;
+                decimal satisfactoryPercent = Math.Round(((decimal)totalSatisfactory/ (decimal)totalRecords) * 100,
+                                                        MidpointRounding.AwayFromZero);
+
+                var returnObj = new { 
+                    data = getInspectionReport,
+                    total = totalRecords,
+                    totalSatisfactory = totalSatisfactory,
+                    totalUnsatisfactory = totalUnsatisfactory,
+                    satisfactoryPercent = satisfactoryPercent,
+                };
+
+                return StatusCode(200, returnObj);
             }
             catch (Exception ex)
             {

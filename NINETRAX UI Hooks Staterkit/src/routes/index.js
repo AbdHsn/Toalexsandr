@@ -33,7 +33,8 @@ const authProtectedRoutes = [
   { path: "/cdr-trackers", component: CDRTrackersView },
   { path: "/ncr-trackers", component: NCRTrackersView },
   {
-    path: "/inspection-daily-report/:reportType",
+    //path: "/inspection-daily-report/:reportType",
+    path: "/inspection-daily-report",
     component: InspectionDailyReport,
   },
 
