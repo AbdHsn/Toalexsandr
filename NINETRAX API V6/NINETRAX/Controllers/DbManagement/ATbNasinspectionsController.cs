@@ -514,7 +514,7 @@ namespace NINETRAX.Controllers.DbManagement
                 }
                 #endregion
 
-                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
+                var prepareExcelData = CommonFunctions.ExportToExcelFile(_heSrv, Request, workbook);
 
                 if (prepareExcelData != null)
                     return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "File.xlsx");

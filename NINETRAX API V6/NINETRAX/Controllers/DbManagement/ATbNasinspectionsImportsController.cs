@@ -462,7 +462,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 #endregion
 
-                var prepareExcelData = CommonServices.ExportToExcelFile(_heSrv, Request, workbook);
+                var prepareExcelData = CommonFunctions.ExportToExcelFile(_heSrv, Request, workbook);
 
                 return File(prepareExcelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ImportFromMaximoSample.xlsx");
             }

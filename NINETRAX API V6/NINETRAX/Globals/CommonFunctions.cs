@@ -5,7 +5,7 @@ using NPOI.XSSF.UserModel;
 
 namespace NINETRAX.Globals
 {
-    public static class CommonServices
+    public static class CommonFunctions
     {
 
         public static void WriteExcelToResponse(this IWorkbook book, HttpContext httpContext, string templateName)
@@ -14,7 +14,7 @@ namespace NINETRAX.Globals
             response.ContentType = "application/vnd.ms-excel";
             if (!string.IsNullOrEmpty(templateName))
             {
-                var contentDisposition = new Microsoft.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                var contentDisposition = new ContentDispositionHeaderValue("attachment");
                 contentDisposition.SetHttpFileName(templateName);
                 response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
             }
