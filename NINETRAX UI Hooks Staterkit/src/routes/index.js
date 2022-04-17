@@ -18,6 +18,7 @@ import CCRTrackersView from "../pages/ccr-trackers-view/index"
 import NCRTrackersView from "../pages/ncr-trackers-view/index"
 import CDRTrackersView from "../pages/cdr-trackers-view/index"
 import InspectionDailyReport from "../pages/inspection-daily-report"
+import DropDownMenuView from "../pages/dropdown-menu-view/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -32,6 +33,7 @@ const authProtectedRoutes = [
   { path: "/ccr-trackers", component: CCRTrackersView },
   { path: "/cdr-trackers", component: CDRTrackersView },
   { path: "/ncr-trackers", component: NCRTrackersView },
+  { path: "/menu-options", component: DropDownMenuView },
   {
     //path: "/inspection-daily-report/:reportType",
     path: "/inspection-daily-report",

@@ -67,3 +67,25 @@ dateClosed: date;
 status: string;
 notes: string;
 }
+
+DropDownMenuView{ 
+id : long {@Id};
+causeCode: string;
+rootCause:string;
+correctiveAction: string;
+qcstatus: string;
+pdrstatusMenu: string;
+pawstatusMenu: string;
+pawrating: string;
+pawAssessment: string;
+ccrstatusMenu: string;
+validity: string;
+qctechs: string;
+mptPar: string;
+mptAsgnCode: string;
+jaxPar: string;
+pawunsat: string;
+pawrootCause: string;
+fmBldgManager: string;
+estimators: string;
+}

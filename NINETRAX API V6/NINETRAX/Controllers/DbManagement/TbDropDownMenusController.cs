@@ -23,7 +23,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbDropDownMenu> _TbDropDownMenuContext;
-        private readonly IRawQueryRepo<TbDropDownMenusView> _getTbDropDownMenusView;
+        private readonly IRawQueryRepo<DropDownMenuView> _getTbDropDownMenusView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -33,7 +33,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbDropDownMenu> TbDropDownMenuContext,
-            IRawQueryRepo<TbDropDownMenusView> getTbDropDownMenusView,
+            IRawQueryRepo<DropDownMenuView> getTbDropDownMenusView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -48,7 +48,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region GetTbDropDownMenuView
-        [HttpPost("GetTbDropDownMenusView")]
+        [HttpPost("GetDropDownMenusView")]
         public async Task<ActionResult<DatatableResponseGLB>> GetTbDropDownMenusView(DatatableGLB datatableGLB)
         {
             DatatableResponseGLB response = new DatatableResponseGLB();
@@ -111,7 +111,7 @@ namespace NINETRAX.Controllers.DbManagement
                 #region database query code 
                 var dataGrid = await _getTbDropDownMenusView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbDropDownMenusView",
+                    TableOrViewName = "DropDownMenuView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -120,7 +120,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbDropDownMenusView",
+                    TableOrViewName = "DropDownMenuView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -157,7 +157,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbDropDownMenusView"
+                    TableOrViewName = "DropDownMenuView"
                 });
 
                 #endregion database query code

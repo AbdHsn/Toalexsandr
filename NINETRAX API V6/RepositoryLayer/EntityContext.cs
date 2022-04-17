@@ -2170,6 +2170,10 @@ namespace RepositoryLayer
             {
                 a.ToView("DashboardInspectionView");
             });
+            modelBuilder.Entity<DropDownMenuView>(a =>
+            {
+                a.ToView("DropDownMenuView");
+            });
 
             modelBuilder.Entity<DashboardUnsatBreakDownView>(a =>
             {
@@ -2244,6 +2248,7 @@ namespace RepositoryLayer
         public DbSet<CDRTrackersView> CDRTrackersView { get; set; }
         public DbSet<TbDropDownMenusView> TbDropDownMenusView { get; set; }
         public DbSet<ATbNasbmdannexTablesView> ATbNasbmdannexTablesView { get; set; }
+        public DbSet<DropDownMenuView> DropDownMenuView { get; set; }
         #endregion ViewEntity
 
         #region SPEntity
