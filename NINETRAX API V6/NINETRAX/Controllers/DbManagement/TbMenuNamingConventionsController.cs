@@ -23,7 +23,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbMenuNamingConvention> _TbMenuNamingConventionContext;
-        private readonly IRawQueryRepo<TbMenuNamingConventionsView> _getTbMenuNamingConventionsView;
+        private readonly IRawQueryRepo<MenuNamingConventionView> _getTbMenuNamingConventionsView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -33,7 +33,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbMenuNamingConvention> TbMenuNamingConventionContext,
-            IRawQueryRepo<TbMenuNamingConventionsView> getTbMenuNamingConventionsView,
+            IRawQueryRepo<MenuNamingConventionView> getTbMenuNamingConventionsView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -111,7 +111,7 @@ namespace NINETRAX.Controllers.DbManagement
                 #region database query code 
                 var dataGrid = await _getTbMenuNamingConventionsView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbMenuNamingConventionsView",
+                    TableOrViewName = "MenuNamingConventionView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -120,7 +120,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbMenuNamingConventionsView",
+                    TableOrViewName = "MenuNamingConventionView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -157,7 +157,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbMenuNamingConventionsView"
+                    TableOrViewName = "MenuNamingConventionView"
                 });
 
                 #endregion database query code
@@ -236,11 +236,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbMenuNamingConvention>> CreateTbMenuNamingConvention(TbMenuNamingConvention objTbMenuNamingConvention)
         {
+            var getLast = await _context.TbMenuNamingConventions.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbMenuNamingConvention.Id = 1;
+            else
+                objTbMenuNamingConvention.Id = getLast.Id + 1;
+
             _context.TbMenuNamingConventions.Add(objTbMenuNamingConvention);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbMenuNamingConvention);
+
+                if (objTbMenuNamingConvention.Id > 0)
+                    return StatusCode(200, objTbMenuNamingConvention);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {
@@ -254,16 +263,23 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbMenuNamingConvention(int id)
         {
-            var objTbMenuNamingConvention = await _context.TbMenuNamingConventions.FindAsync(id);
-            if (objTbMenuNamingConvention == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var obj = await _context.TbMenuNamingConventions.FindAsync(id);
+                if (obj == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.TbMenuNamingConventions.Remove(obj);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
             }
-
-            _context.TbMenuNamingConventions.Remove(objTbMenuNamingConvention);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(200, true);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
         }
 
         #endregion

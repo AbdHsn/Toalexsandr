@@ -36,10 +36,10 @@ namespace RepositoryLayer
             });
 
 
-            modelBuilder.Entity<TbDirectoryNamesView>(entity =>
-            {
-                entity.HasNoKey();
-            });
+            //modelBuilder.Entity<TbDirectoryNamesView>(entity =>
+            //{
+            //    entity.HasNoKey();
+            //});
 
 
             modelBuilder.Entity<TotalRecordCountGLB>(entity =>
@@ -1930,29 +1930,71 @@ namespace RepositoryLayer
                     .IsUnicode(false);
             });
 
+
             modelBuilder.Entity<TbUserLogin>(entity =>
             {
                 entity.ToTable("tb_UserLogin");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                entity.Property(e => e.ID).HasColumnName("ID");
 
                 entity.Property(e => e.AccessLevel)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CanBackupDb).HasColumnName("CanBackupDB");
+                entity.Property(e => e.ActivateAutoLogOut)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
 
-                entity.Property(e => e.CanChangeDblocation).HasColumnName("CanChangeDBLocation");
+                entity.Property(e => e.AddRecords)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
 
-                entity.Property(e => e.Dbaccess).HasColumnName("DBAccess");
+                entity.Property(e => e.AddUsers)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
 
-                entity.Property(e => e.DbmasterUnlock).HasColumnName("DBMasterUnlock");
+                entity.Property(e => e.AdminRights)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
 
-                entity.Property(e => e.DbupdateNotification).HasColumnName("DBUpdateNotification");
+                entity.Property(e => e.CanBackupDB)
+                    .HasMaxLength(1)
+                    .HasColumnName("CanBackupDB")
+                    .IsFixedLength();
 
-                entity.Property(e => e.LoginId)
+                entity.Property(e => e.CanChangeDBLocation)
+                    .HasMaxLength(1)
+                    .HasColumnName("CanChangeDBLocation")
+                    .IsFixedLength();
+
+                entity.Property(e => e.CanImportFiles)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
+
+                entity.Property(e => e.DBAccess)
+                    .HasMaxLength(1)
+                    .HasColumnName("DBAccess")
+                    .IsFixedLength();
+
+                entity.Property(e => e.DBMasterUnlock)
+                    .HasMaxLength(1)
+                    .HasColumnName("DBMasterUnlock")
+                    .IsFixedLength();
+
+                entity.Property(e => e.DBUpdateNotification)
+                    .HasMaxLength(1)
+                    .HasColumnName("DBUpdateNotification")
+                    .IsFixedLength();
+
+                entity.Property(e => e.DeleteRecords)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
+
+                entity.Property(e => e.EditRecordsOnly)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
+
+                entity.Property(e => e.LoginID)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("LoginID");
@@ -1961,13 +2003,20 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ResetPw).HasColumnName("ResetPW");
+                entity.Property(e => e.ReadRecordsOnly)
+                    .HasMaxLength(1)
+                    .IsFixedLength();
+
+                entity.Property(e => e.ResetPW)
+                    .HasMaxLength(1)
+                    .HasColumnName("ResetPW")
+                    .IsFixedLength();
 
                 entity.Property(e => e.SecurityQ1)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SecurityQ1a)
+                entity.Property(e => e.SecurityQ1A)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("SecurityQ1A");
@@ -1976,7 +2025,7 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SecurityQ2a)
+                entity.Property(e => e.SecurityQ2A)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("SecurityQ2A");
@@ -1985,21 +2034,22 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SecurityQ3a)
+                entity.Property(e => e.SecurityQ3A)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("SecurityQ3A");
 
-                entity.Property(e => e.User3X5)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                entity.Property(e => e.unique_id)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("unique_id");
 
-                entity.Property(e => e.UserFn)
+                entity.Property(e => e.UserFN)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("UserFN");
 
-                entity.Property(e => e.UserLn)
+                entity.Property(e => e.UserLN)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("UserLN");
@@ -2174,6 +2224,18 @@ namespace RepositoryLayer
             {
                 a.ToView("DropDownMenuView");
             });
+            modelBuilder.Entity<DirectoryNamesView>(a =>
+            {
+                a.ToView("DirectoryNamesView");
+            });
+            modelBuilder.Entity<UserLoginView>(a =>
+            {
+                a.ToView("UserLoginView");
+            });
+            modelBuilder.Entity<MenuNamingConventionView>(a =>
+            {
+                a.ToView("MenuNamingConventionView");
+            });
 
             modelBuilder.Entity<DashboardUnsatBreakDownView>(a =>
             {
@@ -2237,9 +2299,9 @@ namespace RepositoryLayer
         #endregion TableEntity
 
         #region ViewEntity
+        public DbSet<MenuNamingConventionView> MenuNamingConventionView { get; set; } = null!;
         public DbSet<DashboardInspectionView> DashboardInspectionView { get; set; }
         public DbSet<DashboardUnsatBreakDownView> DashboardUnsatBreakDownView { get; set; }
-        public DbSet<TbDirectoryNamesView> TbDirectoryNamesView { get; set; }
         public DbSet<PDRTrackersView> PDRTrackersView { get; set; }
         public DbSet<IDIQTrackersView> IDIQTrackersView { get; set; }
         public DbSet<PAWTrackersView> PAWTrackersView { get; set; }
@@ -2249,6 +2311,8 @@ namespace RepositoryLayer
         public DbSet<TbDropDownMenusView> TbDropDownMenusView { get; set; }
         public DbSet<ATbNasbmdannexTablesView> ATbNasbmdannexTablesView { get; set; }
         public DbSet<DropDownMenuView> DropDownMenuView { get; set; }
+        public DbSet<DirectoryNamesView> DirectoryNamesView { get; set; }
+        public DbSet<UserLoginView> UserLoginView { get; set; }
         #endregion ViewEntity
 
         #region SPEntity

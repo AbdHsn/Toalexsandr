@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace DataLayer.Models.ViewModels
 {
-    public class TbDirectoryNamesView
+    public class DirectoryNamesView
     {
-        public int Id { get; set; }
-        public string? PersonName { get; set; }
-        public string? PersonTitle { get; set; }
-        public string? BaseOfOperation { get; set; }
+        public int id { get; set; }
+        public string? personName { get; set; }
+        public string? personTitle { get; set; }
+        public string? baseOfOperation { get; set; }
+
+
     }
 }

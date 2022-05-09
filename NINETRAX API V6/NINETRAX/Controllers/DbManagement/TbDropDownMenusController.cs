@@ -236,11 +236,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbDropDownMenu>> CreateTbDropDownMenu(TbDropDownMenu objTbDropDownMenu)
         {
+            var getLast = await _context.TbDropDownMenus.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbDropDownMenu.Id = 1;
+            else
+                objTbDropDownMenu.Id = getLast.Id + 1;
+
             _context.TbDropDownMenus.Add(objTbDropDownMenu);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbDropDownMenu);
+
+                if (objTbDropDownMenu.Id > 0)
+                    return StatusCode(200, objTbDropDownMenu);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {
@@ -254,16 +263,23 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbDropDownMenu(int id)
         {
-            var objTbDropDownMenu = await _context.TbDropDownMenus.FindAsync(id);
-            if (objTbDropDownMenu == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var objTbDropDownMenus = await _context.TbDropDownMenus.FindAsync(id);
+                if (objTbDropDownMenus == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.TbDropDownMenus.Remove(objTbDropDownMenus);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
             }
-
-            _context.TbDropDownMenus.Remove(objTbDropDownMenu);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(200, true);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
         }
 
         #endregion

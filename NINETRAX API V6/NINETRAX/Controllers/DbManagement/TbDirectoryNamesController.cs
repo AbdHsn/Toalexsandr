@@ -23,7 +23,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbDirectoryName> _TbDirectoryNameContext;
-        private readonly IRawQueryRepo<TbDirectoryNamesView> _getTbDirectoryNamesView;
+        private readonly IRawQueryRepo<DirectoryNamesView> _getTbDirectoryNamesView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -33,7 +33,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbDirectoryName> TbDirectoryNameContext,
-            IRawQueryRepo<TbDirectoryNamesView> getTbDirectoryNamesView,
+            IRawQueryRepo<DirectoryNamesView> getTbDirectoryNamesView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -111,7 +111,7 @@ namespace NINETRAX.Controllers.DbManagement
                 #region database query code 
                 var dataGrid = await _getTbDirectoryNamesView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbDirectoryNamesView",
+                    TableOrViewName = "DirectoryNamesView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -120,7 +120,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbDirectoryNamesView",
+                    TableOrViewName = "DirectoryNamesView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -159,7 +159,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbDirectoryNamesView"
+                    TableOrViewName = "DirectoryNamesView"
                 });
 
                 #endregion database query code
@@ -238,11 +238,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbDirectoryName>> CreateTbDirectoryName(TbDirectoryName objTbDirectoryName)
         {
+            var getLast = await _context.TbDirectoryNames.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbDirectoryName.Id = 1;
+            else
+                objTbDirectoryName.Id = getLast.Id + 1;
+
             _context.TbDirectoryNames.Add(objTbDirectoryName);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbDirectoryName);
+
+                if (objTbDirectoryName.Id > 0)
+                    return StatusCode(200, objTbDirectoryName);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {
@@ -258,18 +267,18 @@ namespace NINETRAX.Controllers.DbManagement
         {
             try
             {
-                var objTbDirectoryName = await _context.TbDirectoryNames.FindAsync(id);
-                if (objTbDirectoryName == null)
+                var objDirectoryName = await _context.TbDirectoryNames.FindAsync(id);
+                if (objDirectoryName == null)
                 {
                     return StatusCode(404, "Data not found");
                 }
 
-                _context.TbDirectoryNames.Remove(objTbDirectoryName);
+                _context.TbDirectoryNames.Remove(objDirectoryName);
                 await _context.SaveChangesAsync();
 
                 return StatusCode(200, true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(500, "API response failed.");
             }

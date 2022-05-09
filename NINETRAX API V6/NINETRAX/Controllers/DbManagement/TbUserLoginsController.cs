@@ -23,7 +23,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbUserLogin> _TbUserLoginContext;
-        private readonly IRawQueryRepo<TbUserLoginsView> _getTbUserLoginsView;
+        private readonly IRawQueryRepo<UserLoginView> _getTbUserLoginsView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -33,7 +33,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbUserLogin> TbUserLoginContext,
-            IRawQueryRepo<TbUserLoginsView> getTbUserLoginsView,
+            IRawQueryRepo<UserLoginView> getTbUserLoginsView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -111,7 +111,7 @@ namespace NINETRAX.Controllers.DbManagement
                 #region database query code 
                 var dataGrid = await _getTbUserLoginsView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbUserLoginsView",
+                    TableOrViewName = "UserLoginView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -120,7 +120,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbUserLoginsView",
+                    TableOrViewName = "UserLoginView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -157,7 +157,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbUserLoginsView"
+                    TableOrViewName = "UserLoginView"
                 });
 
                 #endregion database query code
@@ -190,7 +190,7 @@ namespace NINETRAX.Controllers.DbManagement
             var objTbUserLogin = new TbUserLogin();
             try
             {
-                objTbUserLogin = await _context.TbUserLogins.Where(d => d.Id == id).FirstOrDefaultAsync();
+                objTbUserLogin = await _context.TbUserLogins.Where(d => d.ID == id).FirstOrDefaultAsync();
 
                 if (objTbUserLogin == null)
                 {
@@ -211,7 +211,7 @@ namespace NINETRAX.Controllers.DbManagement
         public async Task<IActionResult> PutTbUserLogin(int id, TbUserLogin objTbUserLogin)
         {
 
-            if (id != objTbUserLogin.Id)
+            if (id != objTbUserLogin.ID)
             {
                 return StatusCode(404, "Data not found.");
             }
@@ -236,11 +236,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbUserLogin>> CreateTbUserLogin(TbUserLogin objTbUserLogin)
         {
+            var getLast = await _context.TbUserLogins.OrderByDescending(d => d.ID).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbUserLogin.ID = 1;
+            else
+                objTbUserLogin.ID = getLast.ID + 1;
+
             _context.TbUserLogins.Add(objTbUserLogin);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbUserLogin);
+
+                if (objTbUserLogin.ID > 0)
+                    return StatusCode(200, objTbUserLogin);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {
@@ -254,16 +263,23 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbUserLogin(int id)
         {
-            var objTbUserLogin = await _context.TbUserLogins.FindAsync(id);
-            if (objTbUserLogin == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var objTbUserLogin = await _context.TbUserLogins.FindAsync(id);
+                if (objTbUserLogin == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.TbUserLogins.Remove(objTbUserLogin);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
             }
-
-            _context.TbUserLogins.Remove(objTbUserLogin);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(200, true);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
         }
 
         #endregion

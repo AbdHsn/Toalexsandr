@@ -89,3 +89,11 @@ pawrootCause: string;
 fmBldgManager: string;
 estimators: string;
 }
+
+DirectoryNamesView{ 
+id : long {@Id};
+personName: string;
+personTitle:string;
+baseOfOperation: string;
+}
+
