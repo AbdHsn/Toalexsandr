@@ -285,6 +285,53 @@ activateAutoLogOut: boolean;
 dbUpdateNotification: boolean;
 }
 
+MenuNamingConventionAddUpdate{
+id : long {@Id};
+
+trackerName: string;
+abrvName: string;
+prefix: string;
+numberSeq: long;
+postfix: string;
+namingConv: string;
+lastUsedConv: string;
+nextToUseConv: string;
+active: string;
+group: string;
+}
+
+UsersAddUpdate{
+id : long {@Id};
+firstName: string;
+lastName: string;
+fullName: string;
+uniqueId: string;
+qualityInspectors: boolean;
+assosicateInspectors: boolean;
+planEstimateInspectors: boolean;
+customerInspectors: boolean;
+aor: string;
+positionTitle: string;
+email: string;
+accessType: string;
+activeStatus: boolean;
+fullAdminRights: boolean;
+editRights: boolean;
+deleteRights: boolean;
+viewRights: boolean;
+importRights: boolean;
+activateAutologout: boolean;
+loginId: string;
+password: string;
+resetPassword: boolean;
+securityQuesOne: string;
+securityAnsOne: string;
+dateAccessGranted: date;
+dateAccessRemoved: date;
+comments: string;
+}
+
+
 
 
 // priority: string;
