@@ -68,6 +68,8 @@ status: string;
 notes: string;
 }
 
+
+
 DropDownMenuView{ 
 id : long {@Id};
 causeCode: string;
@@ -97,3 +99,35 @@ personTitle:string;
 baseOfOperation: string;
 }
 
+
+UserLoginView{
+id : long {@Id};
+unique_id: string;
+userFN: string;
+userLN: string;
+loginID: string;
+password: string;
+workSite: string;
+accessLevel: string;
+dbAccess: boolean;
+readRecordsOnly: boolean;
+editRecordsOnly: boolean;
+adminRights: string;
+resetPW: string;
+addUsers: boolean;
+deleteRecords: boolean;
+addRecords: boolean;
+securityQ1: string;
+securityQ1A: string;
+securityQ2: string;
+securityQ2A: string;
+securityQ3: string;
+securityQ3A: string;
+dbMasterUnlock: boolean;
+canImportFiles: boolean;
+canChangeDBLocation: boolean;
+canBackupDB: boolean;
+activateAutoLogOut: boolean;
+dbUpdateNotification: boolean;
+
+}

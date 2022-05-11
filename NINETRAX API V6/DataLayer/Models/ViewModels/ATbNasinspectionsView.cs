@@ -38,5 +38,6 @@ namespace DataLayer.Models.EntityModels
         public string? CorrectiveActions { get; set; }
         public string? QcComments { get; set; }
         public string? Duration { get; set; }
+        public bool? Selected { get; set; }
     }
 }

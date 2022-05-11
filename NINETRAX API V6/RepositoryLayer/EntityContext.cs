@@ -1833,9 +1833,7 @@ namespace RepositoryLayer
             {
                 entity.ToTable("tb_Users");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.AccessType)
                     .HasMaxLength(255)
@@ -1853,7 +1851,19 @@ namespace RepositoryLayer
 
                 entity.Property(e => e.AssosicateInspectors).HasColumnName("assosicate_inspectors");
 
+                entity.Property(e => e.Comments)
+                    .IsUnicode(false)
+                    .HasColumnName("comments");
+
                 entity.Property(e => e.CustomerInspectors).HasColumnName("customer_inspectors");
+
+                entity.Property(e => e.DateAccessGranted)
+                    .HasPrecision(0)
+                    .HasColumnName("date_access_granted");
+
+                entity.Property(e => e.DateAccessRemoved)
+                    .HasPrecision(0)
+                    .HasColumnName("date_access_removed");
 
                 entity.Property(e => e.DeleteRights).HasColumnName("delete_rights");
 
@@ -1913,6 +1923,11 @@ namespace RepositoryLayer
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("security_ques_one");
+
+                entity.Property(e => e.UniqueId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("unique_id");
 
                 entity.Property(e => e.ViewRights).HasColumnName("view_rights");
             });

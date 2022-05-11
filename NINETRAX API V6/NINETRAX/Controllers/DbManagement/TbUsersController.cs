@@ -23,7 +23,7 @@ namespace NINETRAX.Controllers.DbManagement
         private readonly IWebHostEnvironment _heSrv;
         private readonly EntityContext _context;
         private readonly IRawQueryRepo<TbUser> _TbUserContext;
-        private readonly IRawQueryRepo<TbUsersView> _getTbUsersView;
+        private readonly IRawQueryRepo<UsersView> _getTbUsersView;
         private readonly IRawQueryRepo<TotalRecordCountGLB> _getTotalRecordCountGLB;
         private readonly IRawQueryRepo<Object> _getAllByLike;
         #endregion
@@ -33,7 +33,7 @@ namespace NINETRAX.Controllers.DbManagement
             IWebHostEnvironment heSrv,
             EntityContext context,
             IRawQueryRepo<TbUser> TbUserContext,
-            IRawQueryRepo<TbUsersView> getTbUsersView,
+            IRawQueryRepo<UsersView> getTbUsersView,
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike
         )
@@ -111,7 +111,7 @@ namespace NINETRAX.Controllers.DbManagement
                 #region database query code 
                 var dataGrid = await _getTbUsersView.GetAllByWhere(new GetAllByWhereGLB()
                 {
-                    TableOrViewName = "TbUsersView",
+                    TableOrViewName = "UsersView",
                     SortColumn = sortInformation,
                     WhereConditions = whereConditionStatement,
                     LimitStart = datatableGLB.start,
@@ -120,7 +120,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var dataGridCount = await _getTotalRecordCountGLB.CountAllByWhere(new CountAllByWhereGLB()
                 {
-                    TableOrViewName = "TbUsersView",
+                    TableOrViewName = "UsersView",
                     WhereConditions = whereConditionStatement
                 });
 
@@ -157,7 +157,7 @@ namespace NINETRAX.Controllers.DbManagement
                     ColumnName = column,
                     ColumnValue = value,
                     NumberOfReturnRow = 10,
-                    TableOrViewName = "TbUsersView"
+                    TableOrViewName = "UsersView"
                 });
 
                 #endregion database query code
@@ -236,11 +236,20 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpPost]
         public async Task<ActionResult<TbUser>> CreateTbUser(TbUser objTbUser)
         {
+            var getLast = await _context.TbUsers.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefaultAsync();
+            if (getLast == null)
+                objTbUser.Id = 1;
+            else
+                objTbUser.Id = getLast.Id + 1;
+
             _context.TbUsers.Add(objTbUser);
             try
             {
                 await _context.SaveChangesAsync();
-                return StatusCode(200, objTbUser);
+
+                if (objTbUser.Id > 0)
+                    return StatusCode(200, objTbUser);
+                else return StatusCode(500, "Failed to create data.");
             }
             catch (Exception ex)
             {
@@ -254,16 +263,23 @@ namespace NINETRAX.Controllers.DbManagement
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbUser(int id)
         {
-            var objTbUser = await _context.TbUsers.FindAsync(id);
-            if (objTbUser == null)
+            try
             {
-                return StatusCode(404, "Data not found");
+                var user = await _context.TbUsers.FindAsync(id);
+                if (user == null)
+                {
+                    return StatusCode(404, "Data not found");
+                }
+
+                _context.TbUsers.Remove(user);
+                await _context.SaveChangesAsync();
+
+                return StatusCode(200, true);
             }
-
-            _context.TbUsers.Remove(objTbUser);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(200, true);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
         }
 
         #endregion

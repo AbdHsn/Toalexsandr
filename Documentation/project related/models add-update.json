@@ -225,6 +225,68 @@ currectiveAction: byte;
 qcComments: byte; //Comments
 }
 
+DropDownMenuAddUpdate{ 
+id : long {@Id};
+causeCode: string;
+rootCause:string;
+correctiveAction: string;
+qcstatus: string;
+pdrstatusMenu: string;
+pawstatusMenu: string;
+pawrating: string;
+pawAssessment: string;
+ccrstatusMenu: string;
+validity: string;
+qctechs: string;
+mptPar: string;
+mptAsgnCode: string;
+jaxPar: string;
+pawunsat: string;
+pawrootCause: string;
+fmBldgManager: string;
+estimators: string;
+}
+
+DirectoryNamesAddUpdate{ 
+id : long {@Id};
+personName: string;
+personTitle:string;
+baseOfOperation: string;
+}
+
+UserLoginAddUpdate{
+id : long {@Id};
+unique_id: string;
+userFN: string;
+userLN: string;
+loginID: string;
+password: string;
+workSite: string;
+accessLevel: string;
+dbAccess: boolean;
+readRecordsOnly: boolean;
+editRecordsOnly: boolean;
+adminRights: string;
+resetPW: string;
+addUsers: boolean;
+deleteRecords: boolean;
+addRecords: boolean;
+securityQ1: string;
+securityQ1A: string;
+securityQ2: string;
+securityQ2A: string;
+securityQ3: string;
+securityQ3A: string;
+dbMasterUnlock: boolean;
+canImportFiles: boolean;
+canChangeDBLocation: boolean;
+canBackupDB: boolean;
+activateAutoLogOut: boolean;
+dbUpdateNotification: boolean;
+}
+
+
+
 // priority: string;
 // glAccount: string;
 // inspectionResults: string;

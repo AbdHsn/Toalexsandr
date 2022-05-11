@@ -359,6 +359,7 @@ const IDIQTrackersView = props => {
                               ></i>{" "}
                               id
                             </th> */}
+
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("woNumber")}
@@ -781,6 +782,7 @@ const IDIQTrackersView = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
+
                                   <td>
                                     {item.woNumber ? (
                                       <label

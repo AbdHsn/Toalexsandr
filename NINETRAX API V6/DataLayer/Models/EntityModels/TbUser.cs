@@ -9,6 +9,7 @@ namespace DataLayer.Models.EntityModels
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? FullName { get; set; }
+        public string? UniqueId { get; set; }
         public bool QualityInspectors { get; set; }
         public bool AssosicateInspectors { get; set; }
         public bool PlanEstimateInspectors { get; set; }
@@ -29,5 +30,8 @@ namespace DataLayer.Models.EntityModels
         public bool ResetPassword { get; set; }
         public string? SecurityQuesOne { get; set; }
         public string? SecurityAnsOne { get; set; }
+        public DateTime? DateAccessGranted { get; set; }
+        public DateTime? DateAccessRemoved { get; set; }
+        public string? Comments { get; set; }
     }
 }

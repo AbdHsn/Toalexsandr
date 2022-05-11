@@ -802,6 +802,23 @@ const workOrderInspections = props => {
                         <thead>
                           <tr>
                             {/* <th>Id</th> */}
+                            <th>
+                              <div className="form-check form-check-end">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  value=""
+                                  id="checkAll"
+                                  defaultChecked={false}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="checkAll"
+                                >
+                                  All
+                                </label>
+                              </div>
+                            </th>
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("Annex")}
@@ -1338,6 +1355,21 @@ const workOrderInspections = props => {
                               return (
                                 <tr key={index}>
                                   {/* <td>{item.id}</td> */}
+                                  <td>
+                                    <div className="form-check form-check-end">
+                                      <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        value=""
+                                        id={"checkBox" + index}
+                                        defaultChecked={item?.selected}
+                                      />
+                                      <label
+                                        className="form-check-label"
+                                        htmlFor={"checkBox" + index}
+                                      ></label>
+                                    </div>
+                                  </td>
                                   <td>{item.annex}</td>
                                   <td>{item.specItem}</td>
                                   <td>{item.title}</td>

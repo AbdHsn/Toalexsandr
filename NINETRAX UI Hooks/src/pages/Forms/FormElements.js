@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import MetaTags from 'react-meta-tags';
+import MetaTags from "react-meta-tags"
 
 import {
   Card,
@@ -16,24 +16,26 @@ import {
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 const FormElements = () => {
-  const [customchkPrimary, setcustomchkPrimary] = useState(true);
-  const [customchkSuccess, setcustomchkSuccess] = useState(true);
-  const [customchkInfo, setcustomchkInfo] = useState(true);
-  const [customchkWarning, setcustomchkWarning] = useState(true);
-  const [customchkDanger, setcustomchkDanger] = useState(true);
-  const [customOutlinePrimary, setcustomOutlinePrimary] = useState(true);
-  const [customOutlineSuccess, setcustomOutlineSuccess] = useState(true);
-  const [customOutlineInfo, setcustomOutlineInfo] = useState(true);
-  const [customOutlineWarning, setcustomOutlineWarning] = useState(true);
-  const [customOutlineDanger, setcustomOutlineDanger] = useState(true);
-  const [toggleSwitch, settoggleSwitch] = useState(true);
-  const [toggleSwitchSize, settoggleSwitchSize] = useState(true);
+  const [customchkPrimary, setcustomchkPrimary] = useState(true)
+  const [customchkSuccess, setcustomchkSuccess] = useState(true)
+  const [customchkInfo, setcustomchkInfo] = useState(true)
+  const [customchkWarning, setcustomchkWarning] = useState(true)
+  const [customchkDanger, setcustomchkDanger] = useState(true)
+  const [customOutlinePrimary, setcustomOutlinePrimary] = useState(true)
+  const [customOutlineSuccess, setcustomOutlineSuccess] = useState(true)
+  const [customOutlineInfo, setcustomOutlineInfo] = useState(true)
+  const [customOutlineWarning, setcustomOutlineWarning] = useState(true)
+  const [customOutlineDanger, setcustomOutlineDanger] = useState(true)
+  const [toggleSwitch, settoggleSwitch] = useState(true)
+  const [toggleSwitchSize, settoggleSwitchSize] = useState(true)
 
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>Form Elements | Skote - React Admin & Dashboard Template</title>
+          <title>
+            Form Elements | Skote - React Admin & Dashboard Template
+          </title>
         </MetaTags>
         <Container fluid={true}>
           <Breadcrumbs title="Forms" breadcrumbItem="Form Elements" />
@@ -262,11 +264,14 @@ const FormElements = () => {
                     </div>
                   </Row>
                   <Row>
-                    <label className="col-md-2 col-form-label">
-                      Datalists
-                    </label>
+                    <label className="col-md-2 col-form-label">Datalists</label>
                     <div className="col-md-10">
-                      <input className="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..." />
+                      <input
+                        className="form-control"
+                        list="datalistOptions"
+                        id="exampleDataList"
+                        placeholder="Type to search..."
+                      />
                       <datalist id="datalistOptions">
                         <option value="San Francisco" />
                         <option value="New York" />
@@ -337,15 +342,22 @@ const FormElements = () => {
                 <CardBody>
                   <CardTitle className="h4">Range Inputs</CardTitle>
                   <p className="card-title-desc">
-                    Create custom <code>&lt;input type=&quot;range&ldquo;&gt;</code>
+                    Create custom{" "}
+                    <code>&lt;input type=&quot;range&ldquo;&gt;</code>
                     controls with <code>.form-range</code>.
                   </p>
 
                   <Row>
                     <Col lg={6}>
                       <div>
-                        <Label htmlFor="customRange1" className="form-label">Example range</Label>
-                        <Input type="range" className="form-range" id="customRange1" />
+                        <Label htmlFor="customRange1" className="form-label">
+                          Example range
+                        </Label>
+                        <Input
+                          type="range"
+                          className="form-range"
+                          id="customRange1"
+                        />
                       </div>
                     </Col>
                   </Row>
@@ -354,17 +366,34 @@ const FormElements = () => {
                     <Col lg={6}>
                       <div className="mt-4">
                         <h5 className="font-size-14">Min and max</h5>
-                        <p className="card-title-desc">Range inputs have implicit values for min and
-                          max—0 and 100, respectively.</p>
-                        <input type="range" className="form-range" min="0" max="5" id="customRange2" />
+                        <p className="card-title-desc">
+                          Range inputs have implicit values for min and max—0
+                          and 100, respectively.
+                        </p>
+                        <input
+                          type="range"
+                          className="form-range"
+                          min="0"
+                          max="5"
+                          id="customRange2"
+                        />
                       </div>
                     </Col>
                     <Col lg={6}>
                       <div className="mt-4">
                         <h5 className="font-size-14">Steps</h5>
-                        <p className="card-title-desc">By default, range inputs “snap” to integer
-                          values. To change this, you can specify a <code>step</code> value.</p>
-                        <input type="range" className="form-range" min="0" max="5" id="customRange2" />
+                        <p className="card-title-desc">
+                          By default, range inputs “snap” to integer values. To
+                          change this, you can specify a <code>step</code>{" "}
+                          value.
+                        </p>
+                        <input
+                          type="range"
+                          className="form-range"
+                          min="0"
+                          max="5"
+                          id="customRange2"
+                        />
                       </div>
                     </Col>
                   </Row>
@@ -383,8 +412,8 @@ const FormElements = () => {
                     <Col xl={3} sm={6}>
                       <div className="mt-4">
                         <h5 className="font-size-14 mb-4">
-                          <i
-                            className="mdi mdi-arrow-right text-primary mr-1"></i> Form Checkboxes
+                          <i className="mdi mdi-arrow-right text-primary mr-1"></i>{" "}
+                          Form Checkboxes
                         </h5>
                         <div className="form-check mb-3">
                           <input
@@ -406,7 +435,7 @@ const FormElements = () => {
                             type="checkbox"
                             value=""
                             id="defaultCheck2"
-                            defaultChecked
+                            defaultChecked={true}
                           />
                           <label
                             className="form-check-label"
@@ -419,17 +448,17 @@ const FormElements = () => {
                     </Col>
                     <Col xl={3} sm={6}>
                       <div className="mt-4">
-                        <h5 className="font-size-14 mb-4"><i
-                          className="mdi mdi-arrow-right text-primary mr-1"></i> Form Checkboxes Right</h5>
+                        <h5 className="font-size-14 mb-4">
+                          <i className="mdi mdi-arrow-right text-primary mr-1"></i>{" "}
+                          Form Checkboxes Right
+                        </h5>
                         <div className="form-check form-check-right mb-3">
                           <input
                             type="checkbox"
                             className="form-check-input"
                             id="CustomCheck1"
                           />
-                          <label
-                            className="form-check-label"
-                          >
+                          <label className="form-check-label">
                             Form Checkbox Right
                           </label>
                         </div>
@@ -444,7 +473,6 @@ const FormElements = () => {
                           <label
                             className="form-check-label"
                             htmlFor="customCheck2"
-
                           >
                             Form Checkbox Right checked
                           </label>
@@ -743,7 +771,8 @@ const FormElements = () => {
                           Form Radio colors
                         </h5>
                         <p className="sub-header mb-4">
-                          Add class <code>.form-radio-* </code> for a color Radios
+                          Add class <code>.form-radio-* </code> for a color
+                          Radios
                         </p>
 
                         <div>
@@ -832,7 +861,8 @@ const FormElements = () => {
                           Form Radio Outline
                         </h5>
                         <p className="sub-header mb-4">
-                          Add className <code>form-radio-outline</code> & <code>.form-radio-* </code> for a color Checkboxes
+                          Add className <code>form-radio-outline</code> &{" "}
+                          <code>.form-radio-* </code> for a color Checkboxes
                         </p>
 
                         <div>
@@ -926,16 +956,15 @@ const FormElements = () => {
                 <CardBody>
                   <CardTitle className="h4">Switches</CardTitle>
                   <p className="card-title-desc">
-                    A switch has the markup of a custom checkbox but uses the <code>.form-switch</code> class to render a toggle switch. Switches also support the <code>disabled</code> attribute.
+                    A switch has the markup of a custom checkbox but uses the{" "}
+                    <code>.form-switch</code> class to render a toggle switch.
+                    Switches also support the <code>disabled</code> attribute.
                   </p>
                   <Row>
                     <Col sm={6}>
                       <div>
                         <h5 className="font-size-14 mb-3">Switch examples</h5>
-                        <div
-                          className="form-check form-switch mb-3"
-
-                        >
+                        <div className="form-check form-switch mb-3">
                           <input
                             type="checkbox"
                             className="form-check-input"
@@ -944,12 +973,11 @@ const FormElements = () => {
                           <label
                             className="form-check-label"
                             htmlFor="customSwitch1"
-
                           >
                             Default switch checkbox input
                           </label>
                         </div>
-                        <div className="form-check form-switch mb-3" >
+                        <div className="form-check form-switch mb-3">
                           <input
                             type="checkbox"
                             className="form-check-input"
@@ -968,12 +996,33 @@ const FormElements = () => {
                         </div>
                       </div>
                       <div className="form-check form-switch mb-3">
-                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" disabled />
-                        <label className="form-check-label" htmlFor="flexSwitchCheckDisabled">Disabled switch checkbox input</label>
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDisabled"
+                          disabled
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexSwitchCheckDisabled"
+                        >
+                          Disabled switch checkbox input
+                        </label>
                       </div>
                       <div className="form-check form-switch">
-                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" checked disabled />
-                        <label className="form-check-label" htmlFor="flexSwitchCheckCheckedDisabled">Disabled checked switch checkbox input</label>
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckCheckedDisabled"
+                          checked
+                          disabled
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexSwitchCheckCheckedDisabled"
+                        >
+                          Disabled checked switch checkbox input
+                        </label>
                       </div>
                     </Col>
 
@@ -981,10 +1030,7 @@ const FormElements = () => {
                       <div className="mt-4 mt-lg-0">
                         <h5 className="font-size-14 mb-3">Switch sizes</h5>
 
-                        <div
-                          className="form-check form-switch mb-3"
-
-                        >
+                        <div className="form-check form-switch mb-3">
                           <input
                             type="checkbox"
                             className="form-check-input"
@@ -1008,10 +1054,7 @@ const FormElements = () => {
                           </label>
                         </div>
 
-                        <div
-                          className="form-check form-switch form-switch-md mb-3"
-
-                        >
+                        <div className="form-check form-switch form-switch-md mb-3">
                           <input
                             type="checkbox"
                             className="form-check-input"
@@ -1025,9 +1068,7 @@ const FormElements = () => {
                           </label>
                         </div>
 
-                        <div
-                          className="form-check form-switch form-switch-lg mb-3"
-                        >
+                        <div className="form-check form-switch form-switch-lg mb-3">
                           <input
                             type="checkbox"
                             className="form-check-input"
@@ -1049,19 +1090,26 @@ const FormElements = () => {
             </Col>
           </Row>
           <Row>
-
             <Col lg={12}>
               <Card>
                 <CardBody>
                   <CardTitle className="h4 mb-4">File browser</CardTitle>
                   <div>
-                    <h5 className="font-size-14"><i className="mdi mdi-arrow-right text-primary"></i> Default file input</h5>
+                    <h5 className="font-size-14">
+                      <i className="mdi mdi-arrow-right text-primary"></i>{" "}
+                      Default file input
+                    </h5>
                     <div className="row">
                       <Col sm={6}>
-
                         <div className="mt-3">
-                          <Label htmlFor="formFile" className="form-label">Default file input example</Label>
-                          <Input className="form-control" type="file" id="formFile" />
+                          <Label htmlFor="formFile" className="form-label">
+                            Default file input example
+                          </Label>
+                          <Input
+                            className="form-control"
+                            type="file"
+                            id="formFile"
+                          />
                         </div>
                       </Col>
                     </div>
@@ -1070,16 +1118,28 @@ const FormElements = () => {
                       <Col sm={6}>
                         <div className="mt-4">
                           <div>
-                            <Label htmlFor="formFileSm" className="form-label">Small file input example</Label>
-                            <Input className="form-control form-control-sm" id="formFileSm" type="file" />
+                            <Label htmlFor="formFileSm" className="form-label">
+                              Small file input example
+                            </Label>
+                            <Input
+                              className="form-control form-control-sm"
+                              id="formFileSm"
+                              type="file"
+                            />
                           </div>
                         </div>
                       </Col>
                       <Col sm={6}>
                         <div className="mt-4">
                           <div>
-                            <Label htmlFor="formFileLg" className="form-label">Large file input example</Label>
-                            <Input className="form-control form-control-lg" id="formFileLg" type="file" />
+                            <Label htmlFor="formFileLg" className="form-label">
+                              Large file input example
+                            </Label>
+                            <Input
+                              className="form-control form-control-lg"
+                              id="formFileLg"
+                              type="file"
+                            />
                           </div>
                         </div>
                       </Col>
@@ -1087,40 +1147,82 @@ const FormElements = () => {
                   </div>
 
                   <div className="mt-4 pt-2">
-                    <h5 className="font-size-14 mb-0"><i className="mdi mdi-arrow-right text-primary"></i> Custom file input</h5>
+                    <h5 className="font-size-14 mb-0">
+                      <i className="mdi mdi-arrow-right text-primary"></i>{" "}
+                      Custom file input
+                    </h5>
                   </div>
 
                   <Row>
                     <Col sm={6}>
                       <div className="mt-4">
-
                         <div>
                           <Label className="form-label">With Label</Label>
                           <div className="input-group mb-3">
-                            <Label className="input-group-text" htmlFor="inputGroupFile01">Upload</Label>
-                            <Input type="file" className="form-control" id="inputGroupFile01" />
+                            <Label
+                              className="input-group-text"
+                              htmlFor="inputGroupFile01"
+                            >
+                              Upload
+                            </Label>
+                            <Input
+                              type="file"
+                              className="form-control"
+                              id="inputGroupFile01"
+                            />
                           </div>
                           <div className="input-group">
-                            <Input type="file" className="form-control" id="inputGroupFile02" />
-                            <Label className="input-group-text" htmlFor="inputGroupFile02">Upload</Label>
+                            <Input
+                              type="file"
+                              className="form-control"
+                              id="inputGroupFile02"
+                            />
+                            <Label
+                              className="input-group-text"
+                              htmlFor="inputGroupFile02"
+                            >
+                              Upload
+                            </Label>
                           </div>
                         </div>
-
                       </div>
                     </Col>
 
                     <Col sm={6}>
                       <div className="mt-4">
-
                         <div>
                           <Label className="form-label">With Button</Label>
                           <div className="input-group mb-3">
-                            <button className="btn btn-primary" type="button" id="inputGroupFileAddon03">Button</button>
-                            <Input type="file" className="form-control" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" aria-label="Upload" />
+                            <button
+                              className="btn btn-primary"
+                              type="button"
+                              id="inputGroupFileAddon03"
+                            >
+                              Button
+                            </button>
+                            <Input
+                              type="file"
+                              className="form-control"
+                              id="inputGroupFile03"
+                              aria-describedby="inputGroupFileAddon03"
+                              aria-label="Upload"
+                            />
                           </div>
                           <div className="input-group">
-                            <Input type="file" className="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" />
-                            <button className="btn btn-primary" type="button" id="inputGroupFileAddon04">Button</button>
+                            <Input
+                              type="file"
+                              className="form-control"
+                              id="inputGroupFile04"
+                              aria-describedby="inputGroupFileAddon04"
+                              aria-label="Upload"
+                            />
+                            <button
+                              className="btn btn-primary"
+                              type="button"
+                              id="inputGroupFileAddon04"
+                            >
+                              Button
+                            </button>
                           </div>
                         </div>
                       </div>

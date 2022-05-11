@@ -23,25 +23,20 @@ import {
 import Loader from "../../components/Common/Loader"
 import BtnExporting from "../../components/Common/BtnExporting"
 import {
-  fetchTableView,
-  exportTableView,
-  deleteDropDownMenu,
-} from "../../services/dropdown-menu-service"
+  getUserLoginView,
+  exportUserLoginView,
+} from "../../services/user-login-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
 import Breadcrumbs from "components/Common/Breadcrumb"
 
-const DropDownMenuView = props => {
-  const [DropDownMenuViewMdl, setDropDownMenuViewMdl] = useState({})
+const UserLoginView = props => {
+  const [UserLoginViewMdl, setUserLoginViewMdl] = useState({})
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
-
-  const [modal, setModal] = useState(false)
-  const [modelData, setModelData] = useState({})
-  const [deleteModal, setDeleteModal] = useState(false)
 
   const start = useRef(0)
   const orderColumn = useRef({
@@ -51,24 +46,33 @@ const DropDownMenuView = props => {
   const length = useRef("10")
 
   const id = useRef("")
-  const causeCode = useRef("")
-  const rootCause = useRef("")
-  const correctiveAction = useRef("")
-  const qcstatus = useRef("")
-  const pdrstatusMenu = useRef("")
-  const pawstatusMenu = useRef("")
-  const pawrating = useRef("")
-  const pawAssessment = useRef("")
-  const ccrstatusMenu = useRef("")
-  const validity = useRef("")
-  const qctechs = useRef("")
-  const mptPar = useRef("")
-  const mptAsgnCode = useRef("")
-  const jaxPar = useRef("")
-  const pawunsat = useRef("")
-  const pawrootCause = useRef("")
-  const fmBldgManager = useRef("")
-  const estimators = useRef("")
+  const unique_id = useRef("")
+  const userFN = useRef("")
+  const userLN = useRef("")
+  const loginID = useRef("")
+  const password = useRef("")
+  const workSite = useRef("")
+  const accessLevel = useRef("")
+  const dbAccess = useRef("")
+  const readRecordsOnly = useRef("")
+  const editRecordsOnly = useRef("")
+  const adminRights = useRef("")
+  const resetPW = useRef("")
+  const addUsers = useRef("")
+  const deleteRecords = useRef("")
+  const addRecords = useRef("")
+  const securityQ1 = useRef("")
+  const securityQ1A = useRef("")
+  const securityQ2 = useRef("")
+  const securityQ2A = useRef("")
+  const securityQ3 = useRef("")
+  const securityQ3A = useRef("")
+  const dbMasterUnlock = useRef("")
+  const canImportFiles = useRef("")
+  const canChangeDBLocation = useRef("")
+  const canBackupDB = useRef("")
+  const activateAutoLogOut = useRef("")
+  const dbUpdateNotification = useRef("")
 
   useEffect(() => {
     loadView()
@@ -80,59 +84,86 @@ const DropDownMenuView = props => {
       case "id":
         id.current = value
         break
-      case "causeCode":
-        causeCode.current = value
+      case "unique_id":
+        unique_id.current = value
         break
-      case "rootCause":
-        rootCause.current = value
+      case "userFN":
+        userFN.current = value
         break
-      case "correctiveAction":
-        correctiveAction.current = value
+      case "userLN":
+        userLN.current = value
         break
-      case "qcstatus":
-        qcstatus.current = value
+      case "loginID":
+        loginID.current = value
         break
-      case "pdrstatusMenu":
-        pdrstatusMenu.current = value
+      case "password":
+        password.current = value
         break
-      case "pawstatusMenu":
-        pawstatusMenu.current = value
+      case "workSite":
+        workSite.current = value
         break
-      case "pawrating":
-        pawrating.current = value
+      case "accessLevel":
+        accessLevel.current = value
         break
-      case "pawAssessment":
-        pawAssessment.current = value
+      case "dbAccess":
+        dbAccess.current = value
         break
-      case "ccrstatusMenu":
-        ccrstatusMenu.current = value
+      case "readRecordsOnly":
+        readRecordsOnly.current = value
         break
-      case "validity":
-        validity.current = value
+      case "editRecordsOnly":
+        editRecordsOnly.current = value
         break
-      case "qctechs":
-        qctechs.current = value
+      case "adminRights":
+        adminRights.current = value
         break
-      case "mptPar":
-        mptPar.current = value
+      case "resetPW":
+        resetPW.current = value
         break
-      case "mptAsgnCode":
-        mptAsgnCode.current = value
+      case "addUsers":
+        addUsers.current = value
         break
-      case "jaxPar":
-        jaxPar.current = value
+      case "deleteRecords":
+        deleteRecords.current = value
         break
-      case "pawunsat":
-        pawunsat.current = value
+      case "addRecords":
+        addRecords.current = value
         break
-      case "pawrootCause":
-        pawrootCause.current = value
+      case "securityQ1":
+        securityQ1.current = value
         break
-      case "fmBldgManager":
-        fmBldgManager.current = value
+      case "securityQ1A":
+        securityQ1A.current = value
         break
-      case "estimators":
-        estimators.current = value
+      case "securityQ2":
+        securityQ2.current = value
+        break
+      case "securityQ2A":
+        securityQ2A.current = value
+        break
+      case "securityQ3":
+        securityQ3.current = value
+        break
+      case "securityQ3A":
+        securityQ3A.current = value
+        break
+      case "dbMasterUnlock":
+        dbMasterUnlock.current = value
+        break
+      case "canImportFiles":
+        canImportFiles.current = value
+        break
+      case "canChangeDBLocation":
+        canChangeDBLocation.current = value
+        break
+      case "canBackupDB":
+        canBackupDB.current = value
+        break
+      case "activateAutoLogOut":
+        activateAutoLogOut.current = value
+        break
+      case "dbUpdateNotification":
+        dbUpdateNotification.current = value
         break
       default:
         break
@@ -148,31 +179,46 @@ const DropDownMenuView = props => {
       search: {},
       searches: [
         { search_by: "id", value: id.current },
-        { search_by: "causeCode", value: causeCode.current },
-        { search_by: "rootCause", value: rootCause.current },
-        { search_by: "correctiveAction", value: correctiveAction.current },
-        { search_by: "qcstatus", value: qcstatus.current },
-        { search_by: "pdrstatusMenu", value: pdrstatusMenu.current },
-        { search_by: "pawstatusMenu", value: pawstatusMenu.current },
-        { search_by: "pawrating", value: pawrating.current },
-        { search_by: "pawAssessment", value: pawAssessment.current },
-        { search_by: "ccrstatusMenu", value: ccrstatusMenu.current },
-        { search_by: "validity", value: validity.current },
-        { search_by: "qctechs", value: qctechs.current },
-        { search_by: "mptPar", value: mptPar.current },
-        { search_by: "mptAsgnCode", value: mptAsgnCode.current },
-        { search_by: "jaxPar", value: jaxPar.current },
-        { search_by: "pawunsat", value: pawunsat.current },
-        { search_by: "pawrootCause", value: pawrootCause.current },
-        { search_by: "fmBldgManager", value: fmBldgManager.current },
-        { search_by: "estimators", value: estimators.current },
+        { search_by: "unique_id", value: unique_id.current },
+        { search_by: "userFN", value: userFN.current },
+        { search_by: "userLN", value: userLN.current },
+        { search_by: "loginID", value: loginID.current },
+        { search_by: "password", value: password.current },
+        { search_by: "workSite", value: workSite.current },
+        { search_by: "accessLevel", value: accessLevel.current },
+        { search_by: "dbAccess", value: dbAccess.current },
+        { search_by: "readRecordsOnly", value: readRecordsOnly.current },
+        { search_by: "editRecordsOnly", value: editRecordsOnly.current },
+        { search_by: "adminRights", value: adminRights.current },
+        { search_by: "resetPW", value: resetPW.current },
+        { search_by: "addUsers", value: addUsers.current },
+        { search_by: "deleteRecords", value: deleteRecords.current },
+        { search_by: "addRecords", value: addRecords.current },
+        { search_by: "securityQ1", value: securityQ1.current },
+        { search_by: "securityQ1A", value: securityQ1A.current },
+        { search_by: "securityQ2", value: securityQ2.current },
+        { search_by: "securityQ2A", value: securityQ2A.current },
+        { search_by: "securityQ3", value: securityQ3.current },
+        { search_by: "securityQ3A", value: securityQ3A.current },
+        { search_by: "dbMasterUnlock", value: dbMasterUnlock.current },
+        { search_by: "canImportFiles", value: canImportFiles.current },
+        {
+          search_by: "canChangeDBLocation",
+          value: canChangeDBLocation.current,
+        },
+        { search_by: "canBackupDB", value: canBackupDB.current },
+        { search_by: "activateAutoLogOut", value: activateAutoLogOut.current },
+        {
+          search_by: "dbUpdateNotification",
+          value: dbUpdateNotification.current,
+        },
       ],
     }
 
     setIsFetching(true)
-    fetchTableView(preparePostData)
+    getUserLoginView(preparePostData)
       .then(res => {
-        setDropDownMenuViewMdl(res.data)
+        setUserLoginViewMdl(res.data)
         if (res.data.data.length <= 0) {
           setIsFetching(false)
           toastr.warning("No data found", "NINETRAX")
@@ -207,29 +253,44 @@ const DropDownMenuView = props => {
       search: {},
       searches: [
         { search_by: "id", value: id.current },
-        { search_by: "causeCode", value: causeCode.current },
-        { search_by: "rootCause", value: rootCause.current },
-        { search_by: "correctiveAction", value: correctiveAction.current },
-        { search_by: "qcstatus", value: qcstatus.current },
-        { search_by: "pdrstatusMenu", value: pdrstatusMenu.current },
-        { search_by: "pawstatusMenu", value: pawstatusMenu.current },
-        { search_by: "pawrating", value: pawrating.current },
-        { search_by: "pawAssessment", value: pawAssessment.current },
-        { search_by: "ccrstatusMenu", value: ccrstatusMenu.current },
-        { search_by: "validity", value: validity.current },
-        { search_by: "qctechs", value: qctechs.current },
-        { search_by: "mptPar", value: mptPar.current },
-        { search_by: "mptAsgnCode", value: mptAsgnCode.current },
-        { search_by: "jaxPar", value: jaxPar.current },
-        { search_by: "pawunsat", value: pawunsat.current },
-        { search_by: "pawrootCause", value: pawrootCause.current },
-        { search_by: "fmBldgManager", value: fmBldgManager.current },
-        { search_by: "estimators", value: estimators.current },
+        { search_by: "unique_id", value: unique_id.current },
+        { search_by: "userFN", value: userFN.current },
+        { search_by: "userLN", value: userLN.current },
+        { search_by: "loginID", value: loginID.current },
+        { search_by: "password", value: password.current },
+        { search_by: "workSite", value: workSite.current },
+        { search_by: "accessLevel", value: accessLevel.current },
+        { search_by: "dbAccess", value: dbAccess.current },
+        { search_by: "readRecordsOnly", value: readRecordsOnly.current },
+        { search_by: "editRecordsOnly", value: editRecordsOnly.current },
+        { search_by: "adminRights", value: adminRights.current },
+        { search_by: "resetPW", value: resetPW.current },
+        { search_by: "addUsers", value: addUsers.current },
+        { search_by: "deleteRecords", value: deleteRecords.current },
+        { search_by: "addRecords", value: addRecords.current },
+        { search_by: "securityQ1", value: securityQ1.current },
+        { search_by: "securityQ1A", value: securityQ1A.current },
+        { search_by: "securityQ2", value: securityQ2.current },
+        { search_by: "securityQ2A", value: securityQ2A.current },
+        { search_by: "securityQ3", value: securityQ3.current },
+        { search_by: "securityQ3A", value: securityQ3A.current },
+        { search_by: "dbMasterUnlock", value: dbMasterUnlock.current },
+        { search_by: "canImportFiles", value: canImportFiles.current },
+        {
+          search_by: "canChangeDBLocation",
+          value: canChangeDBLocation.current,
+        },
+        { search_by: "canBackupDB", value: canBackupDB.current },
+        { search_by: "activateAutoLogOut", value: activateAutoLogOut.current },
+        {
+          search_by: "dbUpdateNotification",
+          value: dbUpdateNotification.current,
+        },
       ],
     }
 
     setIsExporting(true)
-    exportTableView(preparePostData)
+    exportUserLoginView(preparePostData)
       .then(res => {
         let downloadLink = document.createElement("a")
         downloadLink.href = window.URL.createObjectURL(
@@ -238,7 +299,7 @@ const DropDownMenuView = props => {
           })
         )
 
-        downloadLink.setAttribute("download", "DropDownMenuView.xlsx")
+        downloadLink.setAttribute("download", "UserLoginView.xlsx")
         document.body.appendChild(downloadLink)
         downloadLink.click()
 
@@ -263,53 +324,15 @@ const DropDownMenuView = props => {
     loadView()
   }
 
-  const onNewClick = () => {
-    setModal(true)
-    setModelData(null)
-  }
-
-  const onEditClick = item => {
-    setModal(true)
-    setModelData(item)
-    console.log("edit items: ", item)
-  }
-
-  const onAttemptDelete = id => {
-    if (id > 0) {
-      setDeleteModal(true)
-      setModelData({ id: id })
-    }
-  }
-
-  const onDeleteConfirmed = () => {
-    if (modelData.id > 0) {
-      deleteDropDownMenu(modelData.id)
-        .then(res => {
-          if (res.data) {
-            toastr.success("Selected item successfully deleted.", "NINETRAX")
-            setDeleteModal(false)
-            loadView()
-          } else {
-            toastr.warning("Selected item failed to delete.", "NINETRAX")
-          }
-        })
-        .catch(error => {
-          toastr.error("Failed to process data.", "NINETRAX")
-        })
-    } else {
-      toastr.error("Can't process request.", "NINETRAX")
-    }
-  }
-
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>DropDown Menu View | NINETRAX | QC Management</title>
+          <title>UserLoginView | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
-          <Breadcrumbs title="DropDown Menu" breadcrumbItem="DropDown Menu" />
+          <Breadcrumbs title="UserLoginView" breadcrumbItem="UserLoginView" />
 
           <Row>
             <Col xs="12">
@@ -352,14 +375,6 @@ const DropDownMenuView = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary w-xs"
-                        onClick={onNewClick}
-                      >
-                        <i className="bx bx-plus"></i> New
-                      </button>
-
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
@@ -382,7 +397,7 @@ const DropDownMenuView = props => {
                       >
                         <thead>
                           <tr>
-                            {/* <th
+                            <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("id")}
                             >
@@ -396,282 +411,429 @@ const DropDownMenuView = props => {
                                 }
                               ></i>{" "}
                               id
-                            </th> */}
+                            </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("causeCode")}
+                              onClick={() => onOrderByClick("unique_id")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "causeCode"
+                                  orderColumn.current.column === "unique_id"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Cause Code
+                              unique_id
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("rootCause")}
+                              onClick={() => onOrderByClick("userFN")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "rootCause"
+                                  orderColumn.current.column === "userFN"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Root Cause
+                              userFN
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("correctiveAction")}
+                              onClick={() => onOrderByClick("userLN")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "userLN"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              userLN
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("loginID")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "loginID"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              loginID
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("password")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "password"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              password
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("workSite")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "workSite"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              workSite
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("accessLevel")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "accessLevel"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              accessLevel
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("dbAccess")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "dbAccess"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              dbAccess
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("readRecordsOnly")}
                             >
                               <i
                                 className={
                                   orderColumn.current.column ===
-                                  "correctiveAction"
+                                  "readRecordsOnly"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Corrective Action
+                              readRecordsOnly
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("qcstatus")}
+                              onClick={() => onOrderByClick("editRecordsOnly")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "qcstatus"
+                                  orderColumn.current.column ===
+                                  "editRecordsOnly"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              QC Status
+                              editRecordsOnly
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("pdrstatusMenu")}
+                              onClick={() => onOrderByClick("adminRights")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "pdrstatusMenu"
+                                  orderColumn.current.column === "adminRights"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              PDR Status Menu
+                              adminRights
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("pawstatusMenu")}
+                              onClick={() => onOrderByClick("resetPW")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "pawstatusMenu"
+                                  orderColumn.current.column === "resetPW"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              PAW Status Menu
+                              resetPW
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("pawrating")}
+                              onClick={() => onOrderByClick("addUsers")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "pawrating"
+                                  orderColumn.current.column === "addUsers"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              PAW Rating
+                              addUsers
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("pawAssessment")}
+                              onClick={() => onOrderByClick("deleteRecords")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "pawAssessment"
+                                  orderColumn.current.column === "deleteRecords"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              PAW Assessment
+                              deleteRecords
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("ccrstatusMenu")}
+                              onClick={() => onOrderByClick("addRecords")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "ccrstatusMenu"
+                                  orderColumn.current.column === "addRecords"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              CCR Status Menu
+                              addRecords
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("validity")}
+                              onClick={() => onOrderByClick("securityQ1")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "validity"
+                                  orderColumn.current.column === "securityQ1"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Validity
+                              securityQ1
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("qctechs")}
+                              onClick={() => onOrderByClick("securityQ1A")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "qctechs"
+                                  orderColumn.current.column === "securityQ1A"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              QC Techs
+                              securityQ1A
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("mptPar")}
+                              onClick={() => onOrderByClick("securityQ2")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "mptPar"
+                                  orderColumn.current.column === "securityQ2"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              MPT PAR
+                              securityQ2
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("mptAsgnCode")}
+                              onClick={() => onOrderByClick("securityQ2A")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "mptAsgnCode"
+                                  orderColumn.current.column === "securityQ2A"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              MPT Assign Code
+                              securityQ2A
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("jaxPar")}
+                              onClick={() => onOrderByClick("securityQ3")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "jaxPar"
+                                  orderColumn.current.column === "securityQ3"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              JAX PAR
+                              securityQ3
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("pawunsat")}
+                              onClick={() => onOrderByClick("securityQ3A")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "pawunsat"
+                                  orderColumn.current.column === "securityQ3A"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              PAW unsat
+                              securityQ3A
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("pawrootCause")}
+                              onClick={() => onOrderByClick("dbMasterUnlock")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "pawrootCause"
+                                  orderColumn.current.column ===
+                                  "dbMasterUnlock"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              PAW Root Cause
+                              dbMasterUnlock
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("fmBldgManager")}
+                              onClick={() => onOrderByClick("canImportFiles")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "fmBldgManager"
+                                  orderColumn.current.column ===
+                                  "canImportFiles"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              FM Building Manager
+                              canImportFiles
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("estimators")}
+                              onClick={() =>
+                                onOrderByClick("canChangeDBLocation")
+                              }
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "estimators"
+                                  orderColumn.current.column ===
+                                  "canChangeDBLocation"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Estimators
+                              canChangeDBLocation
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() => onOrderByClick("canBackupDB")}
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column === "canBackupDB"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              canBackupDB
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() =>
+                                onOrderByClick("activateAutoLogOut")
+                              }
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column ===
+                                  "activateAutoLogOut"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              activateAutoLogOut
+                            </th>
+                            <th
+                              className="custom-pointer"
+                              onClick={() =>
+                                onOrderByClick("dbUpdateNotification")
+                              }
+                            >
+                              <i
+                                className={
+                                  orderColumn.current.column ===
+                                  "dbUpdateNotification"
+                                    ? orderColumn.current.order_by === "DESC"
+                                      ? "fa fa-sort-amount-down"
+                                      : "fa fa-sort-amount-up"
+                                    : ""
+                                }
+                              ></i>{" "}
+                              dbUpdateNotification
                             </th>
                             <th></th>
                           </tr>
                           <tr>
-                            {/* <th>
+                            <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
@@ -684,18 +846,18 @@ const DropDownMenuView = props => {
                                 }
                                 onKeyUp={onPressEnter}
                               />
-                            </th> */}
+                            </th>
                             <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Cause Code"
-                                name="scauseCode"
-                                id="scauseCode"
+                                placeholder="unique_id"
+                                name="sunique_id"
+                                id="sunique_id"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "causeCode",
+                                    "unique_id",
                                     e.target.value
                                   )
                                 }
@@ -707,12 +869,40 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Root Cause"
-                                name="srootCause"
-                                id="srootCause"
+                                placeholder="userFN"
+                                name="suserFN"
+                                id="suserFN"
+                                onChange={e =>
+                                  onUpdateSearchFilter("userFN", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="userLN"
+                                name="suserLN"
+                                id="suserLN"
+                                onChange={e =>
+                                  onUpdateSearchFilter("userLN", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="loginID"
+                                name="sloginID"
+                                id="sloginID"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "rootCause",
+                                    "loginID",
                                     e.target.value
                                   )
                                 }
@@ -724,12 +914,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Corrective Action"
-                                name="scorrectiveAction"
-                                id="scorrectiveAction"
+                                placeholder="password"
+                                name="spassword"
+                                id="spassword"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "correctiveAction",
+                                    "password",
                                     e.target.value
                                   )
                                 }
@@ -741,12 +931,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="QC Status"
-                                name="sqcstatus"
-                                id="sqcstatus"
+                                placeholder="workSite"
+                                name="sworkSite"
+                                id="sworkSite"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "qcstatus",
+                                    "workSite",
                                     e.target.value
                                   )
                                 }
@@ -758,12 +948,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="PDR Status Menu"
-                                name="spdrstatusMenu"
-                                id="spdrstatusMenu"
+                                placeholder="accessLevel"
+                                name="saccessLevel"
+                                id="saccessLevel"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "pdrstatusMenu",
+                                    "accessLevel",
                                     e.target.value
                                   )
                                 }
@@ -775,12 +965,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="PAW Status Menu"
-                                name="spawstatusMenu"
-                                id="spawstatusMenu"
+                                placeholder="adminRights"
+                                name="sadminRights"
+                                id="sadminRights"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "pawstatusMenu",
+                                    "adminRights",
                                     e.target.value
                                   )
                                 }
@@ -792,12 +982,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="PAW Rating"
-                                name="spawrating"
-                                id="spawrating"
+                                placeholder="resetPW"
+                                name="sresetPW"
+                                id="sresetPW"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "pawrating",
+                                    "resetPW",
                                     e.target.value
                                   )
                                 }
@@ -809,12 +999,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="PAW Assessment"
-                                name="spawAssessment"
-                                id="spawAssessment"
+                                placeholder="securityQ1"
+                                name="ssecurityQ1"
+                                id="ssecurityQ1"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "pawAssessment",
+                                    "securityQ1",
                                     e.target.value
                                   )
                                 }
@@ -826,12 +1016,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="CCR Status Menu"
-                                name="sccrstatusMenu"
-                                id="sccrstatusMenu"
+                                placeholder="securityQ1A"
+                                name="ssecurityQ1A"
+                                id="ssecurityQ1A"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "ccrstatusMenu",
+                                    "securityQ1A",
                                     e.target.value
                                   )
                                 }
@@ -843,12 +1033,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Validity"
-                                name="svalidity"
-                                id="svalidity"
+                                placeholder="securityQ2"
+                                name="ssecurityQ2"
+                                id="ssecurityQ2"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "validity",
+                                    "securityQ2",
                                     e.target.value
                                   )
                                 }
@@ -860,12 +1050,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="QC Techs"
-                                name="sqctechs"
-                                id="sqctechs"
+                                placeholder="securityQ2A"
+                                name="ssecurityQ2A"
+                                id="ssecurityQ2A"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "qctechs",
+                                    "securityQ2A",
                                     e.target.value
                                   )
                                 }
@@ -877,26 +1067,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="MPT PAR"
-                                name="smptPar"
-                                id="smptPar"
-                                onChange={e =>
-                                  onUpdateSearchFilter("mptPar", e.target.value)
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="MPT Asgn Code"
-                                name="smptAsgnCode"
-                                id="smptAsgnCode"
+                                placeholder="securityQ3"
+                                name="ssecurityQ3"
+                                id="ssecurityQ3"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "mptAsgnCode",
+                                    "securityQ3",
                                     e.target.value
                                   )
                                 }
@@ -908,80 +1084,12 @@ const DropDownMenuView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="jaxPar"
-                                name="sjaxPar"
-                                id="sjaxPar"
+                                placeholder="securityQ3A"
+                                name="ssecurityQ3A"
+                                id="ssecurityQ3A"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "JAX PAR",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="PAW unsat"
-                                name="spawunsat"
-                                id="spawunsat"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "pawunsat",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="PAW Root Cause"
-                                name="spawrootCause"
-                                id="spawrootCause"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "pawrootCause",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Building Manager"
-                                name="sfmBldgManager"
-                                id="sfmBldgManager"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "fmBldgManager",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Estimators"
-                                name="sestimators"
-                                id="sestimators"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "estimators",
+                                    "securityQ3A",
                                     e.target.value
                                   )
                                 }
@@ -1000,29 +1108,26 @@ const DropDownMenuView = props => {
                             </tr>
                           ) : null}
 
-                          {DropDownMenuViewMdl.data &&
-                            DropDownMenuViewMdl.data.map((item, index) => {
+                          {UserLoginViewMdl.data &&
+                            UserLoginViewMdl.data.map((item, index) => {
                               return (
                                 <tr key={index}>
-                                  {/* <td>{item.id}</td> */}
-                                  <td>{item.causeCode}</td>
-                                  <td>{item.rootCause}</td>
-                                  <td>{item.correctiveAction}</td>
-                                  <td>{item.qcstatus}</td>
-                                  <td>{item.pdrstatusMenu}</td>
-                                  <td>{item.pawstatusMenu}</td>
-                                  <td>{item.pawrating}</td>
-                                  <td>{item.pawAssessment}</td>
-                                  <td>{item.ccrstatusMenu}</td>
-                                  <td>{item.validity}</td>
-                                  <td>{item.qctechs}</td>
-                                  <td>{item.mptPar}</td>
-                                  <td>{item.mptAsgnCode}</td>
-                                  <td>{item.jaxPar}</td>
-                                  <td>{item.pawunsat}</td>
-                                  <td>{item.pawrootCause}</td>
-                                  <td>{item.fmBldgManager}</td>
-                                  <td>{item.estimators}</td>
+                                  <td>{item.id}</td>
+                                  <td>{item.unique_id}</td>
+                                  <td>{item.userFN}</td>
+                                  <td>{item.userLN}</td>
+                                  <td>{item.loginID}</td>
+                                  <td>{item.password}</td>
+                                  <td>{item.workSite}</td>
+                                  <td>{item.accessLevel}</td>
+                                  <td>{item.adminRights}</td>
+                                  <td>{item.resetPW}</td>
+                                  <td>{item.securityQ1}</td>
+                                  <td>{item.securityQ1A}</td>
+                                  <td>{item.securityQ2}</td>
+                                  <td>{item.securityQ2A}</td>
+                                  <td>{item.securityQ3}</td>
+                                  <td>{item.securityQ3A}</td>
 
                                   <td>
                                     {/* <button
@@ -1048,8 +1153,8 @@ const DropDownMenuView = props => {
                               )
                             })}
 
-                          {DropDownMenuViewMdl.data &&
-                            DropDownMenuViewMdl.data.length === 0 && (
+                          {UserLoginViewMdl.data &&
+                            UserLoginViewMdl.data.length === 0 && (
                               <tr>
                                 <td
                                   colSpan="100%"
@@ -1079,7 +1184,7 @@ const DropDownMenuView = props => {
                           breakClassName={"page-item"}
                           breakLinkClassName={"page-link"}
                           pageCount={Math.floor(
-                            DropDownMenuViewMdl.totalRecords / +length.current
+                            UserLoginViewMdl.totalRecords / +length.current
                           )}
                           marginPagesDisplayed={2}
                           pageRangeDisplayed={3}
@@ -1097,7 +1202,7 @@ const DropDownMenuView = props => {
                     </Col>
                     <Col className="p-0 mt-2" xs={6} md={4}>
                       <div className="mt-2 float-end">
-                        Total Records: {DropDownMenuViewMdl.totalRecords}
+                        Total Records: {UserLoginViewMdl.totalRecords}
                       </div>
                     </Col>
                   </Row>
@@ -1117,4 +1222,4 @@ const DropDownMenuView = props => {
   )
 }
 
-export default DropDownMenuView
+export default UserLoginView
