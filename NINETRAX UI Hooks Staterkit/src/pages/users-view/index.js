@@ -22,15 +22,22 @@ import {
 } from "reactstrap"
 import Loader from "../../components/Common/Loader"
 import BtnExporting from "../../components/Common/BtnExporting"
-import { getUsersView, exportUsersView } from "../../services/users-service"
+import {
+  getUsersView,
+  exportUsersView,
+  deleteUser,
+} from "../../services/users-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
-
+import UsersAddUpdate from "./add-update"
+import DeleteModal from "../../components/Common/DeleteModal"
 import Breadcrumbs from "components/Common/Breadcrumb"
 
 const UsersView = props => {
   const [UsersViewMdl, setUsersViewMdl] = useState({})
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
-
+  const [modal, setModal] = useState(false)
+  const [modelData, setModelData] = useState({})
+  const [deleteModal, setDeleteModal] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
@@ -320,16 +327,52 @@ const UsersView = props => {
     }
     loadView()
   }
+  const onNewClick = () => {
+    setModal(true)
+    setModelData(null)
+  }
+
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+  }
+
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteUser(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
 
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>UsersView | NINETRAX | QC Management</title>
+          <title>User Settings | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
-          <Breadcrumbs title="UsersView" breadcrumbItem="UsersView" />
+          <Breadcrumbs title="User Settings" breadcrumbItem="User Settings" />
 
           <Row>
             <Col xs="12">
@@ -372,7 +415,15 @@ const UsersView = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
-                      {isExporting === true ? (
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
+
+                      {/* {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
                         <button
@@ -382,7 +433,7 @@ const UsersView = props => {
                         >
                           <i className="bx bx-file"></i> Export
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
 
@@ -394,7 +445,7 @@ const UsersView = props => {
                       >
                         <thead>
                           <tr>
-                            <th
+                            {/* <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("id")}
                             >
@@ -408,7 +459,7 @@ const UsersView = props => {
                                 }
                               ></i>{" "}
                               id
-                            </th>
+                            </th> */}
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("firstName")}
@@ -422,7 +473,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              firstName
+                              First Name
                             </th>
                             <th
                               className="custom-pointer"
@@ -437,7 +488,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              lastName
+                              Last Name
                             </th>
                             <th
                               className="custom-pointer"
@@ -452,7 +503,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              fullName
+                              Full Name
                             </th>
                             <th
                               className="custom-pointer"
@@ -467,7 +518,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              uniqueId
+                              Unique Id
                             </th>
                             <th
                               className="custom-pointer"
@@ -485,7 +536,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              qualityInspectors
+                              Quality Inspectors
                             </th>
                             <th
                               className="custom-pointer"
@@ -503,7 +554,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              assosicateInspectors
+                              Assosicate Inspectors
                             </th>
                             <th
                               className="custom-pointer"
@@ -521,7 +572,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              planEstimateInspectors
+                              Llan Estimate Inspectors
                             </th>
                             <th
                               className="custom-pointer"
@@ -539,7 +590,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              customerInspectors
+                              Customer Inspectors
                             </th>
                             <th
                               className="custom-pointer"
@@ -554,7 +605,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              aor
+                              AOR
                             </th>
                             <th
                               className="custom-pointer"
@@ -569,7 +620,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              positionTitle
+                              Position Title
                             </th>
                             <th
                               className="custom-pointer"
@@ -584,7 +635,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              email
+                              Email
                             </th>
                             <th
                               className="custom-pointer"
@@ -599,7 +650,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              accessType
+                              Access Type
                             </th>
                             <th
                               className="custom-pointer"
@@ -614,7 +665,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              activeStatus
+                              Active Status
                             </th>
                             <th
                               className="custom-pointer"
@@ -630,7 +681,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              fullAdminRights
+                              Full Admin Rights
                             </th>
                             <th
                               className="custom-pointer"
@@ -645,7 +696,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              editRights
+                              Edit Rights
                             </th>
                             <th
                               className="custom-pointer"
@@ -660,7 +711,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              deleteRights
+                              Delete Rights
                             </th>
                             <th
                               className="custom-pointer"
@@ -675,7 +726,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              viewRights
+                              View Rights
                             </th>
                             <th
                               className="custom-pointer"
@@ -690,7 +741,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              importRights
+                              Import Rights
                             </th>
                             <th
                               className="custom-pointer"
@@ -708,7 +759,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              activateAutologout
+                              Activate Auto logout
                             </th>
                             <th
                               className="custom-pointer"
@@ -723,37 +774,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              loginId
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("password")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "password"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              password
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("resetPassword")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "resetPassword"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              resetPassword
+                              Login Id
                             </th>
                             <th
                               className="custom-pointer"
@@ -769,7 +790,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              securityQuesOne
+                              Security Question 01
                             </th>
                             <th
                               className="custom-pointer"
@@ -785,7 +806,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              securityAnsOne
+                              Security Answer 01
                             </th>
                             <th
                               className="custom-pointer"
@@ -803,7 +824,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              dateAccessGranted
+                              Date Access Granted
                             </th>
                             <th
                               className="custom-pointer"
@@ -821,7 +842,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              dateAccessRemoved
+                              Date Access Removed
                             </th>
                             <th
                               className="custom-pointer"
@@ -836,12 +857,12 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              comments
+                              Comments
                             </th>
                             <th></th>
                           </tr>
                           <tr>
-                            <th>
+                            {/* <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
@@ -854,13 +875,13 @@ const UsersView = props => {
                                 }
                                 onKeyUp={onPressEnter}
                               />
-                            </th>
+                            </th> */}
                             <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="firstName"
+                                placeholder="First Name"
                                 name="sfirstName"
                                 id="sfirstName"
                                 onChange={e =>
@@ -877,7 +898,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="lastName"
+                                placeholder="Last Name"
                                 name="slastName"
                                 id="slastName"
                                 onChange={e =>
@@ -894,7 +915,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="fullName"
+                                placeholder="Full Name"
                                 name="sfullName"
                                 id="sfullName"
                                 onChange={e =>
@@ -911,7 +932,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="uniqueId"
+                                placeholder="UniqueId"
                                 name="suniqueId"
                                 id="suniqueId"
                                 onChange={e =>
@@ -928,7 +949,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="aor"
+                                placeholder="AOR"
                                 name="saor"
                                 id="saor"
                                 onChange={e =>
@@ -942,7 +963,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="positionTitle"
+                                placeholder="Position Title"
                                 name="spositionTitle"
                                 id="spositionTitle"
                                 onChange={e =>
@@ -959,7 +980,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="email"
+                                placeholder="Email"
                                 name="semail"
                                 id="semail"
                                 onChange={e =>
@@ -973,7 +994,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="accessType"
+                                placeholder="Access Type"
                                 name="saccessType"
                                 id="saccessType"
                                 onChange={e =>
@@ -990,7 +1011,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="loginId"
+                                placeholder="LoginId"
                                 name="sloginId"
                                 id="sloginId"
                                 onChange={e =>
@@ -1002,29 +1023,13 @@ const UsersView = props => {
                                 onKeyUp={onPressEnter}
                               />
                             </th>
+
                             <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="password"
-                                name="spassword"
-                                id="spassword"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "password",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="securityQuesOne"
+                                placeholder="Security Question 01"
                                 name="ssecurityQuesOne"
                                 id="ssecurityQuesOne"
                                 onChange={e =>
@@ -1041,7 +1046,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="securityAnsOne"
+                                placeholder="Security Answer 01"
                                 name="ssecurityAnsOne"
                                 id="ssecurityAnsOne"
                                 onChange={e =>
@@ -1058,7 +1063,7 @@ const UsersView = props => {
                               <input
                                 type="date"
                                 style={{ width: "140px" }}
-                                placeholder="dateAccessGranted"
+                                placeholder="DateAccessGranted"
                                 name="sdateAccessGranted"
                                 id="sdateAccessGranted"
                                 pattern="\d{4}-\d{2}-\d{2}"
@@ -1094,7 +1099,7 @@ const UsersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="comments"
+                                placeholder="Comments"
                                 name="scomments"
                                 id="scomments"
                                 onChange={e =>
@@ -1122,7 +1127,7 @@ const UsersView = props => {
                             UsersViewMdl.data.map((item, index) => {
                               return (
                                 <tr key={index}>
-                                  <td>{item.id}</td>
+                                  {/* <td>{item.id}</td> */}
                                   <td>{item.firstName}</td>
                                   <td>{item.lastName}</td>
                                   <td>{item.fullName}</td>
@@ -1132,7 +1137,7 @@ const UsersView = props => {
                                   <td>{item.email}</td>
                                   <td>{item.accessType}</td>
                                   <td>{item.loginId}</td>
-                                  <td>{item.password}</td>
+                                  {/* <td>{item.password}</td> */}
                                   <td>{item.securityQuesOne}</td>
                                   <td>{item.securityAnsOne}</td>
                                   <td>
@@ -1152,24 +1157,25 @@ const UsersView = props => {
                                   <td>{item.comments}</td>
 
                                   <td>
-                                    {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={() => onAttemptDelete(item.id)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button>
                                   </td>
                                 </tr>
                               )
@@ -1228,11 +1234,26 @@ const UsersView = props => {
                     </Col>
                   </Row>
 
-                  {/* <DeleteModal
+                  <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <UsersAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />
                 </CardBody>
               </Card>
             </Col>

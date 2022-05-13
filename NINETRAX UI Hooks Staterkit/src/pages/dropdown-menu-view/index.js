@@ -5,6 +5,8 @@ import * as moment from "moment"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import "../../assets/scss/custom/_common.scss"
+import DropDownMenuAddUpdate from "./add-update"
+import DeleteModal from "../../components/Common/DeleteModal"
 
 import {
   Button,
@@ -271,7 +273,6 @@ const DropDownMenuView = props => {
   const onEditClick = item => {
     setModal(true)
     setModelData(item)
-    console.log("edit items: ", item)
   }
 
   const onAttemptDelete = id => {
@@ -360,7 +361,7 @@ const DropDownMenuView = props => {
                         <i className="bx bx-plus"></i> New
                       </button>
 
-                      {isExporting === true ? (
+                      {/* {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
                         <button
@@ -370,7 +371,7 @@ const DropDownMenuView = props => {
                         >
                           <i className="bx bx-file"></i> Export
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
 
@@ -1025,24 +1026,25 @@ const DropDownMenuView = props => {
                                   <td>{item.estimators}</td>
 
                                   <td>
-                                    {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={() => onAttemptDelete(item.id)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button>
                                   </td>
                                 </tr>
                               )
@@ -1102,11 +1104,26 @@ const DropDownMenuView = props => {
                     </Col>
                   </Row>
 
-                  {/* <DeleteModal
+                  <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <DropDownMenuAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />
                 </CardBody>
               </Card>
             </Col>

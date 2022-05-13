@@ -186,3 +186,142 @@ comments: string;
 #SELECT * FROM UserLoginView
 #select * from MenuNamingConventionView
 #SELECT * FROM UsersView
+
+import DirectoryNamesAddUpdate from "./add-update"
+import DeleteModal from "../../components/Common/DeleteModal"
+
+  /////
+  const [modal, setModal] = useState(false)
+  const [modelData, setModelData] = useState({})
+  const [deleteModal, setDeleteModal] = useState(false)
+  /////
+  
+  const onNewClick = () => {
+    setModal(true)
+    setModelData(null)
+  }
+
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+  }
+
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteDirectoryNames(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
+
+////////////
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
+					  
+////////
+
+            <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={() => onAttemptDelete(item.id)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button>
+									
+				 <DeleteModal
+                    show={deleteModal}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <DirectoryNamesAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />					
+
+
+
+<Row>
+        <Col className="col-md-6 col-sm-12"></Col>
+		<Col className="col-md-6 col-sm-12"></Col>
+</Row>
+
+
+
+
+
+	#if($attribute.type == "Boolean")
+    modelData && modelData?.$attribute.name != null
+      ? set_$attribute.name(modelData?.$attribute.name)
+      : set_$attribute.name(false)
+	#end
+	
+		#if($attribute.type == "Boolean")
+  const [$attribute.name, set_$attribute.name] = useState(false)
+	#end
+	
+		#if($attribute.type == "Boolean")
+                <div className="mb-3">
+                <div className="form-check form-check-end">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="chk$attribute.name"
+                    defaultChecked={$attribute.name}
+                    onChange={e => {
+                      set_$attribute.name(e.target.checked)
+                    }}
+                  />
+                  <label className="form-check-label" htmlFor="chk$attribute.name">
+                    $attribute.name
+                  </label>
+                </div>
+                </div>
+	#end

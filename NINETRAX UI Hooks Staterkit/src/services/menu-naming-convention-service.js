@@ -13,7 +13,7 @@ export const getMenuNamingConventionView = async postData => {
     })
 }
 
-export const newDirectoryNamesAddUpdate = async postData => {
+export const newMenuNamingConventionAddUpdate = async postData => {
   return http
     .post(appSettings.BASE_URL + "/d/TbMenuNamingConventions", postData)
     .catch(error => {
@@ -21,7 +21,7 @@ export const newDirectoryNamesAddUpdate = async postData => {
     })
 }
 
-export const editDirectoryNamesAddUpdate = async (id, postData) => {
+export const editMenuNamingConventionAddUpdate = async (id, postData) => {
   return http
     .put(appSettings.BASE_URL + "/d/TbMenuNamingConventions/" + id, postData)
     .catch(error => {

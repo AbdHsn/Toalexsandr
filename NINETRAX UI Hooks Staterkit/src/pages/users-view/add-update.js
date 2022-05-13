@@ -16,23 +16,104 @@ import {
   Form,
 } from "reactstrap"
 import {
-  newDropDownMenuAddUpdate,
-  editDropDownMenuAddUpdate,
-} from "../../services/needToBeDefined"
+  newUsersAddUpdate,
+  editUsersAddUpdate,
+} from "../../services/users-service"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
-const DropDownMenuAddUpdate = ({
-  open,
-  modelData,
-  onSaveClick,
-  onCancelClick,
-}) => {
+import { getDDL } from "../../services/common-service"
+
+const UsersAddUpdate = ({ open, modelData, onSaveClick, onCancelClick }) => {
   useEffect(() => {
     //set existing selected value
+    modelData && modelData?.accessType != null
+      ? set_accessTypeSelected({
+          label: modelData?.accessType,
+          value: modelData?.accessType,
+        })
+      : set_accessTypeSelected("")
+
+    modelData && modelData?.aor != null
+      ? set_aorSelected({
+          label: modelData?.aor,
+          value: modelData?.aor,
+        })
+      : set_aorSelected("")
+
+    modelData && modelData?.securityQuesOne != null
+      ? set_securityQuestionSelected({
+          label: modelData?.securityQuesOne,
+          value: modelData?.securityQuesOne,
+        })
+      : set_securityQuestionSelected("")
+
+    modelData && modelData?.qualityInspectors != null
+      ? set_qualityInspectors(modelData.qualityInspectors)
+      : set_qualityInspectors(false)
+
+    modelData && modelData?.qualityInspectors != null
+      ? set_qualityInspectors(modelData?.qualityInspectors)
+      : set_qualityInspectors(false)
+    modelData && modelData?.assosicateInspectors != null
+      ? set_assosicateInspectors(modelData?.assosicateInspectors)
+      : set_assosicateInspectors(false)
+    modelData && modelData?.planEstimateInspectors != null
+      ? set_planEstimateInspectors(modelData?.planEstimateInspectors)
+      : set_planEstimateInspectors(false)
+    modelData && modelData?.customerInspectors != null
+      ? set_customerInspectors(modelData?.customerInspectors)
+      : set_customerInspectors(false)
+    modelData && modelData?.activeStatus != null
+      ? set_activeStatus(modelData?.activeStatus)
+      : set_activeStatus(false)
+    modelData && modelData?.fullAdminRights != null
+      ? set_fullAdminRights(modelData?.fullAdminRights)
+      : set_fullAdminRights(false)
+    modelData && modelData?.editRights != null
+      ? set_editRights(modelData?.editRights)
+      : set_editRights(false)
+    modelData && modelData?.deleteRights != null
+      ? set_deleteRights(modelData?.deleteRights)
+      : set_deleteRights(false)
+    modelData && modelData?.viewRights != null
+      ? set_viewRights(modelData?.viewRights)
+      : set_viewRights(false)
+    modelData && modelData?.importRights != null
+      ? set_importRights(modelData?.importRights)
+      : set_importRights(false)
+    modelData && modelData?.activateAutologout != null
+      ? set_activateAutologout(modelData?.activateAutologout)
+      : set_activateAutologout(false)
+    modelData && modelData?.resetPassword != null
+      ? set_resetPassword(modelData?.resetPassword)
+      : set_resetPassword(false)
+
+    //Call dropdown data
+    initializeDropdownData()
   }, [modelData])
 
   const [isSaving, setIsSaving] = useState(false)
+  const [qualityInspectors, set_qualityInspectors] = useState(false)
+  const [_accessTypeSelected, set_accessTypeSelected] = useState("")
+  const [_accessTypeSelectItems, set_accessTypeSelectItems] = useState([])
+  const [_aorSelected, set_aorSelected] = useState("")
+  const [_aorSelectItems, set_aorSelectItems] = useState([])
+  const [_securityQuestionSelected, set_securityQuestionSelected] = useState("")
+  const [_securityQuestionSelectItems, set_securityQuestionSelectItems] =
+    useState([])
+
+  const [assosicateInspectors, set_assosicateInspectors] = useState(false)
+  const [planEstimateInspectors, set_planEstimateInspectors] = useState(false)
+  const [customerInspectors, set_customerInspectors] = useState(false)
+  const [activeStatus, set_activeStatus] = useState(false)
+  const [fullAdminRights, set_fullAdminRights] = useState(false)
+  const [editRights, set_editRights] = useState(false)
+  const [deleteRights, set_deleteRights] = useState(false)
+  const [viewRights, set_viewRights] = useState(false)
+  const [importRights, set_importRights] = useState(false)
+  const [activateAutologout, set_activateAutologout] = useState(false)
+  const [resetPassword, set_resetPassword] = useState(false)
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -40,45 +121,73 @@ const DropDownMenuAddUpdate = ({
 
     initialValues: {
       id: (modelData && modelData.id) || 0,
-      causeCode: (modelData && modelData.causeCode) || "",
-      rootCause: (modelData && modelData.rootCause) || "",
-      correctiveAction: (modelData && modelData.correctiveAction) || "",
-      qcstatus: (modelData && modelData.qcstatus) || "",
-      pdrstatusMenu: (modelData && modelData.pdrstatusMenu) || "",
-      pawstatusMenu: (modelData && modelData.pawstatusMenu) || "",
-      pawrating: (modelData && modelData.pawrating) || "",
-      pawAssessment: (modelData && modelData.pawAssessment) || "",
-      ccrstatusMenu: (modelData && modelData.ccrstatusMenu) || "",
-      validity: (modelData && modelData.validity) || "",
-      qctechs: (modelData && modelData.qctechs) || "",
-      mptPar: (modelData && modelData.mptPar) || "",
-      mptAsgnCode: (modelData && modelData.mptAsgnCode) || "",
-      jaxPar: (modelData && modelData.jaxPar) || "",
-      pawunsat: (modelData && modelData.pawunsat) || "",
-      pawrootCause: (modelData && modelData.pawrootCause) || "",
-      fmBldgManager: (modelData && modelData.fmBldgManager) || "",
-      estimators: (modelData && modelData.estimators) || "",
+      firstName: (modelData && modelData.firstName) || "",
+      lastName: (modelData && modelData.lastName) || "",
+      fullName: (modelData && modelData.fullName) || "",
+      uniqueId: (modelData && modelData.uniqueId) || "",
+      qualityInspectors: (modelData && modelData.qualityInspectors) || false,
+      assosicateInspectors:
+        (modelData && modelData.assosicateInspectors) || false,
+      planEstimateInspectors:
+        (modelData && modelData.planEstimateInspectors) || false,
+      customerInspectors: (modelData && modelData.customerInspectors) || false,
+      aor: (modelData && modelData.aor) || "",
+      positionTitle: (modelData && modelData.positionTitle) || "",
+      email: (modelData && modelData.email) || "",
+      accessType: (modelData && modelData.accessType) || "",
+      activeStatus: (modelData && modelData.activeStatus) || false,
+      fullAdminRights: (modelData && modelData.fullAdminRights) || false,
+      editRights: (modelData && modelData.editRights) || false,
+      deleteRights: (modelData && modelData.deleteRights) || false,
+      viewRights: (modelData && modelData.viewRights) || false,
+      importRights: (modelData && modelData.importRights) || false,
+      activateAutologout: (modelData && modelData.activateAutologout) || false,
+      loginId: (modelData && modelData.loginId) || "",
+      password: (modelData && modelData.password) || "",
+      resetPassword: (modelData && modelData.resetPassword) || false,
+      securityQuesOne: (modelData && modelData.securityQuesOne) || "",
+      securityAnsOne: (modelData && modelData.securityAnsOne) || "",
+      dateAccessGranted:
+        (modelData &&
+          modelData?.dateAccessGranted &&
+          moment(modelData?.dateAccessGranted).format("YYYY-MM-DD")) ||
+        null,
+      dateAccessRemoved:
+        (modelData &&
+          modelData?.dateAccessRemoved &&
+          moment(modelData?.dateAccessRemoved).format("YYYY-MM-DD")) ||
+        null,
+      comments: (modelData && modelData.comments) || "",
     },
     validationSchema: Yup.object({
       // id: Yup.string().required("id is required"),
-      // causeCode: Yup.string().required("causeCode is required"),
-      // rootCause: Yup.string().required("rootCause is required"),
-      // correctiveAction: Yup.string().required("correctiveAction is required"),
-      // qcstatus: Yup.string().required("qcstatus is required"),
-      // pdrstatusMenu: Yup.string().required("pdrstatusMenu is required"),
-      // pawstatusMenu: Yup.string().required("pawstatusMenu is required"),
-      // pawrating: Yup.string().required("pawrating is required"),
-      // pawAssessment: Yup.string().required("pawAssessment is required"),
-      // ccrstatusMenu: Yup.string().required("ccrstatusMenu is required"),
-      // validity: Yup.string().required("validity is required"),
-      // qctechs: Yup.string().required("qctechs is required"),
-      // mptPar: Yup.string().required("mptPar is required"),
-      // mptAsgnCode: Yup.string().required("mptAsgnCode is required"),
-      // jaxPar: Yup.string().required("jaxPar is required"),
-      // pawunsat: Yup.string().required("pawunsat is required"),
-      // pawrootCause: Yup.string().required("pawrootCause is required"),
-      // fmBldgManager: Yup.string().required("fmBldgManager is required"),
-      // estimators: Yup.string().required("estimators is required"),
+      // firstName: Yup.string().required("firstName is required"),
+      // lastName: Yup.string().required("lastName is required"),
+      // fullName: Yup.string().required("fullName is required"),
+      // uniqueId: Yup.string().required("uniqueId is required"),
+      // qualityInspectors: Yup.string().required("qualityInspectors is required"),
+      // assosicateInspectors: Yup.string().required("assosicateInspectors is required"),
+      // planEstimateInspectors: Yup.string().required("planEstimateInspectors is required"),
+      // customerInspectors: Yup.string().required("customerInspectors is required"),
+      // aor: Yup.string().required("aor is required"),
+      // positionTitle: Yup.string().required("positionTitle is required"),
+      // email: Yup.string().required("email is required"),
+      // accessType: Yup.string().required("accessType is required"),
+      // activeStatus: Yup.string().required("activeStatus is required"),
+      // fullAdminRights: Yup.string().required("fullAdminRights is required"),
+      // editRights: Yup.string().required("editRights is required"),
+      // deleteRights: Yup.string().required("deleteRights is required"),
+      // viewRights: Yup.string().required("viewRights is required"),
+      // importRights: Yup.string().required("importRights is required"),
+      // activateAutologout: Yup.string().required("activateAutologout is required"),
+      // loginId: Yup.string().required("loginId is required"),
+      // password: Yup.string().required("password is required"),
+      // resetPassword: Yup.string().required("resetPassword is required"),
+      // securityQuesOne: Yup.string().required("securityQuesOne is required"),
+      // securityAnsOne: Yup.string().required("securityAnsOne is required"),
+      // dateAccessGranted: Yup.string().required("dateAccessGranted is required"),
+      // dateAccessRemoved: Yup.string().required("dateAccessRemoved is required"),
+      // comments: Yup.string().required("comments is required"),
     }),
 
     onSubmit: values => {
@@ -86,29 +195,40 @@ const DropDownMenuAddUpdate = ({
 
       const submitModel = {
         id: values.id,
-        causeCode: values.causeCode,
-        rootCause: values.rootCause,
-        correctiveAction: values.correctiveAction,
-        qcstatus: values.qcstatus,
-        pdrstatusMenu: values.pdrstatusMenu,
-        pawstatusMenu: values.pawstatusMenu,
-        pawrating: values.pawrating,
-        pawAssessment: values.pawAssessment,
-        ccrstatusMenu: values.ccrstatusMenu,
-        validity: values.validity,
-        qctechs: values.qctechs,
-        mptPar: values.mptPar,
-        mptAsgnCode: values.mptAsgnCode,
-        jaxPar: values.jaxPar,
-        pawunsat: values.pawunsat,
-        pawrootCause: values.pawrootCause,
-        fmBldgManager: values.fmBldgManager,
-        estimators: values.estimators,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        fullName: values.fullName,
+        uniqueId: values.uniqueId,
+        aor: _aorSelected.value,
+        positionTitle: values.positionTitle,
+        email: values.email,
+        accessType: _accessTypeSelected.value,
+
+        loginId: values.loginId,
+        password: values.password,
+        securityQuesOne: _securityQuestionSelected.value,
+        securityAnsOne: values.securityAnsOne,
+        dateAccessGranted: values.dateAccessGranted,
+        dateAccessRemoved: values.dateAccessRemoved,
+        comments: values.comments,
+
+        qualityInspectors: qualityInspectors,
+        assosicateInspectors: assosicateInspectors,
+        planEstimateInspectors: planEstimateInspectors,
+        customerInspectors: customerInspectors,
+        activeStatus: activeStatus,
+        fullAdminRights: fullAdminRights,
+        editRights: editRights,
+        deleteRights: deleteRights,
+        viewRights: viewRights,
+        importRights: importRights,
+        activateAutologout: activateAutologout,
+        resetPassword: resetPassword,
       }
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
-        editDropDownMenuAddUpdate(submitModel?.id, submitModel)
+        editUsersAddUpdate(submitModel?.id, submitModel)
           .then(res => {
             console.log("submit model create response: ", res)
             if (res.data.id > 0) {
@@ -128,7 +248,7 @@ const DropDownMenuAddUpdate = ({
           })
       } else {
         setIsSaving(true)
-        newDropDownMenuAddUpdate(submitModel)
+        newUsersAddUpdate(submitModel)
           .then(res => {
             console.log("submit model update response: ", res)
             if (res.data.id > 0) {
@@ -150,13 +270,46 @@ const DropDownMenuAddUpdate = ({
     },
   })
 
+  const initializeDropdownData = () => {
+    //USERLEVELACCESS
+    getDDL("USERLEVELACCESS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_accessTypeSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed USERLEVELACCESS_DDL: ", error)
+      })
+
+    //AREAOFRESPONSIBILITIES
+    getDDL("AREAOFRESPONSIBILITIES")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_aorSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed AREAOFRESPONSIBILITIES_DDL: ", error)
+      })
+
+    //SECURITYQUESTIONS
+    getDDL("SECURITYQUESTIONS")
+      .then(res => {
+        if (res.data.length > 0) {
+          set_securityQuestionSelectItems(res.data)
+        }
+      })
+      .catch(error => {
+        console.log("Failed SECURITYQUESTIONS_DDL: ", error)
+      })
+  }
+
   return (
     <>
       <Modal isOpen={open} className="modal-dialog modal-lg">
         <ModalHeader tag="h4">
-          {modelData?.id > 0
-            ? "Update DropDownMenuAddUpdate"
-            : "New DropDownMenuAddUpdate"}
+          {modelData?.id > 0 ? "Update UsersAddUpdate" : "New UsersAddUpdate"}
         </ModalHeader>
         <ModalBody>
           <Form
@@ -166,441 +319,620 @@ const DropDownMenuAddUpdate = ({
               return false
             }}
           >
-            <Row form>
-              <Col className="col-12">
+            <Row>
+              <div className="mb-3">
+                {/* <Label className="form-label">Id</Label> */}
+                <Input
+                  id="id"
+                  name="id"
+                  type="number"
+                  placeholder="Id"
+                  hidden={true}
+                  defaultValue={validation.values.id || 0}
+                />
+              </div>
+
+              <Col className="col-md-6 col-sm-12">
                 <div className="mb-3">
-                  {/* <Label className="form-label">Id</Label> */}
+                  <Label className="form-label">First Name</Label>
                   <Input
-                    id="id"
-                    name="id"
-                    type="number"
-                    placeholder="Id"
-                    hidden={true}
-                    defaultValue={validation.values.id || 0}
-                  />
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">causeCode</Label>
-                  <Input
-                    id="causeCode"
-                    name="causeCode"
+                    id="firstName"
+                    name="firstName"
                     type="text"
-                    placeholder="causeCode"
+                    placeholder="First Name"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.causeCode || ""}
+                    value={validation.values.firstName || ""}
                     invalid={
-                      validation.touched.causeCode &&
-                      validation.errors.causeCode
+                      validation.touched.firstName &&
+                      validation.errors.firstName
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.causeCode &&
-                  validation.errors.causeCode ? (
+                  {validation.touched.firstName &&
+                  validation.errors.firstName ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.causeCode}
+                      {validation.errors.firstName}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">rootCause</Label>
+                  <Label className="form-label">Last Name</Label>
                   <Input
-                    id="rootCause"
-                    name="rootCause"
+                    id="lastName"
+                    name="lastName"
                     type="text"
-                    placeholder="rootCause"
+                    placeholder="Last Name"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.rootCause || ""}
+                    value={validation.values.lastName || ""}
                     invalid={
-                      validation.touched.rootCause &&
-                      validation.errors.rootCause
+                      validation.touched.lastName && validation.errors.lastName
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.rootCause &&
-                  validation.errors.rootCause ? (
+                  {validation.touched.lastName && validation.errors.lastName ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.rootCause}
+                      {validation.errors.lastName}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">correctiveAction</Label>
+                  <Label className="form-label">Full Name</Label>
                   <Input
-                    id="correctiveAction"
-                    name="correctiveAction"
+                    id="fullName"
+                    name="fullName"
                     type="text"
-                    placeholder="correctiveAction"
+                    placeholder="Full Name"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.correctiveAction || ""}
+                    value={validation.values.fullName || ""}
                     invalid={
-                      validation.touched.correctiveAction &&
-                      validation.errors.correctiveAction
+                      validation.touched.fullName && validation.errors.fullName
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.correctiveAction &&
-                  validation.errors.correctiveAction ? (
+                  {validation.touched.fullName && validation.errors.fullName ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.correctiveAction}
+                      {validation.errors.fullName}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qcstatus</Label>
+                  <Label className="form-label">Unique Id</Label>
                   <Input
-                    id="qcstatus"
-                    name="qcstatus"
+                    id="uniqueId"
+                    name="uniqueId"
                     type="text"
-                    placeholder="qcstatus"
+                    placeholder="uniqueId"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.qcstatus || ""}
+                    value={validation.values.uniqueId || ""}
                     invalid={
-                      validation.touched.qcstatus && validation.errors.qcstatus
+                      validation.touched.uniqueId && validation.errors.uniqueId
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.qcstatus && validation.errors.qcstatus ? (
+                  {validation.touched.uniqueId && validation.errors.uniqueId ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.qcstatus}
+                      {validation.errors.uniqueId}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                <div className="mb-3">
+                  <Label className="form-label">Access Level</Label>
+
+                  <Select
+                    id="accessType"
+                    name="accessType"
+                    type="text"
+                    onChange={e => {
+                      set_accessTypeSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_accessTypeSelectItems}
+                    defaultValue={_accessTypeSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select Access Type"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.accessType &&
+                  validation.errors.accessType ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.accessType}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pdrstatusMenu</Label>
-                  <Input
-                    id="pdrstatusMenu"
-                    name="pdrstatusMenu"
+                  <Label className="form-label">
+                    Choose Area Of Responsibilities
+                  </Label>
+
+                  <Select
+                    id="aor"
+                    name="aor"
                     type="text"
-                    placeholder="pdrstatusMenu"
-                    onChange={validation.handleChange}
+                    onChange={e => {
+                      set_aorSelected({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pdrstatusMenu || ""}
-                    invalid={
-                      validation.touched.pdrstatusMenu &&
-                      validation.errors.pdrstatusMenu
-                        ? true
-                        : false
-                    }
+                    options={_aorSelectItems}
+                    defaultValue={_aorSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Area Of Resp"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
                   />
-                  {validation.touched.pdrstatusMenu &&
-                  validation.errors.pdrstatusMenu ? (
+                  {validation.touched.aor && validation.errors.aor ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pdrstatusMenu}
+                      {validation.errors.aor}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawstatusMenu</Label>
+                  <Label className="form-label">Position Title</Label>
                   <Input
-                    id="pawstatusMenu"
-                    name="pawstatusMenu"
+                    id="positionTitle"
+                    name="positionTitle"
                     type="text"
-                    placeholder="pawstatusMenu"
+                    placeholder="Position Title"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pawstatusMenu || ""}
+                    value={validation.values.positionTitle || ""}
                     invalid={
-                      validation.touched.pawstatusMenu &&
-                      validation.errors.pawstatusMenu
+                      validation.touched.positionTitle &&
+                      validation.errors.positionTitle
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pawstatusMenu &&
-                  validation.errors.pawstatusMenu ? (
+                  {validation.touched.positionTitle &&
+                  validation.errors.positionTitle ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pawstatusMenu}
+                      {validation.errors.positionTitle}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawrating</Label>
+                  <Label className="form-label">Email</Label>
                   <Input
-                    id="pawrating"
-                    name="pawrating"
+                    id="email"
+                    name="email"
                     type="text"
-                    placeholder="pawrating"
+                    placeholder="Email"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pawrating || ""}
+                    value={validation.values.email || ""}
                     invalid={
-                      validation.touched.pawrating &&
-                      validation.errors.pawrating
+                      validation.touched.email && validation.errors.email
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pawrating &&
-                  validation.errors.pawrating ? (
+                  {validation.touched.email && validation.errors.email ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pawrating}
+                      {validation.errors.email}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+              <Col className="col-md-6 col-sm-12">
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                {/* checkbox */}
+                <div className="mb-3">
+                  <Label className="form-label">Login Id</Label>
+                  <Input
+                    id="loginId"
+                    name="loginId"
+                    type="text"
+                    placeholder="loginId"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.loginId || ""}
+                    invalid={
+                      validation.touched.loginId && validation.errors.loginId
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.loginId && validation.errors.loginId ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.loginId}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawAssessment</Label>
+                  <Label className="form-label">Password</Label>
                   <Input
-                    id="pawAssessment"
-                    name="pawAssessment"
+                    id="password"
+                    name="password"
                     type="text"
-                    placeholder="pawAssessment"
+                    placeholder="Password"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pawAssessment || ""}
+                    value={validation.values.password || ""}
                     invalid={
-                      validation.touched.pawAssessment &&
-                      validation.errors.pawAssessment
+                      validation.touched.password && validation.errors.password
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pawAssessment &&
-                  validation.errors.pawAssessment ? (
+                  {validation.touched.password && validation.errors.password ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pawAssessment}
+                      {validation.errors.password}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                {/* checkbox */}
+                <div className="mb-3">
+                  <Label className="form-label">Security Questions</Label>
+                  <Select
+                    id="securityQ"
+                    name="securityQ"
+                    type="text"
+                    onChange={e => {
+                      set_securityQuestionSelectItems({
+                        label: e.label,
+                        value: e.value,
+                      })
+                    }}
+                    onBlur={validation.handleBlur}
+                    options={_securityQuestionSelectItems}
+                    defaultValue={_securityQuestionSelected}
+                    className="basic-single"
+                    classNamePrefix="select"
+                    placeholder="Select Question"
+                    isClearable={false}
+                    isSearchable={true}
+                    isLoading={false}
+                    loadingMessage={() => "Fetching Data..."}
+                    noOptionsMessage={() => "No Data Found."}
+                  />
+                  {validation.touched.securityQuesOne &&
+                  validation.errors.securityQuesOne ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.securityQuesOne}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">ccrstatusMenu</Label>
+                  <Label className="form-label">Security Answer</Label>
                   <Input
-                    id="ccrstatusMenu"
-                    name="ccrstatusMenu"
+                    id="securityAnsOne"
+                    name="securityAnsOne"
                     type="text"
-                    placeholder="ccrstatusMenu"
+                    placeholder="Security Answer"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.ccrstatusMenu || ""}
+                    value={validation.values.securityAnsOne || ""}
                     invalid={
-                      validation.touched.ccrstatusMenu &&
-                      validation.errors.ccrstatusMenu
+                      validation.touched.securityAnsOne &&
+                      validation.errors.securityAnsOne
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.ccrstatusMenu &&
-                  validation.errors.ccrstatusMenu ? (
+                  {validation.touched.securityAnsOne &&
+                  validation.errors.securityAnsOne ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.ccrstatusMenu}
+                      {validation.errors.securityAnsOne}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">validity</Label>
+                  <Label className="form-label">Date Access Granted</Label>
                   <Input
-                    id="validity"
-                    name="validity"
-                    type="text"
-                    placeholder="validity"
+                    id="dateAccessGranted"
+                    name="dateAccessGranted"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="dateAccessGranted"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.validity || ""}
+                    value={validation.values.dateAccessGranted || ""}
                     invalid={
-                      validation.touched.validity && validation.errors.validity
+                      validation.touched.dateAccessGranted &&
+                      validation.errors.dateAccessGranted
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.validity && validation.errors.validity ? (
+                  {validation.touched.dateAccessGranted &&
+                  validation.errors.dateAccessGranted ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.validity}
+                      {validation.errors.dateAccessGranted}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qctechs</Label>
+                  <Label className="form-label">Date Access Removed</Label>
                   <Input
-                    id="qctechs"
-                    name="qctechs"
-                    type="text"
-                    placeholder="qctechs"
+                    id="dateAccessRemoved"
+                    name="dateAccessRemoved"
+                    type="date"
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="dateAccessRemoved"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.qctechs || ""}
+                    value={validation.values.dateAccessRemoved || ""}
                     invalid={
-                      validation.touched.qctechs && validation.errors.qctechs
+                      validation.touched.dateAccessRemoved &&
+                      validation.errors.dateAccessRemoved
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.qctechs && validation.errors.qctechs ? (
+                  {validation.touched.dateAccessRemoved &&
+                  validation.errors.dateAccessRemoved ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.qctechs}
+                      {validation.errors.dateAccessRemoved}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">mptPar</Label>
+                  <Label className="form-label">Comments</Label>
                   <Input
-                    id="mptPar"
-                    name="mptPar"
-                    type="text"
-                    placeholder="mptPar"
+                    id="comments"
+                    name="comments"
+                    type="textarea"
+                    placeholder="Comments"
+                    maxLength="225"
+                    rows="5"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.mptPar || ""}
+                    value={validation.values.comments || ""}
                     invalid={
-                      validation.touched.mptPar && validation.errors.mptPar
+                      validation.touched.comments && validation.errors.comments
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.mptPar && validation.errors.mptPar ? (
+                  {validation.touched.comments && validation.errors.comments ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.mptPar}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">mptAsgnCode</Label>
-                  <Input
-                    id="mptAsgnCode"
-                    name="mptAsgnCode"
-                    type="text"
-                    placeholder="mptAsgnCode"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.mptAsgnCode || ""}
-                    invalid={
-                      validation.touched.mptAsgnCode &&
-                      validation.errors.mptAsgnCode
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.mptAsgnCode &&
-                  validation.errors.mptAsgnCode ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.mptAsgnCode}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">jaxPar</Label>
-                  <Input
-                    id="jaxPar"
-                    name="jaxPar"
-                    type="text"
-                    placeholder="jaxPar"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.jaxPar || ""}
-                    invalid={
-                      validation.touched.jaxPar && validation.errors.jaxPar
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.jaxPar && validation.errors.jaxPar ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.jaxPar}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pawunsat</Label>
-                  <Input
-                    id="pawunsat"
-                    name="pawunsat"
-                    type="text"
-                    placeholder="pawunsat"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pawunsat || ""}
-                    invalid={
-                      validation.touched.pawunsat && validation.errors.pawunsat
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pawunsat && validation.errors.pawunsat ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawunsat}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pawrootCause</Label>
-                  <Input
-                    id="pawrootCause"
-                    name="pawrootCause"
-                    type="text"
-                    placeholder="pawrootCause"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pawrootCause || ""}
-                    invalid={
-                      validation.touched.pawrootCause &&
-                      validation.errors.pawrootCause
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pawrootCause &&
-                  validation.errors.pawrootCause ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawrootCause}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">fmBldgManager</Label>
-                  <Input
-                    id="fmBldgManager"
-                    name="fmBldgManager"
-                    type="text"
-                    placeholder="fmBldgManager"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.fmBldgManager || ""}
-                    invalid={
-                      validation.touched.fmBldgManager &&
-                      validation.errors.fmBldgManager
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.fmBldgManager &&
-                  validation.errors.fmBldgManager ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.fmBldgManager}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">estimators</Label>
-                  <Input
-                    id="estimators"
-                    name="estimators"
-                    type="text"
-                    placeholder="estimators"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.estimators || ""}
-                    invalid={
-                      validation.touched.estimators &&
-                      validation.errors.estimators
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.estimators &&
-                  validation.errors.estimators ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.estimators}
+                      {validation.errors.comments}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
             </Row>
+
+            <Row>
+              <Col className="col-sm-3">
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkqualityInspectors"
+                      defaultChecked={qualityInspectors}
+                      onChange={e => {
+                        set_qualityInspectors(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkqualityInspectors"
+                    >
+                      Quality Inspectors
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkassosicateInspectors"
+                      defaultChecked={assosicateInspectors}
+                      onChange={e => {
+                        set_assosicateInspectors(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkassosicateInspectors"
+                    >
+                      Assosicate Inspectors
+                    </label>
+                  </div>
+                </div>
+              </Col>
+              <Col className="col-sm-3">
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkplanEstimateInspectors"
+                      defaultChecked={planEstimateInspectors}
+                      onChange={e => {
+                        set_planEstimateInspectors(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkplanEstimateInspectors"
+                    >
+                      Plan Estimate Inspectors
+                    </label>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkcustomerInspectors"
+                      defaultChecked={customerInspectors}
+                      onChange={e => {
+                        set_customerInspectors(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkcustomerInspectors"
+                    >
+                      Customer Inspectors
+                    </label>
+                  </div>
+                </div>
+              </Col>
+              <Col className="col-sm-3">
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkfullAdminRights"
+                      defaultChecked={fullAdminRights}
+                      onChange={e => {
+                        set_fullAdminRights(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkfullAdminRights"
+                    >
+                      Full Admin Rights
+                    </label>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkviewRights"
+                      defaultChecked={viewRights}
+                      onChange={e => {
+                        set_viewRights(e.target.checked)
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="chkviewRights">
+                      View Rights
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkimportRights"
+                      defaultChecked={importRights}
+                      onChange={e => {
+                        set_importRights(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkimportRights"
+                    >
+                      Import Rights
+                    </label>
+                  </div>
+                </div>
+              </Col>
+              <Col className="col-sm-3">
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkdeleteRights"
+                      defaultChecked={deleteRights}
+                      onChange={e => {
+                        set_deleteRights(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkdeleteRights"
+                    >
+                      Delete Rights
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkeditRights"
+                      defaultChecked={editRights}
+                      onChange={e => {
+                        set_editRights(e.target.checked)
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="chkeditRights">
+                      Edit Rights
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <div className="form-check form-check-end">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="chkactivateAutologout"
+                      defaultChecked={activateAutologout}
+                      onChange={e => {
+                        set_activateAutologout(e.target.checked)
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="chkactivateAutologout"
+                    >
+                      Activate Auto logout
+                    </label>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+
             <Row>
               <Col>
                 <div className="text-end">
@@ -631,11 +963,11 @@ const DropDownMenuAddUpdate = ({
   )
 }
 
-DropDownMenuAddUpdate.propTypes = {
+UsersAddUpdate.propTypes = {
   onSaveClick: PropTypes.func,
   onCancelClick: PropTypes.func,
   open: PropTypes.bool,
   modelData: PropTypes.object,
 }
 
-export default DropDownMenuAddUpdate
+export default UsersAddUpdate

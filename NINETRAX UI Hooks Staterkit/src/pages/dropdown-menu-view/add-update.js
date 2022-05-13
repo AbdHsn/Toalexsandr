@@ -18,7 +18,7 @@ import {
 import {
   newDropDownMenuAddUpdate,
   editDropDownMenuAddUpdate,
-} from "../../services/needToBeDefined"
+} from "../../services/dropdown-menu-service"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
@@ -154,9 +154,7 @@ const DropDownMenuAddUpdate = ({
     <>
       <Modal isOpen={open} className="modal-dialog modal-lg">
         <ModalHeader tag="h4">
-          {modelData?.id > 0
-            ? "Update DropDownMenuAddUpdate"
-            : "New DropDownMenuAddUpdate"}
+          {modelData?.id > 0 ? "Update DropDown Menu" : "New DropDown Menu"}
         </ModalHeader>
         <ModalBody>
           <Form
@@ -166,26 +164,26 @@ const DropDownMenuAddUpdate = ({
               return false
             }}
           >
-            <Row form>
-              <Col className="col-12">
+            <Row>
+              <div className="mb-3">
+                {/* <Label className="form-label">Id</Label> */}
+                <Input
+                  id="id"
+                  name="id"
+                  type="number"
+                  placeholder="Id"
+                  hidden={true}
+                  defaultValue={validation.values.id || 0}
+                />
+              </div>
+              <Col className="col-md-6 col-sm-12">
                 <div className="mb-3">
-                  {/* <Label className="form-label">Id</Label> */}
-                  <Input
-                    id="id"
-                    name="id"
-                    type="number"
-                    placeholder="Id"
-                    hidden={true}
-                    defaultValue={validation.values.id || 0}
-                  />
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">causeCode</Label>
+                  <Label className="form-label">Cause Code</Label>
                   <Input
                     id="causeCode"
                     name="causeCode"
                     type="text"
-                    placeholder="causeCode"
+                    placeholder="Cause Code"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.causeCode || ""}
@@ -204,12 +202,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">rootCause</Label>
+                  <Label className="form-label">Root Cause</Label>
                   <Input
                     id="rootCause"
                     name="rootCause"
                     type="text"
-                    placeholder="rootCause"
+                    placeholder="Root Cause"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.rootCause || ""}
@@ -228,12 +226,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">correctiveAction</Label>
+                  <Label className="form-label">Corrective Action</Label>
                   <Input
                     id="correctiveAction"
                     name="correctiveAction"
                     type="text"
-                    placeholder="correctiveAction"
+                    placeholder="Corrective Action"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.correctiveAction || ""}
@@ -252,12 +250,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qcstatus</Label>
+                  <Label className="form-label">QC Status</Label>
                   <Input
                     id="qcstatus"
                     name="qcstatus"
                     type="text"
-                    placeholder="qcstatus"
+                    placeholder="QC Status"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.qcstatus || ""}
@@ -274,12 +272,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pdrstatusMenu</Label>
+                  <Label className="form-label">PDR Status Menu</Label>
                   <Input
                     id="pdrstatusMenu"
                     name="pdrstatusMenu"
                     type="text"
-                    placeholder="pdrstatusMenu"
+                    placeholder="PDR Status Menu"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pdrstatusMenu || ""}
@@ -298,12 +296,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawstatusMenu</Label>
+                  <Label className="form-label">PAW Status Menu</Label>
                   <Input
                     id="pawstatusMenu"
                     name="pawstatusMenu"
                     type="text"
-                    placeholder="pawstatusMenu"
+                    placeholder="PAW Status Menu"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pawstatusMenu || ""}
@@ -322,12 +320,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawrating</Label>
+                  <Label className="form-label">PAW Rating</Label>
                   <Input
                     id="pawrating"
                     name="pawrating"
                     type="text"
-                    placeholder="pawrating"
+                    placeholder="PAW Rating"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pawrating || ""}
@@ -345,13 +343,14 @@ const DropDownMenuAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
+
                 <div className="mb-3">
-                  <Label className="form-label">pawAssessment</Label>
+                  <Label className="form-label">PAW Assessment</Label>
                   <Input
                     id="pawAssessment"
                     name="pawAssessment"
                     type="text"
-                    placeholder="pawAssessment"
+                    placeholder="PAW Assessment"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pawAssessment || ""}
@@ -370,12 +369,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">ccrstatusMenu</Label>
+                  <Label className="form-label">CCR Status Menu</Label>
                   <Input
                     id="ccrstatusMenu"
                     name="ccrstatusMenu"
                     type="text"
-                    placeholder="ccrstatusMenu"
+                    placeholder="CCR Status Menu"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.ccrstatusMenu || ""}
@@ -393,13 +392,15 @@ const DropDownMenuAddUpdate = ({
                     </FormFeedback>
                   ) : null}
                 </div>
+              </Col>
+              <Col className="col-md-6 col-sm-12">
                 <div className="mb-3">
-                  <Label className="form-label">validity</Label>
+                  <Label className="form-label">Validity</Label>
                   <Input
                     id="validity"
                     name="validity"
                     type="text"
-                    placeholder="validity"
+                    placeholder="Validity"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.validity || ""}
@@ -416,12 +417,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qctechs</Label>
+                  <Label className="form-label">QC Techs</Label>
                   <Input
                     id="qctechs"
                     name="qctechs"
                     type="text"
-                    placeholder="qctechs"
+                    placeholder="QC Techs"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.qctechs || ""}
@@ -438,12 +439,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">mptPar</Label>
+                  <Label className="form-label">MPT PAR</Label>
                   <Input
                     id="mptPar"
                     name="mptPar"
                     type="text"
-                    placeholder="mptPar"
+                    placeholder="MPT PAR"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.mptPar || ""}
@@ -460,12 +461,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">mptAsgnCode</Label>
+                  <Label className="form-label">MPT Assign Code</Label>
                   <Input
                     id="mptAsgnCode"
                     name="mptAsgnCode"
                     type="text"
-                    placeholder="mptAsgnCode"
+                    placeholder="MPT Assign Code"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.mptAsgnCode || ""}
@@ -484,12 +485,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">jaxPar</Label>
+                  <Label className="form-label">JAX PAR</Label>
                   <Input
                     id="jaxPar"
                     name="jaxPar"
                     type="text"
-                    placeholder="jaxPar"
+                    placeholder="JAX PAR"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.jaxPar || ""}
@@ -506,12 +507,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawunsat</Label>
+                  <Label className="form-label">PAW Unsat</Label>
                   <Input
                     id="pawunsat"
                     name="pawunsat"
                     type="text"
-                    placeholder="pawunsat"
+                    placeholder="PAW Unsat"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pawunsat || ""}
@@ -528,12 +529,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawrootCause</Label>
+                  <Label className="form-label">PAW Root Cause</Label>
                   <Input
                     id="pawrootCause"
                     name="pawrootCause"
                     type="text"
-                    placeholder="pawrootCause"
+                    placeholder="PAW Root Cause"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.pawrootCause || ""}
@@ -552,12 +553,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">fmBldgManager</Label>
+                  <Label className="form-label">FM Building Manager</Label>
                   <Input
                     id="fmBldgManager"
                     name="fmBldgManager"
                     type="text"
-                    placeholder="fmBldgManager"
+                    placeholder="FM Building Manager"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.fmBldgManager || ""}
@@ -576,12 +577,12 @@ const DropDownMenuAddUpdate = ({
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">estimators</Label>
+                  <Label className="form-label">Estimator</Label>
                   <Input
                     id="estimators"
                     name="estimators"
                     type="text"
-                    placeholder="estimators"
+                    placeholder="Estimators"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.estimators || ""}

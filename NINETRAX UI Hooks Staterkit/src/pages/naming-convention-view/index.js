@@ -25,9 +25,11 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getMenuNamingConventionView,
   exportMenuNamingConventionView,
+  deleteMenuNamingConvention,
 } from "../../services/menu-naming-convention-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
-
+import MenuNamingConventionAddUpdate from "./add-update"
+import DeleteModal from "../../components/Common/DeleteModal"
 import Breadcrumbs from "components/Common/Breadcrumb"
 
 const MenuNamingConventionView = props => {
@@ -38,6 +40,9 @@ const MenuNamingConventionView = props => {
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
+  const [modal, setModal] = useState(false)
+  const [modelData, setModelData] = useState({})
+  const [deleteModal, setDeleteModal] = useState(false)
 
   const start = useRef(0)
   const orderColumn = useRef({
@@ -211,17 +216,54 @@ const MenuNamingConventionView = props => {
     loadView()
   }
 
+  const onNewClick = () => {
+    setModal(true)
+    setModelData(null)
+  }
+
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+  }
+
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteMenuNamingConvention(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>MenuNamingConventionView | NINETRAX | QC Management</title>
+          <title>Menu Naming Conventions | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
           <Breadcrumbs
-            title="MenuNamingConventionView"
-            breadcrumbItem="MenuNamingConventionView"
+            title="Menu Naming Conventions"
+            breadcrumbItem="Menu Naming Conventions"
           />
 
           <Row>
@@ -265,6 +307,14 @@ const MenuNamingConventionView = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
+
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
@@ -287,7 +337,7 @@ const MenuNamingConventionView = props => {
                       >
                         <thead>
                           <tr>
-                            <th
+                            {/* <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("id")}
                             >
@@ -301,7 +351,7 @@ const MenuNamingConventionView = props => {
                                 }
                               ></i>{" "}
                               id
-                            </th>
+                            </th> */}
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("trackerName")}
@@ -315,7 +365,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              trackerName
+                              Tracker Name
                             </th>
                             <th
                               className="custom-pointer"
@@ -330,7 +380,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              abrvName
+                              Abrv Name
                             </th>
                             <th
                               className="custom-pointer"
@@ -345,7 +395,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              prefix
+                              Prefix
                             </th>
                             <th
                               className="custom-pointer"
@@ -360,7 +410,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              numberSeq
+                              Number Sequence
                             </th>
                             <th
                               className="custom-pointer"
@@ -375,7 +425,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              postfix
+                              Postfix
                             </th>
                             <th
                               className="custom-pointer"
@@ -390,7 +440,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              namingConv
+                              Naming Convention
                             </th>
                             <th
                               className="custom-pointer"
@@ -405,7 +455,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              lastUsedConv
+                              Last Used Convention
                             </th>
                             <th
                               className="custom-pointer"
@@ -420,7 +470,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              nextToUseConv
+                              Next To Use Convention
                             </th>
                             <th
                               className="custom-pointer"
@@ -435,7 +485,7 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              active
+                              Active
                             </th>
                             <th
                               className="custom-pointer"
@@ -450,12 +500,12 @@ const MenuNamingConventionView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              group
+                              Group
                             </th>
                             <th></th>
                           </tr>
                           <tr>
-                            <th>
+                            {/* <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
@@ -468,13 +518,13 @@ const MenuNamingConventionView = props => {
                                 }
                                 onKeyUp={onPressEnter}
                               />
-                            </th>
+                            </th> */}
                             <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="trackerName"
+                                placeholder="Tracker Name"
                                 name="strackerName"
                                 id="strackerName"
                                 onChange={e =>
@@ -491,7 +541,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="abrvName"
+                                placeholder="Abrv Name"
                                 name="sabrvName"
                                 id="sabrvName"
                                 onChange={e =>
@@ -508,7 +558,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="prefix"
+                                placeholder="Prefix"
                                 name="sprefix"
                                 id="sprefix"
                                 onChange={e =>
@@ -522,7 +572,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="postfix"
+                                placeholder="Postfix"
                                 name="spostfix"
                                 id="spostfix"
                                 onChange={e =>
@@ -539,7 +589,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="namingConv"
+                                placeholder="Naming Convention"
                                 name="snamingConv"
                                 id="snamingConv"
                                 onChange={e =>
@@ -556,7 +606,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="lastUsedConv"
+                                placeholder="Last Used Convention"
                                 name="slastUsedConv"
                                 id="slastUsedConv"
                                 onChange={e =>
@@ -573,7 +623,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="nextToUseConv"
+                                placeholder="Next To Use Convention"
                                 name="snextToUseConv"
                                 id="snextToUseConv"
                                 onChange={e =>
@@ -590,7 +640,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="active"
+                                placeholder="Active"
                                 name="sactive"
                                 id="sactive"
                                 onChange={e =>
@@ -604,7 +654,7 @@ const MenuNamingConventionView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="group"
+                                placeholder="Group"
                                 name="sgroup"
                                 id="sgroup"
                                 onChange={e =>
@@ -630,7 +680,7 @@ const MenuNamingConventionView = props => {
                               (item, index) => {
                                 return (
                                   <tr key={index}>
-                                    <td>{item.id}</td>
+                                    {/* <td>{item.id}</td> */}
                                     <td>{item.trackerName}</td>
                                     <td>{item.abrvName}</td>
                                     <td>{item.prefix}</td>
@@ -642,24 +692,25 @@ const MenuNamingConventionView = props => {
                                     <td>{item.group}</td>
 
                                     <td>
-                                      {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                      <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-primary ml-2"
+                                        onClick={e => onEditClick(item)}
+                                        data-toggle="modal"
+                                        data-target=".bs-example-modal-center"
+                                      >
+                                        <i className="far fa-edit"></i> Edit
+                                      </button>{" "}
+                                      <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-danger ml-2"
+                                        onClick={() => onAttemptDelete(item.id)}
+                                        data-toggle="modal"
+                                        data-target=".bs-example-modal-center"
+                                      >
+                                        <i className="far fa-trash-alt"></i>{" "}
+                                        Delete
+                                      </button>
                                     </td>
                                   </tr>
                                 )
@@ -721,12 +772,26 @@ const MenuNamingConventionView = props => {
                       </div>
                     </Col>
                   </Row>
-
-                  {/* <DeleteModal
+                  <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <MenuNamingConventionAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />
                 </CardBody>
               </Card>
             </Col>

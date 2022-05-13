@@ -9,7 +9,7 @@ export const getUsersView = async postData => {
     })
 }
 
-export const newUserAddUpdate = async postData => {
+export const newUsersAddUpdate = async postData => {
   return http
     .post(appSettings.BASE_URL + "/d/TbUsers", postData)
     .catch(error => {
@@ -17,7 +17,7 @@ export const newUserAddUpdate = async postData => {
     })
 }
 
-export const editUserAddUpdate = async (id, postData) => {
+export const editUsersAddUpdate = async (id, postData) => {
   return http
     .put(appSettings.BASE_URL + "/d/TbUsers/" + id, postData)
     .catch(error => {

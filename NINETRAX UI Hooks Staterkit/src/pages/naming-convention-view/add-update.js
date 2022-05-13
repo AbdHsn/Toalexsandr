@@ -16,13 +16,13 @@ import {
   Form,
 } from "reactstrap"
 import {
-  newDropDownMenuAddUpdate,
-  editDropDownMenuAddUpdate,
-} from "../../services/needToBeDefined"
+  newMenuNamingConventionAddUpdate,
+  editMenuNamingConventionAddUpdate,
+} from "../../services/menu-naming-convention-service"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import BtnSaving from "../../components/Common/BtnSaving"
-const DropDownMenuAddUpdate = ({
+const MenuNamingConventionAddUpdate = ({
   open,
   modelData,
   onSaveClick,
@@ -40,45 +40,27 @@ const DropDownMenuAddUpdate = ({
 
     initialValues: {
       id: (modelData && modelData.id) || 0,
-      causeCode: (modelData && modelData.causeCode) || "",
-      rootCause: (modelData && modelData.rootCause) || "",
-      correctiveAction: (modelData && modelData.correctiveAction) || "",
-      qcstatus: (modelData && modelData.qcstatus) || "",
-      pdrstatusMenu: (modelData && modelData.pdrstatusMenu) || "",
-      pawstatusMenu: (modelData && modelData.pawstatusMenu) || "",
-      pawrating: (modelData && modelData.pawrating) || "",
-      pawAssessment: (modelData && modelData.pawAssessment) || "",
-      ccrstatusMenu: (modelData && modelData.ccrstatusMenu) || "",
-      validity: (modelData && modelData.validity) || "",
-      qctechs: (modelData && modelData.qctechs) || "",
-      mptPar: (modelData && modelData.mptPar) || "",
-      mptAsgnCode: (modelData && modelData.mptAsgnCode) || "",
-      jaxPar: (modelData && modelData.jaxPar) || "",
-      pawunsat: (modelData && modelData.pawunsat) || "",
-      pawrootCause: (modelData && modelData.pawrootCause) || "",
-      fmBldgManager: (modelData && modelData.fmBldgManager) || "",
-      estimators: (modelData && modelData.estimators) || "",
+      trackerName: (modelData && modelData.trackerName) || "",
+      abrvName: (modelData && modelData.abrvName) || "",
+      prefix: (modelData && modelData.prefix) || "",
+      postfix: (modelData && modelData.postfix) || "",
+      namingConv: (modelData && modelData.namingConv) || "",
+      lastUsedConv: (modelData && modelData.lastUsedConv) || "",
+      nextToUseConv: (modelData && modelData.nextToUseConv) || "",
+      active: (modelData && modelData.active) || "",
+      group: (modelData && modelData.group) || "",
     },
     validationSchema: Yup.object({
       // id: Yup.string().required("id is required"),
-      // causeCode: Yup.string().required("causeCode is required"),
-      // rootCause: Yup.string().required("rootCause is required"),
-      // correctiveAction: Yup.string().required("correctiveAction is required"),
-      // qcstatus: Yup.string().required("qcstatus is required"),
-      // pdrstatusMenu: Yup.string().required("pdrstatusMenu is required"),
-      // pawstatusMenu: Yup.string().required("pawstatusMenu is required"),
-      // pawrating: Yup.string().required("pawrating is required"),
-      // pawAssessment: Yup.string().required("pawAssessment is required"),
-      // ccrstatusMenu: Yup.string().required("ccrstatusMenu is required"),
-      // validity: Yup.string().required("validity is required"),
-      // qctechs: Yup.string().required("qctechs is required"),
-      // mptPar: Yup.string().required("mptPar is required"),
-      // mptAsgnCode: Yup.string().required("mptAsgnCode is required"),
-      // jaxPar: Yup.string().required("jaxPar is required"),
-      // pawunsat: Yup.string().required("pawunsat is required"),
-      // pawrootCause: Yup.string().required("pawrootCause is required"),
-      // fmBldgManager: Yup.string().required("fmBldgManager is required"),
-      // estimators: Yup.string().required("estimators is required"),
+      // trackerName: Yup.string().required("trackerName is required"),
+      // abrvName: Yup.string().required("abrvName is required"),
+      // prefix: Yup.string().required("prefix is required"),
+      // postfix: Yup.string().required("postfix is required"),
+      // namingConv: Yup.string().required("namingConv is required"),
+      // lastUsedConv: Yup.string().required("lastUsedConv is required"),
+      // nextToUseConv: Yup.string().required("nextToUseConv is required"),
+      // active: Yup.string().required("active is required"),
+      // group: Yup.string().required("group is required"),
     }),
 
     onSubmit: values => {
@@ -86,29 +68,21 @@ const DropDownMenuAddUpdate = ({
 
       const submitModel = {
         id: values.id,
-        causeCode: values.causeCode,
-        rootCause: values.rootCause,
-        correctiveAction: values.correctiveAction,
-        qcstatus: values.qcstatus,
-        pdrstatusMenu: values.pdrstatusMenu,
-        pawstatusMenu: values.pawstatusMenu,
-        pawrating: values.pawrating,
-        pawAssessment: values.pawAssessment,
-        ccrstatusMenu: values.ccrstatusMenu,
-        validity: values.validity,
-        qctechs: values.qctechs,
-        mptPar: values.mptPar,
-        mptAsgnCode: values.mptAsgnCode,
-        jaxPar: values.jaxPar,
-        pawunsat: values.pawunsat,
-        pawrootCause: values.pawrootCause,
-        fmBldgManager: values.fmBldgManager,
-        estimators: values.estimators,
+        trackerName: values.trackerName,
+        abrvName: values.abrvName,
+        prefix: values.prefix,
+        numberSeq: values.numberSeq,
+        postfix: values.postfix,
+        namingConv: values.namingConv,
+        lastUsedConv: values.lastUsedConv,
+        nextToUseConv: values.nextToUseConv,
+        active: values.active,
+        group: values.group,
       }
 
       if (submitModel && submitModel?.id > 0) {
         setIsSaving(true)
-        editDropDownMenuAddUpdate(submitModel?.id, submitModel)
+        editMenuNamingConventionAddUpdate(submitModel?.id, submitModel)
           .then(res => {
             console.log("submit model create response: ", res)
             if (res.data.id > 0) {
@@ -128,7 +102,7 @@ const DropDownMenuAddUpdate = ({
           })
       } else {
         setIsSaving(true)
-        newDropDownMenuAddUpdate(submitModel)
+        newMenuNamingConventionAddUpdate(submitModel)
           .then(res => {
             console.log("submit model update response: ", res)
             if (res.data.id > 0) {
@@ -155,8 +129,8 @@ const DropDownMenuAddUpdate = ({
       <Modal isOpen={open} className="modal-dialog modal-lg">
         <ModalHeader tag="h4">
           {modelData?.id > 0
-            ? "Update DropDownMenuAddUpdate"
-            : "New DropDownMenuAddUpdate"}
+            ? "Update Naming Convention "
+            : "New Naming Convention"}
         </ModalHeader>
         <ModalBody>
           <Form
@@ -166,436 +140,225 @@ const DropDownMenuAddUpdate = ({
               return false
             }}
           >
-            <Row form>
-              <Col className="col-12">
+            <Row>
+              <div className="mb-3">
+                {/* <Label className="form-label">Id</Label> */}
+                <Input
+                  id="id"
+                  name="id"
+                  type="number"
+                  placeholder="Id"
+                  hidden={true}
+                  defaultValue={validation.values.id || 0}
+                />
+              </div>
+              <Col className="col-md-6 col-sm-12">
                 <div className="mb-3">
-                  {/* <Label className="form-label">Id</Label> */}
+                  <Label className="form-label">Tracker Name</Label>
                   <Input
-                    id="id"
-                    name="id"
-                    type="number"
-                    placeholder="Id"
-                    hidden={true}
-                    defaultValue={validation.values.id || 0}
-                  />
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">causeCode</Label>
-                  <Input
-                    id="causeCode"
-                    name="causeCode"
+                    id="trackerName"
+                    name="trackerName"
                     type="text"
-                    placeholder="causeCode"
+                    placeholder="Tracker Name"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.causeCode || ""}
+                    value={validation.values.trackerName || ""}
                     invalid={
-                      validation.touched.causeCode &&
-                      validation.errors.causeCode
+                      validation.touched.trackerName &&
+                      validation.errors.trackerName
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.causeCode &&
-                  validation.errors.causeCode ? (
+                  {validation.touched.trackerName &&
+                  validation.errors.trackerName ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.causeCode}
+                      {validation.errors.trackerName}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">rootCause</Label>
+                  <Label className="form-label">Abrv Name</Label>
                   <Input
-                    id="rootCause"
-                    name="rootCause"
+                    id="abrvName"
+                    name="abrvName"
                     type="text"
-                    placeholder="rootCause"
+                    placeholder="Abrv Name"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.rootCause || ""}
+                    value={validation.values.abrvName || ""}
                     invalid={
-                      validation.touched.rootCause &&
-                      validation.errors.rootCause
+                      validation.touched.abrvName && validation.errors.abrvName
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.rootCause &&
-                  validation.errors.rootCause ? (
+                  {validation.touched.abrvName && validation.errors.abrvName ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.rootCause}
+                      {validation.errors.abrvName}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">correctiveAction</Label>
+                  <Label className="form-label">Prefix</Label>
                   <Input
-                    id="correctiveAction"
-                    name="correctiveAction"
+                    id="prefix"
+                    name="prefix"
                     type="text"
-                    placeholder="correctiveAction"
+                    placeholder="Prefix"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.correctiveAction || ""}
+                    value={validation.values.prefix || ""}
                     invalid={
-                      validation.touched.correctiveAction &&
-                      validation.errors.correctiveAction
+                      validation.touched.prefix && validation.errors.prefix
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.correctiveAction &&
-                  validation.errors.correctiveAction ? (
+                  {validation.touched.prefix && validation.errors.prefix ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.correctiveAction}
+                      {validation.errors.prefix}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">qcstatus</Label>
+                  <Label className="form-label">Postfix</Label>
                   <Input
-                    id="qcstatus"
-                    name="qcstatus"
+                    id="postfix"
+                    name="postfix"
                     type="text"
-                    placeholder="qcstatus"
+                    placeholder="Postfix"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.qcstatus || ""}
+                    value={validation.values.postfix || ""}
                     invalid={
-                      validation.touched.qcstatus && validation.errors.qcstatus
+                      validation.touched.postfix && validation.errors.postfix
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.qcstatus && validation.errors.qcstatus ? (
+                  {validation.touched.postfix && validation.errors.postfix ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.qcstatus}
+                      {validation.errors.postfix}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pdrstatusMenu</Label>
+                  <Label className="form-label">Naming Convention</Label>
                   <Input
-                    id="pdrstatusMenu"
-                    name="pdrstatusMenu"
+                    id="namingConv"
+                    name="namingConv"
                     type="text"
-                    placeholder="pdrstatusMenu"
+                    placeholder="Naming Convention"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pdrstatusMenu || ""}
+                    value={validation.values.namingConv || ""}
                     invalid={
-                      validation.touched.pdrstatusMenu &&
-                      validation.errors.pdrstatusMenu
+                      validation.touched.namingConv &&
+                      validation.errors.namingConv
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pdrstatusMenu &&
-                  validation.errors.pdrstatusMenu ? (
+                  {validation.touched.namingConv &&
+                  validation.errors.namingConv ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pdrstatusMenu}
+                      {validation.errors.namingConv}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+
+              <Col className="col-md-6 col-sm-12">
+                <div className="mb-3">
+                  <Label className="form-label">Last Used Convention</Label>
+                  <Input
+                    id="lastUsedConv"
+                    name="lastUsedConv"
+                    type="text"
+                    placeholder="Last Used Convention"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.lastUsedConv || ""}
+                    invalid={
+                      validation.touched.lastUsedConv &&
+                      validation.errors.lastUsedConv
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.lastUsedConv &&
+                  validation.errors.lastUsedConv ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.lastUsedConv}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawstatusMenu</Label>
+                  <Label className="form-label">Next To Use Convention</Label>
                   <Input
-                    id="pawstatusMenu"
-                    name="pawstatusMenu"
+                    id="nextToUseConv"
+                    name="nextToUseConv"
                     type="text"
-                    placeholder="pawstatusMenu"
+                    placeholder="Next To Use Convention"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pawstatusMenu || ""}
+                    value={validation.values.nextToUseConv || ""}
                     invalid={
-                      validation.touched.pawstatusMenu &&
-                      validation.errors.pawstatusMenu
+                      validation.touched.nextToUseConv &&
+                      validation.errors.nextToUseConv
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pawstatusMenu &&
-                  validation.errors.pawstatusMenu ? (
+                  {validation.touched.nextToUseConv &&
+                  validation.errors.nextToUseConv ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pawstatusMenu}
+                      {validation.errors.nextToUseConv}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawrating</Label>
+                  <Label className="form-label">Active</Label>
                   <Input
-                    id="pawrating"
-                    name="pawrating"
+                    id="active"
+                    name="active"
                     type="text"
-                    placeholder="pawrating"
+                    placeholder="Active"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pawrating || ""}
+                    value={validation.values.active || ""}
                     invalid={
-                      validation.touched.pawrating &&
-                      validation.errors.pawrating
+                      validation.touched.active && validation.errors.active
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pawrating &&
-                  validation.errors.pawrating ? (
+                  {validation.touched.active && validation.errors.active ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pawrating}
+                      {validation.errors.active}
                     </FormFeedback>
                   ) : null}
                 </div>
                 <div className="mb-3">
-                  <Label className="form-label">pawAssessment</Label>
+                  <Label className="form-label">Group</Label>
                   <Input
-                    id="pawAssessment"
-                    name="pawAssessment"
+                    id="group"
+                    name="group"
                     type="text"
-                    placeholder="pawAssessment"
+                    placeholder="Group"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.pawAssessment || ""}
+                    value={validation.values.group || ""}
                     invalid={
-                      validation.touched.pawAssessment &&
-                      validation.errors.pawAssessment
+                      validation.touched.group && validation.errors.group
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.pawAssessment &&
-                  validation.errors.pawAssessment ? (
+                  {validation.touched.group && validation.errors.group ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.pawAssessment}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">ccrstatusMenu</Label>
-                  <Input
-                    id="ccrstatusMenu"
-                    name="ccrstatusMenu"
-                    type="text"
-                    placeholder="ccrstatusMenu"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.ccrstatusMenu || ""}
-                    invalid={
-                      validation.touched.ccrstatusMenu &&
-                      validation.errors.ccrstatusMenu
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.ccrstatusMenu &&
-                  validation.errors.ccrstatusMenu ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.ccrstatusMenu}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">validity</Label>
-                  <Input
-                    id="validity"
-                    name="validity"
-                    type="text"
-                    placeholder="validity"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.validity || ""}
-                    invalid={
-                      validation.touched.validity && validation.errors.validity
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.validity && validation.errors.validity ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.validity}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">qctechs</Label>
-                  <Input
-                    id="qctechs"
-                    name="qctechs"
-                    type="text"
-                    placeholder="qctechs"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.qctechs || ""}
-                    invalid={
-                      validation.touched.qctechs && validation.errors.qctechs
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.qctechs && validation.errors.qctechs ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.qctechs}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">mptPar</Label>
-                  <Input
-                    id="mptPar"
-                    name="mptPar"
-                    type="text"
-                    placeholder="mptPar"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.mptPar || ""}
-                    invalid={
-                      validation.touched.mptPar && validation.errors.mptPar
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.mptPar && validation.errors.mptPar ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.mptPar}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">mptAsgnCode</Label>
-                  <Input
-                    id="mptAsgnCode"
-                    name="mptAsgnCode"
-                    type="text"
-                    placeholder="mptAsgnCode"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.mptAsgnCode || ""}
-                    invalid={
-                      validation.touched.mptAsgnCode &&
-                      validation.errors.mptAsgnCode
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.mptAsgnCode &&
-                  validation.errors.mptAsgnCode ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.mptAsgnCode}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">jaxPar</Label>
-                  <Input
-                    id="jaxPar"
-                    name="jaxPar"
-                    type="text"
-                    placeholder="jaxPar"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.jaxPar || ""}
-                    invalid={
-                      validation.touched.jaxPar && validation.errors.jaxPar
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.jaxPar && validation.errors.jaxPar ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.jaxPar}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pawunsat</Label>
-                  <Input
-                    id="pawunsat"
-                    name="pawunsat"
-                    type="text"
-                    placeholder="pawunsat"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pawunsat || ""}
-                    invalid={
-                      validation.touched.pawunsat && validation.errors.pawunsat
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pawunsat && validation.errors.pawunsat ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawunsat}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">pawrootCause</Label>
-                  <Input
-                    id="pawrootCause"
-                    name="pawrootCause"
-                    type="text"
-                    placeholder="pawrootCause"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.pawrootCause || ""}
-                    invalid={
-                      validation.touched.pawrootCause &&
-                      validation.errors.pawrootCause
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.pawrootCause &&
-                  validation.errors.pawrootCause ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.pawrootCause}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">fmBldgManager</Label>
-                  <Input
-                    id="fmBldgManager"
-                    name="fmBldgManager"
-                    type="text"
-                    placeholder="fmBldgManager"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.fmBldgManager || ""}
-                    invalid={
-                      validation.touched.fmBldgManager &&
-                      validation.errors.fmBldgManager
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.fmBldgManager &&
-                  validation.errors.fmBldgManager ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.fmBldgManager}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">estimators</Label>
-                  <Input
-                    id="estimators"
-                    name="estimators"
-                    type="text"
-                    placeholder="estimators"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.estimators || ""}
-                    invalid={
-                      validation.touched.estimators &&
-                      validation.errors.estimators
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.estimators &&
-                  validation.errors.estimators ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.estimators}
+                      {validation.errors.group}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -631,11 +394,11 @@ const DropDownMenuAddUpdate = ({
   )
 }
 
-DropDownMenuAddUpdate.propTypes = {
+MenuNamingConventionAddUpdate.propTypes = {
   onSaveClick: PropTypes.func,
   onCancelClick: PropTypes.func,
   open: PropTypes.bool,
   modelData: PropTypes.object,
 }
 
-export default DropDownMenuAddUpdate
+export default MenuNamingConventionAddUpdate

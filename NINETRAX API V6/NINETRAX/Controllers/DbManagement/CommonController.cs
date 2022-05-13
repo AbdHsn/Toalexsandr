@@ -298,6 +298,28 @@ namespace NINETRAX.Controllers.DbManagement
                             value = s.Status,
                         }).ToListAsync();
                         break;
+                    case "USERLEVELACCESS":
+                        returnLst = await _context.TbUserLevelAccesses.Select(s => new
+                        {
+                            label = s.AccessLevel,
+                            value = s.AccessLevel,
+                        }).ToListAsync();
+                        break;
+                    case "AREAOFRESPONSIBILITIES":
+                        returnLst = new List<object>()
+                        {
+                           new { value= "NASJAX", label= "NASJAX" },
+                           new { value= "BUMED", label= "BUMED" },
+                           new { value= "Misc", label= "Misc" },
+                        };
+                        break;
+                    case "SECURITYQUESTIONS":
+                        returnLst = await _context.TbLoginSecurityQs.Select(s => new
+                        {
+                            label = s.SecurityQuestions,
+                            value = s.SecurityQuestions,
+                        }).ToListAsync();
+                        break;
 
                     default:
                         break;

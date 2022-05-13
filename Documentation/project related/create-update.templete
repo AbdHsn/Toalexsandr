@@ -39,6 +39,11 @@ const ${entity.name} = ({
       : set_$attribute.name+Selected("")
 
 	#end
+	#if($attribute.type == "Boolean")
+    modelData && modelData?.$attribute.name != null
+      ? set_$attribute.name+(modelData?.$attribute.name)
+      : set_$attribute.name+(false)
+	#end
 #end
 
 
@@ -50,6 +55,9 @@ const ${entity.name} = ({
 	#if($attribute.type == "Short")
   const [_$attribute.name+Selected, set_$attribute.name+Selected] = useState("")
   const [_$attribute.name+SelectItems, set_$attribute.name+SelectItems] = useState([])
+	#end
+	#if($attribute.type == "Boolean")
+  const [$attribute.name, set_$attribute.name] = useState(false)
 	#end
 #end
 
@@ -110,6 +118,9 @@ const ${entity.name} = ({
 #foreach($attribute in $entity.attributes )
     #if ($attribute.type == "Short")
 		$attribute.name: _$attribute.name+Selected.value,
+	#end
+	#if ($attribute.type == "Boolean")
+		$attribute.name: $attribute.name,
     #else
     	$attribute.name: values.$attribute.name,
     #end
@@ -331,7 +342,23 @@ const ${entity.name} = ({
                 </div>
 	#end
 	#if($attribute.type == "Boolean")
-    {/* checkbox */}
+                <div className="mb-3">
+                <div className="form-check form-check-end">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="chk$attribute.name"
+                    defaultChecked={$attribute.name}
+                    onChange={e => {
+                      set_$attribute.name+(e.target.checked)
+                    }}
+                  />
+                  <label className="form-check-label" htmlFor="chk$attribute.name">
+                    $attribute.name
+                  </label>
+                </div>
+                </div>
 	#end
 #end
 
