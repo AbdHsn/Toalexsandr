@@ -25,15 +25,20 @@ import BtnExporting from "../../components/Common/BtnExporting"
 import {
   getDirectoryNamesView,
   exportDirectoryNamesView,
+  deleteDirectoryNames,
 } from "../../services/directory-names-service"
 import { rowSizes as rowSizeDdl } from "../../services/common-service"
-
+import DirectoryNamesAddUpdate from "./add-update"
+import DeleteModal from "../../components/Common/DeleteModal"
 import Breadcrumbs from "components/Common/Breadcrumb"
 
 const DirectoryNamesView = props => {
   const [DirectoryNamesViewMdl, setDirectoryNamesViewMdl] = useState({})
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
 
+  const [modal, setModal] = useState(false)
+  const [modelData, setModelData] = useState({})
+  const [deleteModal, setDeleteModal] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
@@ -168,18 +173,52 @@ const DirectoryNamesView = props => {
     loadView()
   }
 
+  const onNewClick = () => {
+    setModal(true)
+    setModelData(null)
+  }
+
+  const onEditClick = item => {
+    setModal(true)
+    setModelData(item)
+  }
+
+  const onAttemptDelete = id => {
+    if (id > 0) {
+      setDeleteModal(true)
+      setModelData({ id: id })
+    }
+  }
+
+  const onDeleteConfirmed = () => {
+    if (modelData.id > 0) {
+      deleteDirectoryNames(modelData.id)
+        .then(res => {
+          if (res.data) {
+            toastr.success("Selected item successfully deleted.", "NINETRAX")
+            setDeleteModal(false)
+            loadView()
+          } else {
+            toastr.warning("Selected item failed to delete.", "NINETRAX")
+          }
+        })
+        .catch(error => {
+          toastr.error("Failed to process data.", "NINETRAX")
+        })
+    } else {
+      toastr.error("Can't process request.", "NINETRAX")
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>DirectoryNamesView | NINETRAX | QC Management</title>
+          <title>Supervisors | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
-          <Breadcrumbs
-            title="DirectoryNamesView"
-            breadcrumbItem="DirectoryNamesView"
-          />
+          <Breadcrumbs title="Supervisors" breadcrumbItem="Supervisors" />
 
           <Row>
             <Col xs="12">
@@ -222,7 +261,15 @@ const DirectoryNamesView = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
-                      {isExporting === true ? (
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-xs"
+                        onClick={onNewClick}
+                      >
+                        <i className="bx bx-plus"></i> New
+                      </button>
+
+                      {/* {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
                         <button
@@ -232,7 +279,7 @@ const DirectoryNamesView = props => {
                         >
                           <i className="bx bx-file"></i> Export
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
 
@@ -244,7 +291,7 @@ const DirectoryNamesView = props => {
                       >
                         <thead>
                           <tr>
-                            <th
+                            {/* <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("id")}
                             >
@@ -258,7 +305,7 @@ const DirectoryNamesView = props => {
                                 }
                               ></i>{" "}
                               id
-                            </th>
+                            </th> */}
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("personName")}
@@ -272,7 +319,7 @@ const DirectoryNamesView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              personName
+                              Person Name
                             </th>
                             <th
                               className="custom-pointer"
@@ -287,7 +334,7 @@ const DirectoryNamesView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              personTitle
+                              Person Title
                             </th>
                             <th
                               className="custom-pointer"
@@ -303,12 +350,12 @@ const DirectoryNamesView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              baseOfOperation
+                              Base Of Operation
                             </th>
                             <th></th>
                           </tr>
                           <tr>
-                            <th>
+                            {/* <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
@@ -321,13 +368,13 @@ const DirectoryNamesView = props => {
                                 }
                                 onKeyUp={onPressEnter}
                               />
-                            </th>
+                            </th> */}
                             <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="personName"
+                                placeholder="Person Name"
                                 name="spersonName"
                                 id="spersonName"
                                 onChange={e =>
@@ -344,7 +391,7 @@ const DirectoryNamesView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="personTitle"
+                                placeholder="Person Title"
                                 name="spersonTitle"
                                 id="spersonTitle"
                                 onChange={e =>
@@ -361,7 +408,7 @@ const DirectoryNamesView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="baseOfOperation"
+                                placeholder="Base Of Operation"
                                 name="sbaseOfOperation"
                                 id="sbaseOfOperation"
                                 onChange={e =>
@@ -389,30 +436,31 @@ const DirectoryNamesView = props => {
                             DirectoryNamesViewMdl.data.map((item, index) => {
                               return (
                                 <tr key={index}>
-                                  <td>{item.id}</td>
+                                  {/* <td>{item.id}</td> */}
                                   <td>{item.personName}</td>
                                   <td>{item.personTitle}</td>
                                   <td>{item.baseOfOperation}</td>
 
                                   <td>
-                                    {/* <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary ml-2"
-                                    onClick={e => handleEdit(item)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-edit"></i> Edit
-                                  </button>{" "}
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger ml-2"
-                                    onClick={e => onDeleteConfirmation(item.id)}
-                                    data-toggle="modal"
-                                    data-target=".bs-example-modal-center"
-                                  >
-                                    <i className="far fa-trash-alt"></i> Delete
-                                  </button> */}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary ml-2"
+                                      onClick={e => onEditClick(item)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-edit"></i> Edit
+                                    </button>{" "}
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-danger ml-2"
+                                      onClick={() => onAttemptDelete(item.id)}
+                                      data-toggle="modal"
+                                      data-target=".bs-example-modal-center"
+                                    >
+                                      <i className="far fa-trash-alt"></i>{" "}
+                                      Delete
+                                    </button>
                                   </td>
                                 </tr>
                               )
@@ -471,12 +519,26 @@ const DirectoryNamesView = props => {
                       </div>
                     </Col>
                   </Row>
-
-                  {/* <DeleteModal
+                  <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => setDeleteModal(false)}
-                  /> */}
+                    onDeleteClick={() => onDeleteConfirmed()}
+                    onCloseClick={() => {
+                      setDeleteModal(false)
+                      setModelData({})
+                    }}
+                  />
+
+                  <DirectoryNamesAddUpdate
+                    open={modal}
+                    modelData={modelData}
+                    onSaveClick={item => {
+                      console.log("onSaveClick from index called...", item)
+                      if (item?.id > 0) {
+                        loadView()
+                      }
+                    }}
+                    onCancelClick={setModal}
+                  />
                 </CardBody>
               </Card>
             </Col>

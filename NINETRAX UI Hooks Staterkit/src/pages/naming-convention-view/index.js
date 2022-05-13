@@ -5,6 +5,7 @@ import * as moment from "moment"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 import "../../assets/scss/custom/_common.scss"
+
 import {
   Button,
   Card,
@@ -22,21 +23,18 @@ import {
 import Loader from "../../components/Common/Loader"
 import BtnExporting from "../../components/Common/BtnExporting"
 import {
-  getIDIQTrackersView,
-  exportIDIQTrackersView,
-  deleteIDIQTracker,
-} from "../../services/idiq-trackers-service"
-import { appTitle, rowSizes as rowSizeDdl } from "../../services/common-service"
-import Breadcrumbs from "components/Common/Breadcrumb"
-import IDIQTrackerAddUpdate from "./add-update"
-import DeleteModal from "../../components/Common/DeleteModal"
+  getMenuNamingConventionView,
+  exportMenuNamingConventionView,
+} from "../../services/menu-naming-convention-service"
+import { rowSizes as rowSizeDdl } from "../../services/common-service"
 
-const IDIQTrackersView = props => {
-  const [IDIQTrackersViewMdl, setIDIQTrackersViewMdl] = useState({})
+import Breadcrumbs from "components/Common/Breadcrumb"
+
+const MenuNamingConventionView = props => {
+  const [MenuNamingConventionViewMdl, setMenuNamingConventionViewMdl] =
+    useState({})
   const [pageSizeDrp, setPageSizeDrp] = useState(false)
-  const [modal, setModal] = useState(false)
-  const [modelData, setModelData] = useState({})
-  const [deleteModal, setDeleteModal] = useState(false)
+
   const [isFetching, setIsFetching] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [filterOptions, setFilterOptions] = useState(false)
@@ -49,18 +47,16 @@ const IDIQTrackersView = props => {
   const length = useRef("10")
 
   const id = useRef("")
-  const woNumber = useRef("")
-  const idiqsowDescription = useRef("")
-  const location = useRef("")
-  const woType = useRef("")
-  const estimator = useRef("")
-  const parAssigned = useRef("")
-  const verifiedBy = useRef("")
-  const inspectionDate = useRef("")
-  const dateToPar = useRef("")
-  const dateFromPar = useRef("")
-  const woStatus = useRef("")
-  const comments = useRef("")
+  const trackerName = useRef("")
+  const abrvName = useRef("")
+  const prefix = useRef("")
+  const numberSeq = useRef("")
+  const postfix = useRef("")
+  const namingConv = useRef("")
+  const lastUsedConv = useRef("")
+  const nextToUseConv = useRef("")
+  const active = useRef("")
+  const group = useRef("")
 
   useEffect(() => {
     loadView()
@@ -72,41 +68,35 @@ const IDIQTrackersView = props => {
       case "id":
         id.current = value
         break
-      case "woNumber":
-        woNumber.current = value
+      case "trackerName":
+        trackerName.current = value
         break
-      case "idiqsowDescription":
-        idiqsowDescription.current = value
+      case "abrvName":
+        abrvName.current = value
         break
-      case "location":
-        location.current = value
+      case "prefix":
+        prefix.current = value
         break
-      case "woType":
-        woType.current = value
+      case "numberSeq":
+        numberSeq.current = value
         break
-      case "estimator":
-        estimator.current = value
+      case "postfix":
+        postfix.current = value
         break
-      case "parAssigned":
-        parAssigned.current = value
+      case "namingConv":
+        namingConv.current = value
         break
-      case "verifiedBy":
-        verifiedBy.current = value
+      case "lastUsedConv":
+        lastUsedConv.current = value
         break
-      case "inspectionDate":
-        inspectionDate.current = value
+      case "nextToUseConv":
+        nextToUseConv.current = value
         break
-      case "dateToPar":
-        dateToPar.current = value
+      case "active":
+        active.current = value
         break
-      case "dateFromPar":
-        dateFromPar.current = value
-        break
-      case "woStatus":
-        woStatus.current = value
-        break
-      case "comments":
-        comments.current = value
+      case "group":
+        group.current = value
         break
       default:
         break
@@ -122,25 +112,23 @@ const IDIQTrackersView = props => {
       search: {},
       searches: [
         { search_by: "id", value: id.current },
-        { search_by: "woNumber", value: woNumber.current },
-        { search_by: "idiqsowDescription", value: idiqsowDescription.current },
-        { search_by: "location", value: location.current },
-        { search_by: "woType", value: woType.current },
-        { search_by: "estimator", value: estimator.current },
-        { search_by: "parAssigned", value: parAssigned.current },
-        { search_by: "verifiedBy", value: verifiedBy.current },
-        { search_by: "inspectionDate", value: inspectionDate.current },
-        { search_by: "dateToPar", value: dateToPar.current },
-        { search_by: "dateFromPar", value: dateFromPar.current },
-        { search_by: "woStatus", value: woStatus.current },
-        { search_by: "comments", value: comments.current },
+        { search_by: "trackerName", value: trackerName.current },
+        { search_by: "abrvName", value: abrvName.current },
+        { search_by: "prefix", value: prefix.current },
+        { search_by: "numberSeq", value: numberSeq.current },
+        { search_by: "postfix", value: postfix.current },
+        { search_by: "namingConv", value: namingConv.current },
+        { search_by: "lastUsedConv", value: lastUsedConv.current },
+        { search_by: "nextToUseConv", value: nextToUseConv.current },
+        { search_by: "active", value: active.current },
+        { search_by: "group", value: group.current },
       ],
     }
 
     setIsFetching(true)
-    getIDIQTrackersView(preparePostData)
+    getMenuNamingConventionView(preparePostData)
       .then(res => {
-        setIDIQTrackersViewMdl(res.data)
+        setMenuNamingConventionViewMdl(res.data)
         if (res.data.data.length <= 0) {
           setIsFetching(false)
           toastr.warning("No data found", "NINETRAX")
@@ -175,23 +163,21 @@ const IDIQTrackersView = props => {
       search: {},
       searches: [
         { search_by: "id", value: id.current },
-        { search_by: "woNumber", value: woNumber.current },
-        { search_by: "idiqsowDescription", value: idiqsowDescription.current },
-        { search_by: "location", value: location.current },
-        { search_by: "woType", value: woType.current },
-        { search_by: "estimator", value: estimator.current },
-        { search_by: "parAssigned", value: parAssigned.current },
-        { search_by: "verifiedBy", value: verifiedBy.current },
-        { search_by: "inspectionDate", value: inspectionDate.current },
-        { search_by: "dateToPar", value: dateToPar.current },
-        { search_by: "dateFromPar", value: dateFromPar.current },
-        { search_by: "woStatus", value: woStatus.current },
-        { search_by: "comments", value: comments.current },
+        { search_by: "trackerName", value: trackerName.current },
+        { search_by: "abrvName", value: abrvName.current },
+        { search_by: "prefix", value: prefix.current },
+        { search_by: "numberSeq", value: numberSeq.current },
+        { search_by: "postfix", value: postfix.current },
+        { search_by: "namingConv", value: namingConv.current },
+        { search_by: "lastUsedConv", value: lastUsedConv.current },
+        { search_by: "nextToUseConv", value: nextToUseConv.current },
+        { search_by: "active", value: active.current },
+        { search_by: "group", value: group.current },
       ],
     }
 
     setIsExporting(true)
-    exportIDIQTrackersView(preparePostData)
+    exportMenuNamingConventionView(preparePostData)
       .then(res => {
         let downloadLink = document.createElement("a")
         downloadLink.href = window.URL.createObjectURL(
@@ -200,7 +186,7 @@ const IDIQTrackersView = props => {
           })
         )
 
-        downloadLink.setAttribute("download", "IDIQTrackersView.xlsx")
+        downloadLink.setAttribute("download", "MenuNamingConventionView.xlsx")
         document.body.appendChild(downloadLink)
         downloadLink.click()
 
@@ -225,53 +211,18 @@ const IDIQTrackersView = props => {
     loadView()
   }
 
-  const onNewClick = () => {
-    setModal(true)
-    setModelData(null)
-  }
-
-  const onEditClick = item => {
-    setModal(true)
-    setModelData(item)
-    console.log("edit items: ", item)
-  }
-
-  const onAttemptDelete = id => {
-    if (id > 0) {
-      setDeleteModal(true)
-      setModelData({ id: id })
-    }
-  }
-
-  const onDeleteConfirmed = () => {
-    if (modelData.id > 0) {
-      deleteIDIQTracker(modelData.id)
-        .then(res => {
-          if (res.data) {
-            toastr.success("Selected item successfully deleted.", "NINETRAX")
-            setDeleteModal(false)
-            loadView()
-          } else {
-            toastr.warning("Selected item failed to delete.", "NINETRAX")
-          }
-        })
-        .catch(error => {
-          toastr.error("Failed to process data.", "NINETRAX")
-        })
-    } else {
-      toastr.error("Can't process request.", "NINETRAX")
-    }
-  }
-
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>IDIQ Trackers | {appTitle}</title>
+          <title>MenuNamingConventionView | NINETRAX | QC Management</title>
         </MetaTags>
 
         <Container fluid>
-          <Breadcrumbs title="IDIQ Trackers" breadcrumbItem="IDIQ Trackers" />
+          <Breadcrumbs
+            title="MenuNamingConventionView"
+            breadcrumbItem="MenuNamingConventionView"
+          />
 
           <Row>
             <Col xs="12">
@@ -314,14 +265,6 @@ const IDIQTrackersView = props => {
                         </DropdownMenu>
                       </ButtonDropdown>
 
-                      <button
-                        type="button"
-                        className="btn btn-outline-secondary w-xs"
-                        onClick={onNewClick}
-                      >
-                        <i className="bx bx-plus"></i> New
-                      </button>
-
                       {isExporting === true ? (
                         <BtnExporting isExporting={isExporting} />
                       ) : (
@@ -337,14 +280,14 @@ const IDIQTrackersView = props => {
                   </div>
 
                   <Row>
-                    <div className="horizontal-scroll table-responsive">
+                    <div className="table-responsive">
                       <Table
                         data-simplebar={true}
                         className="table table-sm m-0"
                       >
                         <thead>
                           <tr>
-                            {/* <th
+                            <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("id")}
                             >
@@ -358,196 +301,161 @@ const IDIQTrackersView = props => {
                                 }
                               ></i>{" "}
                               id
-                            </th> */}
-
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("woNumber")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "woNumber"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              WO Number
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("idiqsowDescription")
-                              }
+                              onClick={() => onOrderByClick("trackerName")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column ===
-                                  "idiqsowDescription"
+                                  orderColumn.current.column === "trackerName"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              IDIQ SOW Description
+                              trackerName
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("location")}
+                              onClick={() => onOrderByClick("abrvName")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "location"
+                                  orderColumn.current.column === "abrvName"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Location
+                              abrvName
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("woType")}
+                              onClick={() => onOrderByClick("prefix")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "woType"
+                                  orderColumn.current.column === "prefix"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              WO Type
+                              prefix
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("estimator")}
+                              onClick={() => onOrderByClick("numberSeq")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "estimator"
+                                  orderColumn.current.column === "numberSeq"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Estimator
+                              numberSeq
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("parAssigned")}
+                              onClick={() => onOrderByClick("postfix")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "parAssigned"
+                                  orderColumn.current.column === "postfix"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Assigned PAR
+                              postfix
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("verifiedBy")}
+                              onClick={() => onOrderByClick("namingConv")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "verifiedBy"
+                                  orderColumn.current.column === "namingConv"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Verified By
+                              namingConv
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("inspectionDate")}
+                              onClick={() => onOrderByClick("lastUsedConv")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column ===
-                                  "inspectionDate"
+                                  orderColumn.current.column === "lastUsedConv"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Inspection Date
+                              lastUsedConv
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("dateToPar")}
+                              onClick={() => onOrderByClick("nextToUseConv")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "dateToPar"
+                                  orderColumn.current.column === "nextToUseConv"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Date To PAR
+                              nextToUseConv
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("dateFromPar")}
+                              onClick={() => onOrderByClick("active")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "dateFromPar"
+                                  orderColumn.current.column === "active"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              Date From PAR
+                              active
                             </th>
                             <th
                               className="custom-pointer"
-                              onClick={() => onOrderByClick("woStatus")}
+                              onClick={() => onOrderByClick("group")}
                             >
                               <i
                                 className={
-                                  orderColumn.current.column === "woStatus"
+                                  orderColumn.current.column === "group"
                                     ? orderColumn.current.order_by === "DESC"
                                       ? "fa fa-sort-amount-down"
                                       : "fa fa-sort-amount-up"
                                     : ""
                                 }
                               ></i>{" "}
-                              WO Status
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("comments")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "comments"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Inspection Notes
+                              group
                             </th>
                             <th></th>
                           </tr>
                           <tr>
-                            {/* <th>
+                            <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
@@ -560,35 +468,18 @@ const IDIQTrackersView = props => {
                                 }
                                 onKeyUp={onPressEnter}
                               />
-                            </th> */}
+                            </th>
                             <th>
                               {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="WO Number"
-                                name="swoNumber"
-                                id="swoNumber"
+                                placeholder="trackerName"
+                                name="strackerName"
+                                id="strackerName"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "woNumber",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "450px" }}
-                                type="text"
-                                placeholder="IDIQ SOW Description"
-                                name="sidiqsowDescription"
-                                id="sidiqsowDescription"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "idiqsowDescription",
+                                    "trackerName",
                                     e.target.value
                                   )
                                 }
@@ -600,12 +491,12 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Location"
-                                name="slocation"
-                                id="slocation"
+                                placeholder="abrvName"
+                                name="sabrvName"
+                                id="sabrvName"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "location",
+                                    "abrvName",
                                     e.target.value
                                   )
                                 }
@@ -617,11 +508,11 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="WO Type"
-                                name="swoType"
-                                id="swoType"
+                                placeholder="prefix"
+                                name="sprefix"
+                                id="sprefix"
                                 onChange={e =>
-                                  onUpdateSearchFilter("woType", e.target.value)
+                                  onUpdateSearchFilter("prefix", e.target.value)
                                 }
                                 onKeyUp={onPressEnter}
                               />
@@ -631,29 +522,12 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Estimator"
-                                name="sestimator"
-                                id="sestimator"
+                                placeholder="postfix"
+                                name="spostfix"
+                                id="spostfix"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "estimator",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Assigned Par"
-                                name="sparAssigned"
-                                id="sparAssigned"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "parAssigned",
+                                    "postfix",
                                     e.target.value
                                   )
                                 }
@@ -665,66 +539,12 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Verified By"
-                                name="sverifiedBy"
-                                id="sverifiedBy"
+                                placeholder="namingConv"
+                                name="snamingConv"
+                                id="snamingConv"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "verifiedBy",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Inspection Date"
-                                name="sinspectionDate"
-                                id="sinspectionDate"
-                                pattern="\d{4}-\d{2}-\d{2}"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "inspectionDate",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Date To PAR"
-                                name="sdateToPar"
-                                id="sdateToPar"
-                                pattern="\d{4}-\d{2}-\d{2}"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "dateToPar",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
-                            <th>
-                              {" "}
-                              <input
-                                type="date"
-                                style={{ width: "140px" }}
-                                placeholder="Date From PAR"
-                                name="sdateFromPar"
-                                id="sdateFromPar"
-                                pattern="\d{4}-\d{2}-\d{2}"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "dateFromPar",
+                                    "namingConv",
                                     e.target.value
                                   )
                                 }
@@ -736,12 +556,12 @@ const IDIQTrackersView = props => {
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
-                                placeholder="WO Status"
-                                name="swoStatus"
-                                id="swoStatus"
+                                placeholder="lastUsedConv"
+                                name="slastUsedConv"
+                                id="slastUsedConv"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "woStatus",
+                                    "lastUsedConv",
                                     e.target.value
                                   )
                                 }
@@ -751,16 +571,44 @@ const IDIQTrackersView = props => {
                             <th>
                               {" "}
                               <input
-                                style={{ width: "450px" }}
+                                style={{ width: "100px" }}
                                 type="text"
-                                placeholder="Inspection Notes"
-                                name="scomments"
-                                id="scomments"
+                                placeholder="nextToUseConv"
+                                name="snextToUseConv"
+                                id="snextToUseConv"
                                 onChange={e =>
                                   onUpdateSearchFilter(
-                                    "comments",
+                                    "nextToUseConv",
                                     e.target.value
                                   )
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="active"
+                                name="sactive"
+                                id="sactive"
+                                onChange={e =>
+                                  onUpdateSearchFilter("active", e.target.value)
+                                }
+                                onKeyUp={onPressEnter}
+                              />
+                            </th>
+                            <th>
+                              {" "}
+                              <input
+                                style={{ width: "100px" }}
+                                type="text"
+                                placeholder="group"
+                                name="sgroup"
+                                id="sgroup"
+                                onChange={e =>
+                                  onUpdateSearchFilter("group", e.target.value)
                                 }
                                 onKeyUp={onPressEnter}
                               />
@@ -777,79 +625,49 @@ const IDIQTrackersView = props => {
                             </tr>
                           ) : null}
 
-                          {IDIQTrackersViewMdl.data &&
-                            IDIQTrackersViewMdl.data.map((item, index) => {
-                              return (
-                                <tr key={index}>
-                                  {/* <td>{item.id}</td> */}
+                          {MenuNamingConventionViewMdl.data &&
+                            MenuNamingConventionViewMdl.data.map(
+                              (item, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td>{item.id}</td>
+                                    <td>{item.trackerName}</td>
+                                    <td>{item.abrvName}</td>
+                                    <td>{item.prefix}</td>
+                                    <td>{item.postfix}</td>
+                                    <td>{item.namingConv}</td>
+                                    <td>{item.lastUsedConv}</td>
+                                    <td>{item.nextToUseConv}</td>
+                                    <td>{item.active}</td>
+                                    <td>{item.group}</td>
 
-                                  <td>
-                                    {item.woNumber ? (
-                                      <label
-                                        className="label label-info custom-pointer"
-                                        onClick={e => onEditClick(item)}
-                                      >
-                                        {item.woNumber}
-                                      </label>
-                                    ) : null}
-                                  </td>
-                                  <td>{item.idiqsowDescription}</td>
-                                  <td>{item.location}</td>
-                                  <td>{item.woType}</td>
-                                  <td>{item.estimator}</td>
-                                  <td>{item.parAssigned}</td>
-                                  <td>{item.verifiedBy}</td>
-                                  <td>
-                                    {item.inspectionDate
-                                      ? moment(item.inspectionDate).format(
-                                          "MM/DD/YYYY"
-                                        )
-                                      : "No Data"}
-                                  </td>
-                                  <td>
-                                    {item.dateToPar
-                                      ? moment(item.dateToPar).format(
-                                          "MM/DD/YYYY"
-                                        )
-                                      : "No Data"}
-                                  </td>
-                                  <td>
-                                    {item.dateFromPar
-                                      ? moment(item.dateFromPar).format(
-                                          "MM/DD/YYYY"
-                                        )
-                                      : "No Data"}
-                                  </td>
-                                  <td>{item.woStatus}</td>
-                                  <td>{item.comments}</td>
+                                    <td>
+                                      {/* <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-primary ml-2"
+                                    onClick={e => handleEdit(item)}
+                                    data-toggle="modal"
+                                    data-target=".bs-example-modal-center"
+                                  >
+                                    <i className="far fa-edit"></i> Edit
+                                  </button>{" "}
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger ml-2"
+                                    onClick={e => onDeleteConfirmation(item.id)}
+                                    data-toggle="modal"
+                                    data-target=".bs-example-modal-center"
+                                  >
+                                    <i className="far fa-trash-alt"></i> Delete
+                                  </button> */}
+                                    </td>
+                                  </tr>
+                                )
+                              }
+                            )}
 
-                                  <td>
-                                    {/* <button
-                                      type="button"
-                                      className="btn btn-sm btn-outline-primary ml-2"
-                                      onClick={e => onEditClick(item)}
-                                      data-toggle="modal"
-                                      data-target=".bs-example-modal-center"
-                                    >
-                                      <i className="far fa-edit"></i> Edit
-                                    </button>{" "} */}
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-outline-danger ml-2"
-                                      onClick={() => onAttemptDelete(item.id)}
-                                      data-toggle="modal"
-                                      data-target=".bs-example-modal-center"
-                                    >
-                                      <i className="far fa-trash-alt"></i>{" "}
-                                      Delete
-                                    </button>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-
-                          {IDIQTrackersViewMdl.data &&
-                            IDIQTrackersViewMdl.data.length === 0 && (
+                          {MenuNamingConventionViewMdl.data &&
+                            MenuNamingConventionViewMdl.data.length === 0 && (
                               <tr>
                                 <td
                                   colSpan="100%"
@@ -879,7 +697,8 @@ const IDIQTrackersView = props => {
                           breakClassName={"page-item"}
                           breakLinkClassName={"page-link"}
                           pageCount={Math.floor(
-                            IDIQTrackersViewMdl.totalRecords / +length.current
+                            MenuNamingConventionViewMdl.totalRecords /
+                              +length.current
                           )}
                           marginPagesDisplayed={2}
                           pageRangeDisplayed={3}
@@ -897,31 +716,17 @@ const IDIQTrackersView = props => {
                     </Col>
                     <Col className="p-0 mt-2" xs={6} md={4}>
                       <div className="mt-2 float-end">
-                        Total Records: {IDIQTrackersViewMdl.totalRecords}
+                        Total Records:{" "}
+                        {MenuNamingConventionViewMdl.totalRecords}
                       </div>
                     </Col>
                   </Row>
 
-                  <DeleteModal
+                  {/* <DeleteModal
                     show={deleteModal}
-                    onDeleteClick={() => onDeleteConfirmed()}
-                    onCloseClick={() => {
-                      setDeleteModal(false)
-                      setModelData({})
-                    }}
-                  />
-
-                  <IDIQTrackerAddUpdate
-                    open={modal}
-                    modelData={modelData}
-                    onSaveClick={item => {
-                      console.log("onSaveClick from index called...", item)
-                      if (item?.id > 0) {
-                        loadView()
-                      }
-                    }}
-                    onCancelClick={setModal}
-                  />
+                    onDeleteClick={handleDelete}
+                    onCloseClick={() => setDeleteModal(false)}
+                  /> */}
                 </CardBody>
               </Card>
             </Col>
@@ -932,4 +737,4 @@ const IDIQTrackersView = props => {
   )
 }
 
-export default IDIQTrackersView
+export default MenuNamingConventionView

@@ -21,6 +21,8 @@ import InspectionDailyReport from "../pages/inspection-daily-report"
 import DropDownMenuView from "../pages/dropdown-menu-view/index"
 import UserLoginView from "../pages/user-login-view/index"
 import DirectoryNamesView from "../pages/directory-names-view/index"
+import NamingConventionView from "../pages/naming-convention-view"
+import UsersView from "../pages/users-view/index"
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -38,6 +40,8 @@ const authProtectedRoutes = [
   { path: "/menu-options", component: DropDownMenuView },
   { path: "/user-login", component: UserLoginView },
   { path: "/directory-names", component: DirectoryNamesView },
+  { path: "/naming-convention", component: NamingConventionView },
+  { path: "/user-access", component: UsersView },
   {
     //path: "/inspection-daily-report/:reportType",
     path: "/inspection-daily-report",

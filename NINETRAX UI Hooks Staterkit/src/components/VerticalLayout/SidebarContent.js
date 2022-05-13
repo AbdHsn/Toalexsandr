@@ -235,20 +235,15 @@ const SidebarContent = props => {
                   <Link to="/user-login">{props.t("User Login")}</Link>
                 </li> */}
                 <li>
-                  <Link to="/directory-names">
-                    {props.t("Directory Names")}
-                  </Link>
+                  <Link to="/directory-names">{props.t("Supervisors")}</Link>
                 </li>
                 <li>
-                  <Link to="/supervisors">{props.t("Supervisors")}</Link>
-                </li>
-                <li>
-                  <Link to="/user-settings">{props.t("User Settings")}</Link>
-                </li>
-                <li>
-                  <Link to="/naming-conventions">
+                  <Link to="/naming-convention">
                     {props.t("Naming Convention")}
                   </Link>
+                </li>
+                <li>
+                  <Link to="/user-access">{props.t("User Access")}</Link>
                 </li>
               </ul>
             </li>

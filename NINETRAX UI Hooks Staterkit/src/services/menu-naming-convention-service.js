@@ -1,10 +1,11 @@
 import http from "./http-handler"
 import appSettings from "../app-settings.json"
 
-export const getDirectoryNamesView = async postData => {
+export const getMenuNamingConventionView = async postData => {
   return http
     .post(
-      appSettings.BASE_URL + "/d/TbDirectoryNames/GetTbDirectoryNamesView",
+      appSettings.BASE_URL +
+        "/d/TbMenuNamingConventions/GetTbMenuNamingConventionsView",
       postData
     )
     .catch(error => {
@@ -14,7 +15,7 @@ export const getDirectoryNamesView = async postData => {
 
 export const newDirectoryNamesAddUpdate = async postData => {
   return http
-    .post(appSettings.BASE_URL + "/d/TbDirectoryNames", postData)
+    .post(appSettings.BASE_URL + "/d/TbMenuNamingConventions", postData)
     .catch(error => {
       throw error.response.data
     })
@@ -22,24 +23,24 @@ export const newDirectoryNamesAddUpdate = async postData => {
 
 export const editDirectoryNamesAddUpdate = async (id, postData) => {
   return http
-    .put(appSettings.BASE_URL + "/d/TbDirectoryNames/" + id, postData)
+    .put(appSettings.BASE_URL + "/d/TbMenuNamingConventions/" + id, postData)
     .catch(error => {
       throw error.response.data
     })
 }
 
-export const deleteDirectoryNames = async id => {
+export const deleteMenuNamingConvention = async id => {
   return http
-    .delete(appSettings.BASE_URL + "/d/TbDirectoryNames/" + id)
+    .delete(appSettings.BASE_URL + "/d/TbMenuNamingConventions/" + id)
     .catch(error => {
       throw error.response.data
     })
 }
 
-export const exportDirectoryNamesView = async postData => {
+export const exportMenuNamingConventionView = async postData => {
   return http
     .post(
-      appSettings.BASE_URL + "/d/TbDirectoryNames/ExportToExcel",
+      appSettings.BASE_URL + "/d/TbMenuNamingConventions/ExportToExcel",
       postData,
       {
         responseType: "blob",

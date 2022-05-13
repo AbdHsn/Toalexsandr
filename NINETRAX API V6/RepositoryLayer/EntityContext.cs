@@ -2251,6 +2251,10 @@ namespace RepositoryLayer
             {
                 a.ToView("MenuNamingConventionView");
             });
+            modelBuilder.Entity<UsersView>(a =>
+            {
+                a.ToView("UsersView");
+            });
 
             modelBuilder.Entity<DashboardUnsatBreakDownView>(a =>
             {
@@ -2314,6 +2318,7 @@ namespace RepositoryLayer
         #endregion TableEntity
 
         #region ViewEntity
+        public DbSet<UsersView> UsersView { get; set; } = null!;
         public DbSet<MenuNamingConventionView> MenuNamingConventionView { get; set; } = null!;
         public DbSet<DashboardInspectionView> DashboardInspectionView { get; set; }
         public DbSet<DashboardUnsatBreakDownView> DashboardUnsatBreakDownView { get; set; }
