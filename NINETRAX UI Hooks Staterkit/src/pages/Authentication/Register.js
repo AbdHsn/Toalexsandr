@@ -1,59 +1,107 @@
-import React, { useEffect } from "react";
-import MetaTags from "react-meta-tags";
-import { Row, Col, CardBody, Card, Alert, Container, Input, Label, Form, FormFeedback } from "reactstrap";
+import React, { useEffect, useState } from "react"
+import MetaTags from "react-meta-tags"
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  Alert,
+  Container,
+  Input,
+  Label,
+  Form,
+  FormFeedback,
+} from "reactstrap"
 
 // Formik Validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from "yup"
+import { useFormik } from "formik"
 
 // action
-import { registerUser, apiError } from "../../store/actions";
+import { registerUser, apiError } from "../../store/actions"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom"
 
 // import images
-import profileImg from "../../assets/images/profile-img.png";
-import logoImg from "../../assets/images/logo.svg";
+import profileImg from "../../assets/images/profile-img.png"
+import logoImg from "../../assets/images/logo.svg"
+import BtnProcessing from "../../components/Common/BtnProcessing"
+import { userRegistration } from "../../services/auth-service"
+import toastr from "toastr"
+import "toastr/build/toastr.min.css"
 
 const Register = props => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+  let history = useHistory()
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: '',
-      username: '',
-      password: '',
+      email: "",
+      username: "",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
       username: Yup.string().required("Please Enter Your Username"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
-    onSubmit: (values) => {
-      dispatch(registerUser(values));
-    }
-  });
+    onSubmit: values => {
+      //dispatch(registerUser(values))
+
+      const submitModel = {
+        loginId: values.username,
+        email: values.email,
+        password: values.password,
+      }
+
+      registration(submitModel)
+    },
+  })
 
   const { user, registrationError, loading } = useSelector(state => ({
     user: state.Account.user,
     registrationError: state.Account.registrationError,
     loading: state.Account.loading,
-  }));
+  }))
 
   // handleValidSubmit
   const handleValidSubmit = values => {
-    dispatch(registerUser(values));
-  };
+    dispatch(registerUser(values))
+  }
 
   useEffect(() => {
-    dispatch(apiError(""));
-  }, []);
+    dispatch(apiError(""))
+  }, [])
+
+  const registration = formValues => {
+    console.log("submit values....", formValues)
+    setIsProcessing(true)
+    userRegistration(formValues)
+      .then(res => {
+        console.log("submit model update response: ", res)
+        if (res.data.id > 0) {
+          localStorage.setItem("authUser", JSON.stringify(res.data))
+          history.push("/dashboard")
+          toastr.success("Registration Successful.", "NINETRAX")
+          setIsProcessing(false)
+          validation.resetForm()
+        } else {
+          setIsProcessing(false)
+          toastr.warning("Registration Failed.", "NINETRAX")
+        }
+      })
+      .catch(error => {
+        setIsProcessing(false)
+        toastr.error(error, "NINETRAX")
+      })
+  }
 
   return (
     <React.Fragment>
@@ -75,7 +123,7 @@ const Register = props => {
                     <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Free Register</h5>
-                        <p>Get your free Skote account now.</p>
+                        <p>Get your free NINETRAX account now.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -101,10 +149,10 @@ const Register = props => {
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
+                      onSubmit={e => {
+                        e.preventDefault()
+                        validation.handleSubmit()
+                        return false
                       }}
                     >
                       {user && user ? (
@@ -129,11 +177,15 @@ const Register = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
                           }
                         />
                         {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                          <FormFeedback type="invalid">
+                            {validation.errors.email}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -147,11 +199,17 @@ const Register = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.username || ""}
                           invalid={
-                            validation.touched.username && validation.errors.username ? true : false
+                            validation.touched.username &&
+                            validation.errors.username
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.username && validation.errors.username ? (
-                          <FormFeedback type="invalid">{validation.errors.username}</FormFeedback>
+                        {validation.touched.username &&
+                        validation.errors.username ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.username}
+                          </FormFeedback>
                         ) : null}
                       </div>
                       <div className="mb-3">
@@ -164,26 +222,42 @@ const Register = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.password || ""}
                           invalid={
-                            validation.touched.password && validation.errors.password ? true : false
+                            validation.touched.password &&
+                            validation.errors.password
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
+                        {validation.touched.password &&
+                        validation.errors.password ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.password}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
                       <div className="mt-4">
-                        <button
+                        {/* <button
                           className="btn btn-primary btn-block "
                           type="submit"
                         >
                           Register
-                        </button>
+                        </button> */}
+                        {isProcessing === true ? (
+                          <BtnProcessing isProcessing={isProcessing} />
+                        ) : (
+                          <button
+                            type="submit"
+                            className="btn btn-outline-success btn-block"
+                          >
+                            REGISTRATION
+                          </button>
+                        )}{" "}
                       </div>
 
                       <div className="mt-4 text-center">
                         <p className="mb-0">
-                          By registering you agree to the Skote{" "}
+                          By registering you agree to the NINETRAX{" "}
                           <Link to="#" className="text-primary">
                             Terms of Use
                           </Link>
@@ -202,8 +276,8 @@ const Register = props => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  © {new Date().getFullYear()} NINETRAX. Powered{" "}
+                  <i className="mdi mdi-heart text-danger" /> by NINETRAX
                 </p>
               </div>
             </Col>
@@ -211,7 +285,7 @@ const Register = props => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

@@ -1,7 +1,6 @@
 import PropTypes from "prop-types"
 import MetaTags from "react-meta-tags"
-import React from "react"
-
+import React, { useState } from "react"
 import {
   Row,
   Col,
@@ -18,7 +17,7 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
-import { withRouter, Link } from "react-router-dom"
+import { withRouter, Link, useHistory } from "react-router-dom"
 
 // Formik validation
 import * as Yup from "yup"
@@ -38,9 +37,16 @@ import logo from "assets/images/logo.svg"
 
 //Import config
 import { facebook, google } from "../../config"
+import login from "store/auth/login/reducer"
+import BtnProcessing from "../../components/Common/BtnProcessing"
+import { loginRequest } from "../../services/auth-service"
+import toastr from "toastr"
+import "toastr/build/toastr.min.css"
 
 const Login = props => {
+  let history = useHistory()
   const dispatch = useDispatch()
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -51,11 +57,18 @@ const Login = props => {
       password: "123456" || "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      email: Yup.string().required("Please Enter User Name"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: values => {
-      dispatch(loginUser(values, props.history))
+      //dispatch(loginUser(values, props.history))
+
+      const submitModel = {
+        loginId: values.email,
+        password: values.password,
+      }
+
+      login(submitModel)
     },
   })
 
@@ -66,6 +79,33 @@ const Login = props => {
   // handleValidSubmit
   const handleValidSubmit = (event, values) => {
     dispatch(loginUser(values, props.history))
+    //login()
+  }
+
+  const login = formValues => {
+    console.log("submit values....", formValues)
+    setIsProcessing(true)
+    loginRequest(formValues)
+      .then(res => {
+        console.log("submit model update response: ", res)
+        if (res.data.id > 0) {
+          localStorage.setItem("authUser", JSON.stringify(res.data))
+          sessionStorage.setItem("token", res.data.token)
+          console.log("login response obj --->", res)
+          history.push("/dashboard")
+          toastr.success("Login Successful.", "NINETRAX")
+          setIsProcessing(false)
+          validation.resetForm()
+        } else {
+          setIsProcessing(false)
+          toastr.warning("Invalid Credentials.", "NINETRAX")
+        }
+      })
+      .catch(error => {
+        console.log("Error: ---->", error)
+        setIsProcessing(false)
+        toastr.error(error, "NINETRAX")
+      })
   }
 
   const signIn = (res, type) => {
@@ -104,7 +144,7 @@ const Login = props => {
   return (
     <React.Fragment>
       <MetaTags>
-        <title>Login | Skote - React Admin & Dashboard Template</title>
+        <title>Login | NINETRAX</title>
       </MetaTags>
       <div className="home-btn d-none d-sm-block">
         <Link to="/" className="text-dark">
@@ -121,7 +161,7 @@ const Login = props => {
                     <Col xs={7}>
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to Skote.</p>
+                        <p>Sign in to continue on NINETRAX.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -156,12 +196,12 @@ const Login = props => {
                       {error ? <Alert color="danger">{error}</Alert> : null}
 
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">User Name</Label>
                         <Input
                           name="email"
                           className="form-control"
                           placeholder="Enter email"
-                          type="email"
+                          type="text"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
@@ -217,12 +257,16 @@ const Login = props => {
                       </div>
 
                       <div className="mt-3 d-grid">
-                        <button
-                          className="btn btn-primary btn-block"
-                          type="submit"
-                        >
-                          Log In
-                        </button>
+                        {isProcessing === true ? (
+                          <BtnProcessing isProcessing={isProcessing} />
+                        ) : (
+                          <button
+                            type="submit"
+                            className="btn btn-outline-success btn-block"
+                          >
+                            LOG IN
+                          </button>
+                        )}{" "}
                       </div>
 
                       <div className="mt-4 text-center">
@@ -304,8 +348,8 @@ const Login = props => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  © {new Date().getFullYear()} NINETRAX. Powered{" "}
+                  <i className="mdi mdi-heart text-danger" /> by NINETRAX
                 </p>
               </div>
             </Col>

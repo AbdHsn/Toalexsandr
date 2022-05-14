@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +15,8 @@ namespace NINETRAX.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "Working")]
+        //[HttpGet(Name = "Working"), Authorize(Roles = "Admin")]
+        [HttpGet(Name = "Working"), Authorize]
         public string Get()
         {
             return "API Project is running successfully.";

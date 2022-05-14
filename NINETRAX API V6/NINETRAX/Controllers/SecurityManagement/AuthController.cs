@@ -58,8 +58,7 @@ namespace NINETRAX.Controllers.DbManagement
         #endregion
 
         #region MyRegion
-        [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("LoginRequest"), AllowAnonymous]
         public ActionResult LoginRequest(TbUser user)
         {
             var getUser = AuthenticateUser(user);
@@ -67,11 +66,56 @@ namespace NINETRAX.Controllers.DbManagement
             if (getUser != null)
             {
                 var newToken = GenerateWebToken(getUser);
-                return StatusCode(200, new { Id = getUser.Id, UserTpe = getUser.AccessType, Email = user.Email, Token = newToken });
+                return StatusCode(200, new { Id = getUser.Id, AccessType = getUser.AccessType, Email = user.Email, Token = newToken });
                 //return Ok();
             }
             return StatusCode(403, "Credential does not matched!");
         }
+
+        #region User Registration
+        [HttpPost("UserRegistration"), AllowAnonymous]
+        public ActionResult UserRegistration(TbUser user)
+        {
+
+            try
+            {
+                var isAlreadyEmailExist = _context.TbUsers.Where(u => u.Email == user.Email).FirstOrDefault();
+                if (isAlreadyEmailExist != null)
+                    return StatusCode(500, "User email is already exist.");
+
+                var isAlreadyLoginIdExist = _context.TbUsers.Where(u => u.LoginId == user.LoginId).FirstOrDefault();
+                if (isAlreadyLoginIdExist != null)
+                    return StatusCode(500, $"User name '{user.LoginId}' is already exist.");
+
+                var getLast = _context.TbUsers.OrderByDescending(d => d.Id).AsNoTracking().FirstOrDefault();
+                if (getLast == null)
+                    user.Id = 1;
+                else
+                    user.Id = getLast.Id + 1;
+
+                user.AccessType = "Guest";
+
+                _context.TbUsers.Add(user);
+                _context.SaveChanges();
+
+                if (user.Id > 0)
+                {
+                    var getUser = AuthenticateUser(user);
+                    var newToken = GenerateWebToken(getUser);
+                    return StatusCode(200, new { Id = getUser.Id, AccessType = getUser.AccessType, Email = user.Email, Token = newToken });
+
+                }
+                else
+                {
+                    return StatusCode(500, "Registration failed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "API response failed.");
+            }
+        }
+        #endregion
 
         private string GenerateWebToken(TbUser user)
         {
@@ -82,7 +126,9 @@ namespace NINETRAX.Controllers.DbManagement
                 newClaims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
                 newClaims.Add(new Claim(JwtRegisteredClaimNames.GivenName, String.Concat(user.FirstName, " ", user.LastName).ToString()));
                 newClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-                //claims.Add(new Claim(ClaimTypes.Role, user.UserTpe.ToString()));
+
+                newClaims.Add(new Claim(ClaimTypes.Role, user.AccessType));
+  
 
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);

@@ -520,78 +520,7 @@ const UsersView = props => {
                               ></i>{" "}
                               Unique Id
                             </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("qualityInspectors")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "qualityInspectors"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Quality Inspectors
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("assosicateInspectors")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "assosicateInspectors"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Assosicate Inspectors
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("planEstimateInspectors")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "planEstimateInspectors"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Llan Estimate Inspectors
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("customerInspectors")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "customerInspectors"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Customer Inspectors
-                            </th>
+
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("aor")}
@@ -667,100 +596,7 @@ const UsersView = props => {
                               ></i>{" "}
                               Active Status
                             </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("fullAdminRights")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "fullAdminRights"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Full Admin Rights
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("editRights")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "editRights"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Edit Rights
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("deleteRights")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "deleteRights"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Delete Rights
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("viewRights")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "viewRights"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              View Rights
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("importRights")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column === "importRights"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Import Rights
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() =>
-                                onOrderByClick("activateAutologout")
-                              }
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "activateAutologout"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Activate Auto logout
-                            </th>
+
                             <th
                               className="custom-pointer"
                               onClick={() => onOrderByClick("loginId")}
@@ -790,23 +626,7 @@ const UsersView = props => {
                                     : ""
                                 }
                               ></i>{" "}
-                              Security Question 01
-                            </th>
-                            <th
-                              className="custom-pointer"
-                              onClick={() => onOrderByClick("securityAnsOne")}
-                            >
-                              <i
-                                className={
-                                  orderColumn.current.column ===
-                                  "securityAnsOne"
-                                    ? orderColumn.current.order_by === "DESC"
-                                      ? "fa fa-sort-amount-down"
-                                      : "fa fa-sort-amount-up"
-                                    : ""
-                                }
-                              ></i>{" "}
-                              Security Answer 01
+                              Security Question & Answer
                             </th>
                             <th
                               className="custom-pointer"
@@ -1006,6 +826,7 @@ const UsersView = props => {
                                 onKeyUp={onPressEnter}
                               />
                             </th>
+                            <th>{/* Active Status */}</th>
                             <th>
                               {" "}
                               <input
@@ -1025,7 +846,7 @@ const UsersView = props => {
                             </th>
 
                             <th>
-                              {" "}
+                              {/* {" "}
                               <input
                                 style={{ width: "100px" }}
                                 type="text"
@@ -1039,25 +860,9 @@ const UsersView = props => {
                                   )
                                 }
                                 onKeyUp={onPressEnter}
-                              />
+                              /> */}
                             </th>
-                            <th>
-                              {" "}
-                              <input
-                                style={{ width: "100px" }}
-                                type="text"
-                                placeholder="Security Answer 01"
-                                name="ssecurityAnsOne"
-                                id="ssecurityAnsOne"
-                                onChange={e =>
-                                  onUpdateSearchFilter(
-                                    "securityAnsOne",
-                                    e.target.value
-                                  )
-                                }
-                                onKeyUp={onPressEnter}
-                              />
-                            </th>
+
                             <th>
                               {" "}
                               <input
@@ -1136,10 +941,15 @@ const UsersView = props => {
                                   <td>{item.positionTitle}</td>
                                   <td>{item.email}</td>
                                   <td>{item.accessType}</td>
+                                  <td></td>
                                   <td>{item.loginId}</td>
                                   {/* <td>{item.password}</td> */}
-                                  <td>{item.securityQuesOne}</td>
-                                  <td>{item.securityAnsOne}</td>
+                                  <td>
+                                    Question: {item.securityQuesOne}
+                                    <br />
+                                    Answer: {item.securityAnsOne}
+                                  </td>
+
                                   <td>
                                     {item.dateAccessGranted
                                       ? moment(item.dateAccessGranted).format(

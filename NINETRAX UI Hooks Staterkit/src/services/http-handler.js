@@ -8,8 +8,9 @@ const header = {
     "Content-Type": "application/json",
     //"Content-Type": "multipart/form-data",
     Accept: "*/*",
-    // Authorization:
-    //   "Bearer " + JSON.parse(sessionStorage.getItem("token")).token,
+    Authorization: `bearer ${
+      JSON.parse(localStorage.getItem("authUser"))?.token || ""
+    }`,
     "Access-Control-Allow-Origin": appSettings.BASE_URL,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
     "Access-Control-Allow-Headers":
