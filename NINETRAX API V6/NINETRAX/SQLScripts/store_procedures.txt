@@ -1,0 +1,24 @@
+﻿DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `GetDailyInspectionReport`$$
+
+CREATE PROCEDURE `GetDailyInspectionReport`(IN selectedDate VARCHAR(20), IN reportType VARCHAR(15))
+BEGIN
+	SELECT
+  `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`ID`                 AS `Id`,
+    `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Location`           AS `Location`,
+      `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Work Order`         AS `WorkOrder`,
+      `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Work Type`          AS `WorkType`,
+        `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Description`        AS `Description`,
+        `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Actual Finish`      AS `ActualFinish`,
+          `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Inspection Results` AS `InspectionResults`,
+  `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Entered Date`       AS `EnteredDate`,
+  `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Cause Code`         AS `CauseCode`,
+  'BUMED'         AS `ReportType`
+FROM `QualityDB_Prod_forDev`.`A_tb_NASInspections`
+WHERE `QualityDB_Prod_forDev`.`A_tb_NASInspections`.`Entered Date` = selectedDate;
+END$$
+
+DELIMITER ;
+
+////////////////

@@ -1,0 +1,315 @@
+﻿CREATE VIEW `DashboardInspectionView` AS 
+SELECT
+  `A_tb_NASInspections`.`ID`                 AS `Id`,
+  `A_tb_NASInspections`.`Crew`               AS `Crew`,
+  `A_tb_NASInspections`.`Work Order`         AS `WorkOrder`,
+  `A_tb_NASInspections`.`Inspection Date`    AS `InspectionDate`,
+  `A_tb_NASInspections`.`Description`        AS `Description`,
+  `A_tb_NASInspections`.`Location`           AS `Location`,
+  `A_tb_NASInspections`.`Lead`               AS `Lead`,
+  `A_tb_NASInspections`.`Cause Code`         AS `CauseCode`,
+  `A_tb_NASInspections`.`Unsat Findings`     AS `Finding`,
+  `A_tb_NASInspections`.`Inspection Results` AS `Result`
+FROM `A_tb_NASInspections`
+
+////////////////////////////////
+
+CREATE VIEW `ATbNasinspectionsView` AS 
+SELECT
+  `A_tb_NASInspections`.`ID`                  AS `Id`,
+  `A_tb_NASInspections`.`Annex`               AS `Annex`,
+  `A_tb_NASInspections`.`Spec_Item`           AS `SpecItem`,
+  `A_tb_NASInspections`.`Title`               AS `Title`,
+  `A_tb_NASInspections`.`Work Order`          AS `WorkOrder`,
+  `A_tb_NASInspections`.`Description`         AS `Description`,
+  `A_tb_NASInspections`.`Long_Description`    AS `LongDescription`,
+  `A_tb_NASInspections`.`Location`            AS `Location`,
+  `A_tb_NASInspections`.`Asset`               AS `Asset`,
+  `A_tb_NASInspections`.`Asset_Description`   AS `AssetDescription`,
+  `A_tb_NASInspections`.`Status`              AS `Status`,
+  `A_tb_NASInspections`.`Crew`                AS `Crew`,
+  `A_tb_NASInspections`.`Lead`                AS `Lead`,
+  `A_tb_NASInspections`.`Work Type`           AS `WorkType`,
+  `A_tb_NASInspections`.`Sub Work Type`       AS `SubWorkType`,
+  `A_tb_NASInspections`.`Elin`                AS `Elin`,
+  `A_tb_NASInspections`.`On_Behalf_Of`        AS `OnBehalfOf`,
+  `A_tb_NASInspections`.`Phone`               AS `Phone`,
+  `A_tb_NASInspections`.`Duration`            AS `Duration`,
+  `A_tb_NASInspections`.`Target Start`        AS `TargetStart`,
+  `A_tb_NASInspections`.`Target Finish`       AS `TargetFinish`,
+  `A_tb_NASInspections`.`Actual Start`        AS `ActualStart`,
+  `A_tb_NASInspections`.`Actual Finish`       AS `ActualFinish`,
+  `A_tb_NASInspections`.`Status Date`         AS `StatusDate`,
+  `A_tb_NASInspections`.`QC Inspector`        AS `QcInspector`,
+  `A_tb_NASInspections`.`Entered Date`        AS `EnteredDate`,
+  `A_tb_NASInspections`.`Inspection Results`  AS `InspectionResults`,
+  `A_tb_NASInspections`.`Inspection Date`  AS `InspectionDate`,
+  `A_tb_NASInspections`.`Unsat Findings`      AS `UnsatFindings`,
+  `A_tb_NASInspections`.`Cause Code`          AS `CauseCode`,
+  `A_tb_NASInspections`.`Root Cause`          AS `RootCause`,
+  `A_tb_NASInspections`.`Corrective Actions`  AS `CorrectiveActions`,
+  `A_tb_NASInspections`.`QCComments`          AS `QcComments`,
+  `A_tb_NASInspections`.`Selected`            AS `Selected`
+FROM `A_tb_NASInspections`
+
+///////////////////////
+SELECT
+  `tb_IDIQTracker`.`ID`                          AS `Id`,
+  `tb_IDIQTracker`.`WO Number`                   AS `WONumber`,  
+  `tb_IDIQTracker`.`IDIQ Work Order Description` AS `IDIQSOWDescription`,
+  `tb_IDIQTracker`.`WO Location`                 AS `Location`,
+  `tb_IDIQTracker`.`WO Type`                     AS `WOType`,  
+  `tb_IDIQTracker`.`Estimator`                   AS `Estimator`,
+    `tb_IDIQTracker`.`PAR ASSIGNED`                AS `ParAssigned`,
+    `tb_IDIQTracker`.`VERIFIED BY`                 AS `VerifiedBy`,
+      `tb_IDIQTracker`.`QC Inspection Complete`      AS `InspectionDate`,
+  `tb_IDIQTracker`.`DATE SENT TO PAR`            AS `DateToPar`,
+  `tb_IDIQTracker`.`DATE RECEIVED FROM PAR`      AS `DateFromPar`,
+  `tb_IDIQTracker`.`WO Status`                   AS `WOStatus`,
+    `tb_IDIQTracker`.`Comments`                    AS `Comments`,
+          `tb_IDIQTracker`.`Task Completed`      AS `TaskCompleted`,
+
+  `tb_IDIQTracker`.`Approved Start Date`         AS `ApprovedStartDate`,
+  `tb_IDIQTracker`.`Approved End Date`           AS `ApprovedEndDate`,
+    `tb_IDIQTracker`.`Actual Completion Date`      AS `ActualCompletionDate`,
+      `tb_IDIQTracker`.`TASK COMPLETED ON TIME`      AS `TaskCompletedOnTime`,
+        `tb_IDIQTracker`.`QC RECEIVED DATE`            AS `QCReceivedDate`,
+        `tb_IDIQTracker`.`CLOSED BY`                   AS `ClosedBy`,
+          `tb_IDIQTracker`.`DATE SENT TO WORK CONTROL`   AS `DateSentToWorkControl`,
+          `tb_IDIQTracker`.`Subcontractor / In House`    AS `SubContractorInHouse`,
+  `tb_IDIQTracker`.`Subcontractor Name`          AS `SubContractorName`,
+    `tb_IDIQTracker`.`DATE WO WAS CLOSED`          AS `DateWoWasClosed`,
+    `tb_IDIQTracker`.`UnsatNotes`                  AS `UnsatNotes`,
+      `tb_IDIQTracker`.`RootCause`                   AS `RootCause`,
+    `tb_IDIQTracker`.`CauseCode`                   AS `CauseCode`
+FROM `tb_IDIQTracker`
+
+///////////////////
+
+SELECT
+  `A_tb_PDRTracker`.`ID`                        AS `Id`,
+  `A_tb_PDRTracker`.`PDRNUmber`                 AS `PDRNUmber`,
+  `A_tb_PDRTracker`.`Work Order`                AS `WorkOrder`,
+  `A_tb_PDRTracker`.`Location`                  AS `Location`,
+  `A_tb_PDRTracker`.`Techs_Name`                AS `techsName`,
+  `A_tb_PDRTracker`.`QC Inspector`              AS `QCInspector`,
+  `A_tb_PDRTracker`.`Unsat Findings`            AS `UnsatFindings`,
+  `A_tb_PDRTracker`.`Cause Code`                AS `causeCode`,
+  `A_tb_PDRTracker`.`Root Cause`                AS `rootCause`,
+  `A_tb_PDRTracker`.`SUBCONTRACTOR NAME`        AS `subcontractorName`,
+  `A_tb_PDRTracker`.`SURVEILLANCE TYPE`         AS `surveillanceType`,
+  `A_tb_PDRTracker`.`SURVEILLANCE RESULTS`      AS `surveillanceResults`,
+  `A_tb_PDRTracker`.`ANNEX`                     AS `Annex`,
+  `A_tb_PDRTracker`.`SPEC ITEM`                 AS `SpecItem`,
+  `A_tb_PDRTracker`.`TITLE`                     AS `Title`,
+  `A_tb_PDRTracker`.`SPEC ITEM REQUIREMENTS`    AS `specItemRequirements`,
+  `A_tb_PDRTracker`.`DATE STARTED`              AS `dateStarted`,
+  `A_tb_PDRTracker`.`DATE COMPLETED`            AS `DateCompleted`,
+  `A_tb_PDRTracker`.`DESCRIPTION OF INSPECTION` AS `descriptionOfInspection`,
+  `A_tb_PDRTracker`.`FMNAME`                    AS `FMName`,
+  `A_tb_PDRTracker`.`FMTITLE`                   AS `FMTitle`,
+  `A_tb_PDRTracker`.`FM RESPONSE`               AS `fmResponse`,
+  `A_tb_PDRTracker`.`DATE ISSUED`               AS `DateIssued`,
+  `A_tb_PDRTracker`.`DATE DUE`                  AS `DateDue`,
+  `A_tb_PDRTracker`.`DATE REINSPECTED`          AS `dateReinspected`,
+  `A_tb_PDRTracker`.`DATE CLOSED`               AS `dateClosed`,
+  `A_tb_PDRTracker`.`QC COMMENTS`               AS `qcComments`,
+  `A_tb_PDRTracker`.`CLOSED BY`                 AS `closedBy`,
+  `A_tb_PDRTracker`.`STATUS`                    AS `Status`,
+  `A_tb_PDRTracker`.`QC COMMENTS2`              AS `qcComments2`,
+  `A_tb_PDRTracker`.`INSPECTION FAIL REASON`    AS `inspectionFailReason`
+FROM `A_tb_PDRTracker`
+
+//////////////////////
+SELECT
+  `tb_PAWTracker`.`ID`                 AS `Id`,
+  `tb_PAWTracker`.`PAW Number`         AS `PAWNumber`,
+  `tb_PAWTracker`.`SITE`               AS `site`,
+  `tb_PAWTracker`.`WO Number`          AS `WONumber`,
+  `tb_PAWTracker`.`Annex`              AS `Annex`,
+  `tb_PAWTracker`.`Location`           AS `Location`,
+  `tb_PAWTracker`.`SPEC ITEM 1`        AS `SpecItem`,
+  `tb_PAWTracker`.`Title`              AS `Title`,
+  `tb_PAWTracker`.`DESCRIPTION`        AS `Description`,
+  `tb_PAWTracker`.`DESCRIPTION SHORT`  AS `descriptionShort`,
+  `tb_PAWTracker`.`PAW LEVEL`          AS `pawLevel`,
+  `tb_PAWTracker`.`PAW RATING`         AS `pawRating`,
+  `tb_PAWTracker`.`PAW ASSESSMENT`     AS `pawAssessment`,
+  `tb_PAWTracker`.`PAR`                AS `Par`,
+  `tb_PAWTracker`.`VALIDITY`           AS `Validity`,
+  `tb_PAWTracker`.`TO NUMBER`          AS `toNumber`,
+  `tb_PAWTracker`.`MOD NUMBER`         AS `modNumber`,
+  `tb_PAWTracker`.`DATE RECEIVED`      AS `DateReceived`,
+  `tb_PAWTracker`.`DATE ACKNOWLEDGED`  AS `DateAcknowledged`,
+  `tb_PAWTracker`.`DATE SENT TO PAR`   AS `DateToPar`,
+  `tb_PAWTracker`.`PAST DUE FROM PAR`  AS `pastDueFromPar`,
+  `tb_PAWTracker`.`DATE CLOSED BY PAR` AS `dateClosedByPar`,
+  `tb_PAWTracker`.`PAW STATUS`         AS `Status`,
+  `tb_PAWTracker`.`PAW RESPONSE`       AS `PawResponse`,
+  `tb_PAWTracker`.`RESPONSE BY`        AS `responseBy`,
+  `tb_PAWTracker`.`COMMENTS`           AS `comments`,
+  `tb_PAWTracker`.`UNSAT Condition`    AS `unsatCondition`,
+  `tb_PAWTracker`.`UNSAT ROOT CAUSE`   AS `unsatRootCause`
+FROM `tb_PAWTracker`
+
+//////////////////
+SELECT
+  `tb_CCRTracker`.`ID`                        AS `Id`,
+  `tb_CCRTracker`.`CCR NUMBER`                AS `CCRNumber`,
+  `tb_CCRTracker`.`SITE`                      AS `site`,
+  `tb_CCRTracker`.`WO NUMBER`                 AS `WONumber`,
+  `tb_CCRTracker`.`Annex`                     AS `Annex`,
+  `tb_CCRTracker`.`LOCATION`                  AS `Location`,
+  `tb_CCRTracker`.`SPEC ITEM 1`               AS `SpecItem`,
+  `tb_CCRTracker`.`SPEC ITEM 3`               AS `specItem3`,
+  `tb_CCRTracker`.`TITLE`                     AS `Title`,
+  `tb_CCRTracker`.`PAR`                       AS `Par`,
+  `tb_CCRTracker`.`FM_BLDG_MANAGER`           AS `FMManager`,
+  `tb_CCRTracker`.`ISSUED BY`                 AS `issuedBy`,
+  `tb_CCRTracker`.`DATE RECEIVED`             AS `DateReceived`,
+  `tb_CCRTracker`.`DATE ACKED`                AS `DateAcknowledged`,
+  `tb_CCRTracker`.`DATE RESPONDED`            AS `DateToPar`,
+  `tb_CCRTracker`.`DATE CLOSED`               AS `dateClosed`,
+  `tb_CCRTracker`.`DESCRIPTION`               AS `description`,
+  `tb_CCRTracker`.`DETAIL OF COMPLAINT`       AS `DetailOfComplaint`,
+  `tb_CCRTracker`.`DETAIL OF COMPLAINT SHORT` AS `detailOfComplaintShort`,
+  `tb_CCRTracker`.`COMMENTS`                  AS `Comments`,
+  `tb_CCRTracker`.`CCR RESPONSE`              AS `CCRResponse`,
+  `tb_CCRTracker`.`RESPONSE BY`               AS `responseBy`,
+  `tb_CCRTracker`.`VALID`                     AS `valid`,
+  `tb_CCRTracker`.`ISITVALID`                 AS `Validity`,
+  `tb_CCRTracker`.`STATUS`                    AS `Status`,
+  `tb_CCRTracker`.`UNSAT Condition`           AS `unsatCondition`,
+  `tb_CCRTracker`.`UNSAT ROOT CAUSE`          AS `unsatRootCause`
+FROM `tb_CCRTracker`
+
+/////////////////
+SELECT
+  `tb_NCRTracker`.`ID`                     AS `Id`,
+  `tb_NCRTracker`.`SITE`                   AS `site`,
+  `tb_NCRTracker`.`NCR NUMBER`             AS `NCRNumber`,
+  `tb_NCRTracker`.`QCFR NUMBER`            AS `qcfrNumber`,
+  `tb_NCRTracker`.`PDR NUMBER`             AS `PDRNumber`,
+  `tb_NCRTracker`.`WO NUMBER`              AS `WONumber`,
+  `tb_NCRTracker`.`DATE ISSUED`            AS `DateIssued`,
+  `tb_NCRTracker`.`QC INSPECTOR`           AS `QCInspector`,
+  `tb_NCRTracker`.`NONCONFORMANCE SUMMARY` AS `NonConformanceSummary`,
+  `tb_NCRTracker`.`ANNEX`                  AS `Annex`,
+  `tb_NCRTracker`.`SPEC ITEM`              AS `SpecItem`,
+  `tb_NCRTracker`.`TITLE`                  AS `Title`,
+  `tb_NCRTracker`.`ASSESSMENT TYPE`        AS `assessmentType`,
+  `tb_NCRTracker`.`NONCONFORMANCE TYPE`    AS `nonconformanceType`,
+  `tb_NCRTracker`.`REQUIREMENT 1`          AS `requirement1`,
+  `tb_NCRTracker`.`OBSERVATION 1`          AS `observation1`,
+  `tb_NCRTracker`.`REQUIREMENT 2`          AS `requirement2`,
+  `tb_NCRTracker`.`OBSERVATION 2`          AS `observation2`,
+  `tb_NCRTracker`.`REQUIREMENT 3`          AS `requirement3`,
+  `tb_NCRTracker`.`OBSERVATION 3`          AS `observation3`,
+  `tb_NCRTracker`.`REQUIREMENT 4`          AS `requirement4`,
+  `tb_NCRTracker`.`OBSERVATION 4`          AS `observation4`,
+  `tb_NCRTracker`.`RESPONSIBLE PERSONE`    AS `ResponsiblePerson`,
+  `tb_NCRTracker`.`RESPONSIBLE DISCIPLINE` AS `responsibleDiscipline`,
+  `tb_NCRTracker`.`RESPONSIBLE SUB`        AS `ResponsibleSub`,
+  `tb_NCRTracker`.`DATE CAP DUE`           AS `DateCAPDue`,
+  `tb_NCRTracker`.`COMMENTS`               AS `comments`,
+  `tb_NCRTracker`.`STATUS`                 AS `Status`
+FROM `tb_NCRTracker`
+
+//////////////////////////
+
+SELECT
+  `tb_CDRTracker`.`ID`                AS `Id`,
+  `tb_CDRTracker`.`cdrnumber`         AS `CDRNumber`,
+  `tb_CDRTracker`.`datereceived`      AS `DateReceived`,
+  `tb_CDRTracker`.`discrepancy`       AS `Discrepancy`,
+  `tb_CDRTracker`.`discrepancyshort`  AS `discrepancyshort`,
+  `tb_CDRTracker`.`isitvalid`         AS `isitvalid`,
+  `tb_CDRTracker`.`functionalmanager` AS `FunctionalManager`,
+  `tb_CDRTracker`.`responseduedate`   AS `ResponseDueDate`,
+  `tb_CDRTracker`.`considerations`    AS `considerations`,
+  `tb_CDRTracker`.`memonumber`        AS `MemoNumber`,
+  `tb_CDRTracker`.`response`          AS `FMResponse`,
+  `tb_CDRTracker`.`responsedate`      AS `ResponseDate`,
+  `tb_CDRTracker`.`dateclosed`        AS `DateClosed`,
+  `tb_CDRTracker`.`status`            AS `Status`,
+  `tb_CDRTracker`.`notes`             AS `Notes`
+FROM `tb_CDRTracker`
+
+//////////////////////
+SELECT
+  `tb_DropDownMenu`.`ID`               AS `id`,
+  `tb_DropDownMenu`.`CauseCode`        AS `causeCode`,
+  `tb_DropDownMenu`.`RootCause`        AS `rootCause`,
+  `tb_DropDownMenu`.`CorrectiveAction` AS `correctiveAction`,
+  `tb_DropDownMenu`.`QCStatus`         AS `qcstatus`,
+  `tb_DropDownMenu`.`PDRStatusMenu`    AS `pdrstatusMenu`,
+  `tb_DropDownMenu`.`PAWStatusMenu`    AS `pawstatusMenu`,
+  `tb_DropDownMenu`.`PAWRating`        AS `pawrating`,
+  `tb_DropDownMenu`.`PAW ASSESSMENT`   AS `pawAssessment`,
+  `tb_DropDownMenu`.`CCRStatusMenu`    AS `ccrstatusMenu`,
+  `tb_DropDownMenu`.`Validity`         AS `validity`,
+  `tb_DropDownMenu`.`QCTechs`          AS `qctechs`,
+  `tb_DropDownMenu`.`MPT_PAR`          AS `mptPar`,
+  `tb_DropDownMenu`.`MPT_ASGN_Code`    AS `mptAsgnCode`,
+  `tb_DropDownMenu`.`JAX_PAR`          AS `jaxPar`,
+  `tb_DropDownMenu`.`PAWUnsat`         AS `pawunsat`,
+  `tb_DropDownMenu`.`PAWRootCause`     AS `pawrootCause`,
+  `tb_DropDownMenu`.`FM_BLDG_MANAGER`  AS `fmBldgManager`,
+  `tb_DropDownMenu`.`ESTIMATORS`       AS `estimators`
+FROM `tb_DropDownMenu`
+
+///////////////////
+SELECT
+  `tb_DirectoryNames`.`ID`              AS `id`,
+  `tb_DirectoryNames`.`PersonName`      AS `personName`,
+  `tb_DirectoryNames`.`PersonTitle`     AS `personTitle`,
+  `tb_DirectoryNames`.`BaseOfOperation` AS `baseOfOperation`
+FROM `tb_DirectoryNames`
+
+///////////////
+SELECT
+  `tb_Menu_NamingConvention`.`ID`               AS `id`,
+  `tb_Menu_NamingConvention`.`tracker_name`     AS `trackerName`,
+  `tb_Menu_NamingConvention`.`abrv_name`        AS `abrvName`,
+  `tb_Menu_NamingConvention`.`prefix`           AS `prefix`,
+  `tb_Menu_NamingConvention`.`number_seq`       AS `numberSeq`,
+  `tb_Menu_NamingConvention`.`postfix`          AS `postfix`,
+  `tb_Menu_NamingConvention`.`naming_conv`      AS `namingConv`,
+  `tb_Menu_NamingConvention`.`last_used_conv`   AS `lastUsedConv`,
+  `tb_Menu_NamingConvention`.`next_to_use_conv` AS `nextToUseConv`,
+  `tb_Menu_NamingConvention`.`active`           AS `active`,
+  `tb_Menu_NamingConvention`.`group`            AS `group`
+FROM `tb_Menu_NamingConvention`
+
+/////////////////
+SELECT
+  `tb_Users`.`ID`                       AS `id`,
+  `tb_Users`.`first_name`               AS `firstName`,
+  `tb_Users`.`last_name`                AS `lastName`,
+  `tb_Users`.`full_name`                AS `fullName`,
+  `tb_Users`.`unique_id`                AS `uniqueId`,
+  `tb_Users`.`quality_inspectors`       AS `qualityInspectors`,
+  `tb_Users`.`assosicate_inspectors`    AS `assosicateInspectors`,
+  `tb_Users`.`plan_estimate_inspectors` AS `planEstimateInspectors`,
+  `tb_Users`.`customer_inspectors`      AS `customerInspectors`,
+  `tb_Users`.`aor`                      AS `aor`,
+  `tb_Users`.`position_title`           AS `positionTitle`,
+  `tb_Users`.`email`                    AS `email`,
+  `tb_Users`.`access_type`              AS `accessType`,
+  `tb_Users`.`active_status`            AS `activeStatus`,
+  `tb_Users`.`full_admin_rights`        AS `fullAdminRights`,
+  `tb_Users`.`edit_rights`              AS `editRights`,
+  `tb_Users`.`delete_rights`            AS `deleteRights`,
+  `tb_Users`.`view_rights`              AS `viewRights`,
+  `tb_Users`.`import_rights`            AS `importRights`,
+  `tb_Users`.`activate_autologout`      AS `activateAutologout`,
+  `tb_Users`.`user_picture`             AS `user_picture`,
+  `tb_Users`.`login_id`                 AS `loginId`,
+  `tb_Users`.`password`                 AS `password`,
+  `tb_Users`.`reset_password`           AS `resetPassword`,
+  `tb_Users`.`security_ques_one`        AS `securityQuesOne`,
+  `tb_Users`.`security_ans_one`         AS `securityAnsOne`,
+  `tb_Users`.`date_access_granted`      AS `dateAccessGranted`,
+  `tb_Users`.`date_access_removed`      AS `dateAccessRemoved`,
+  `tb_Users`.`comments`                 AS `comments`
+FROM `tb_Users`

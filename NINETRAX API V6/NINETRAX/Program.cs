@@ -6,22 +6,13 @@ using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 string CorsPolicy = "CorsPolicy";
 // Add services to the container.
 
-builder.Services.AddControllers(options => {
-    //Adding these code to set authorize attribute globally for the controllers
-    var policy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-    options.Filters.Add(new AuthorizeFilter(policy));
-});
-
+builder.Services.AddControllers();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
            );
@@ -30,61 +21,28 @@ builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo 
-    { 
-        Title = "NINETRAX", 
-        Description = "REST API End Point Testing UI", 
-        Version = "v1", 
-        //TermsOfService = new Uri("http://54.175.155.238/") 
-    });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "NINETRAX", Description = "API End Points Testing UI", Version = "v1" });
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
         In = ParameterLocation.Header,
-        //Type = SecuritySchemeType.ApiKey,
-        //Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            Implicit = new OpenApiOAuthFlow
-            {
-                Scopes = new Dictionary<string, string>
-                {
-                    { "openid", "Open Id" }
-                },
-                //AuthorizationUrl = new Uri(builder.Configuration.GetSection("Authentication:Domain").Value + "authorize?audience=" + builder.Configuration.GetSection("Authentication:Audience").Value)
-            }
-        }
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
     });
-    //options.OperationFilter<SecurityRequirementsOperationFilter>();
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-
-//.Net Core Default
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuerSigningKey = true,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-//                .GetBytes(builder.Configuration.GetSection("Jwt:Key").Value)),
-//            ValidateIssuer = false,
-//            ValidateAudience = false
-//        };
-//    });
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.- = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.Authority = builder.Configuration.GetSection("Authentication:Domain").Value;//Configuration["Authentication:Domain"];
-    options.Audience = builder.Configuration.GetSection("Authentication:Audience").Value;//Configuration["Authentication:Audience"];
-});
-
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("Jwt:Key").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 builder.Services.AddCors();
 
 builder.Services.AddDbContext<EntityContext>(options =>
@@ -125,11 +83,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
-        options.OAuthClientId(builder.Configuration.GetSection("Authentication:ClientId").Value);
-    });
+    app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
 // Order Must be followed.
