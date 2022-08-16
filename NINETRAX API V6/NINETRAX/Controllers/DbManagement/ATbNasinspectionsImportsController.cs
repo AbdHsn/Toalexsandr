@@ -8,6 +8,8 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NINETRAX.Globals;
 using DataLayer.Models.SPModels;
+using System.Data;
+using Newtonsoft.Json;
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -35,7 +37,7 @@ namespace NINETRAX.Controllers.DbManagement
             IRawQueryRepo<TotalRecordCountGLB> getTotalRecordCountGLB,
             IRawQueryRepo<Object> getAllByLike,
             IRawQueryRepo<Object> callSP
-     
+
         )
         {
             _ATbNasinspectionsImportContext = ATbNasinspectionsImportContext;
@@ -45,7 +47,7 @@ namespace NINETRAX.Controllers.DbManagement
             _getTotalRecordCountGLB = getTotalRecordCountGLB;
             _getAllByLike = getAllByLike;
             _callSP = callSP;
-        
+
         }
         #endregion
 
@@ -292,52 +294,127 @@ namespace NINETRAX.Controllers.DbManagement
                         // required because of known issue when running on .NET Core
                         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
+                        #region new excel code
+
+                        //IExcelDataReader excelReader;
+
+                        ////1. Reading Excel file
+                        //if (getExtension == ".xls")
+                        //{
+                        //    //1.1 Reading from a binary Excel file ('97-2003 format; *.xls)
+                        //    excelReader = ExcelReaderFactory.CreateBinaryReader(CommonFunctions.FileToMemoryStream(importFile));
+                        //}
+                        //else
+                        //{
+                        //    //1.2 Reading from a OpenXml Excel file (2007 format; *.xlsx)
+                        //    excelReader = ExcelReaderFactory.CreateOpenXmlReader(CommonFunctions.FileToMemoryStream(importFile));
+                        //}
+
+                        ////2. DataSet - The result of each spreadsheet will be created in the result.Tables
+                        //DataSet result = excelReader.AsDataSet();
+
+                        ////3. DataSet - Create column names from first row
+                        ////excelReader.IsFirstRowAsColumnNames = ;
+
+                        //excelReader.Close();
+
+                        /////////////////
                         using (var stream = new MemoryStream())
                         {
                             uploadedExcelFile.CopyTo(stream);
                             stream.Position = 0;
                             using (var reader = ExcelReaderFactory.CreateReader(stream))
                             {
-                                int count = 0;
-                                while (reader.Read()) //Each row of the file
+                                //// reader.IsFirstRowAsColumnNames
+                                var conf = new ExcelDataSetConfiguration
                                 {
-                                    //skipping header record.
-                                    if (count == 0)
+                                    ConfigureDataTable = _ => new ExcelDataTableConfiguration
                                     {
-                                        count++;
-                                        continue;
+                                        UseHeaderRow = true
                                     }
+                                };
 
-                                    //var t = reader.GetValue(0).ToString();
+                                var dataSet = reader.AsDataSet(conf);
 
-                                    //Assigning excel data into ExcelReaderVM
-                                    excelData.Add(new ATbNasinspectionsImport
-                                    {
-                                        WorkOrder = reader.GetValue(0).ToString(),
-                                        Description = reader.GetValue(1).ToString(),
-                                        Long_Description = reader.GetValue(2).ToString(),
-                                        Location = reader.GetValue(3).ToString(),
-                                        Asset = reader.GetValue(4).ToString(),
-                                        Asset_Description = reader.GetValue(5).ToString(),
-                                        Status = reader.GetValue(6).ToString(),
-                                        Crew = reader.GetValue(7).ToString(),
-                                        Lead = reader.GetValue(8).ToString(),
-                                        WorkType = reader.GetValue(9).ToString(),
-                                        SubWorkType = reader.GetValue(10).ToString(),
-                                        Elin = reader.GetValue(11).ToString(),
-                                        OnBehalfOf = reader.GetValue(12)?.ToString(),
-                                        Phone = reader.GetValue(13).ToString(),
-                                        Duration = reader.GetValue(14).ToString(),
-                                        TargetStart = reader.GetValue(15) != null ? DateTime.Parse(reader.GetValue(15).ToString()) : null,
-                                        TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null,
-                                        ActualStart = reader.GetValue(17) != null ? DateTime.Parse(reader.GetValue(17).ToString()) : null,
-                                        ActualFinish = reader.GetValue(18) != null ? DateTime.Parse(reader.GetValue(18).ToString()) : null,
-                                        StatusDate = reader.GetValue(19) != null ? DateTime.Parse(reader.GetValue(19).ToString()) : null
-                                    });
-                                    count++;
-                                }
+                                // Now you can get data from each sheet by its index or its "name"
+                                var dataTable = dataSet.Tables[0];
+
+                                var serialized = JsonConvert.SerializeObject(dataTable);
+                                var model = JsonConvert.DeserializeObject<List<ATbNasinspectionsImport>>(serialized);
                             }
                         }
+                        ///
+
+                        #endregion
+
+                        //using (var stream = new MemoryStream())
+                        //{
+                        //    uploadedExcelFile.CopyTo(stream);
+                        //    stream.Position = 0;
+                        //    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        //    {
+                        //        int count = 0;
+                        //        while (reader.Read()) //Each row of the file
+                        //        {
+                        //            //skipping header record.
+                        //            if (count == 0)
+                        //            {
+                        //                count++;
+                        //                continue;
+                        //            }
+
+                        //            //var t = reader.GetValue(0).ToString();
+
+                        //            var inspectImport = new ATbNasinspectionsImport();
+                        //            inspectImport.WorkOrder = reader?.GetValue(0).ToString();
+                        //            inspectImport.Description = reader?.GetValue(1).ToString();
+                        //            inspectImport.Long_Description = reader?.GetValue(2).ToString();
+                        //            inspectImport.Location = reader.GetValue(3).ToString();
+                        //            inspectImport.Asset = reader.GetValue(4).ToString();
+                        //            inspectImport.Asset_Description = reader.GetValue(5).ToString();
+                        //            inspectImport.Status = reader.GetValue(6).ToString();
+                        //            inspectImport.Crew = reader.GetValue(7).ToString();
+                        //            inspectImport.Lead = reader.GetValue(8).ToString();
+                        //            inspectImport.WorkType = reader.GetValue(9).ToString();
+                        //            inspectImport.SubWorkType = reader.GetValue(10).ToString();
+                        //            inspectImport.Elin = reader.GetValue(11).ToString();
+                        //            inspectImport.OnBehalfOf = reader.GetValue(12)?.ToString();
+                        //            inspectImport.Phone = reader.GetValue(13).ToString();
+                        //            inspectImport.Duration = reader.GetValue(14).ToString();
+                        //            inspectImport.TargetStart = reader.GetValue(15) != null ? DateTime.Parse(reader.GetValue(15).ToString()) : null;
+                        //            inspectImport.TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null;
+                        //            inspectImport.ActualStart = reader.GetValue(17) != null ? DateTime.Parse(reader.GetValue(17).ToString()) : null;
+                        //            inspectImport.ActualFinish = reader.GetValue(18) != null ? DateTime.Parse(reader.GetValue(18).ToString()) : null;
+                        //            inspectImport.StatusDate = reader.GetValue(19) != null ? DateTime.Parse(reader.GetValue(19).ToString()) : null;
+                        //            excelData.Add(inspectImport);
+                        //            //Assigning excel data into ExcelReaderVM
+                        //            //excelData.Add(new ATbNasinspectionsImport
+                        //            //{
+                        //            //    WorkOrder = reader?.GetValue(0).ToString(),
+                        //            //    Description = reader?.GetValue(1).ToString(),
+                        //            //    Long_Description = reader?.GetValue(2).ToString(),
+                        //            //    Location = reader.GetValue(3).ToString(),
+                        //            //    Asset = reader.GetValue(4).ToString(),
+                        //            //    Asset_Description = reader.GetValue(5).ToString(),
+                        //            //    Status = reader.GetValue(6).ToString(),
+                        //            //    Crew = reader.GetValue(7).ToString(),
+                        //            //    Lead = reader.GetValue(8).ToString(),
+                        //            //    WorkType = reader.GetValue(9).ToString(),
+                        //            //    SubWorkType = reader.GetValue(10).ToString(),
+                        //            //    Elin = reader.GetValue(11).ToString(),
+                        //            //    OnBehalfOf = reader.GetValue(12)?.ToString(),
+                        //            //    Phone = reader.GetValue(13).ToString(),
+                        //            //    Duration = reader.GetValue(14).ToString(),
+                        //            //    TargetStart = reader.GetValue(15) != null ? DateTime.Parse(reader.GetValue(15).ToString()) : null,
+                        //            //    TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null,
+                        //            //    ActualStart = reader.GetValue(17) != null ? DateTime.Parse(reader.GetValue(17).ToString()) : null,
+                        //            //    ActualFinish = reader.GetValue(18) != null ? DateTime.Parse(reader.GetValue(18).ToString()) : null,
+                        //            //    StatusDate = reader.GetValue(19) != null ? DateTime.Parse(reader.GetValue(19).ToString()) : null
+                        //            //});
+                        //            count++;
+                        //        }
+                        //    }
+                        //}
 
                         //save data
                         if (excelData.Count() > 0)
@@ -372,14 +449,14 @@ namespace NINETRAX.Controllers.DbManagement
                 }
                 else
                 {
-                    return NotFound("File not provided to proceed.");
+                    return NotFound("No file found to process.");
                 }
                 #endregion
             }
             catch (Exception ex)
             {
                 string error = ex.StackTrace.ToString();
-                return StatusCode(500, "Excel importing failed to proceed.");
+                return StatusCode(500, "Importing failed to proceed.");
             }
         }
         #endregion

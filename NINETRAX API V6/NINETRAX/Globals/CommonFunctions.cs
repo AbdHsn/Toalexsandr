@@ -55,5 +55,15 @@ namespace NINETRAX.Globals
                 return null;
             }
         }
+
+        public static MemoryStream FileToMemoryStream(IFormFile file)
+        {
+            using (var stream = new MemoryStream()) 
+            { 
+                file.CopyTo(stream);
+                stream.Position = 0;
+                return stream;
+            }
+        }
     }
 }

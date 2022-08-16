@@ -57,7 +57,7 @@ namespace NINETRAX.Controllers.DbManagement
         }
         #endregion
 
-        #region MyRegion
+        #region Auth Functions
         [HttpPost("LoginRequest"), AllowAnonymous]
         public ActionResult LoginRequest(TbUser user)
         {
@@ -69,7 +69,7 @@ namespace NINETRAX.Controllers.DbManagement
                 return StatusCode(200, new { Id = getUser.Id, AccessType = getUser.AccessType, Email = user.Email, Token = newToken });
                 //return Ok();
             }
-            return StatusCode(403, "Credential does not matched!");
+            return StatusCode(403, "Credential did not matched!");
         }
 
         #region User Registration
@@ -124,7 +124,6 @@ namespace NINETRAX.Controllers.DbManagement
                 //add claims
                 var newClaims = new List<Claim>();
                 newClaims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
-                newClaims.Add(new Claim(JwtRegisteredClaimNames.GivenName, String.Concat(user.FirstName, " ", user.LastName).ToString()));
                 newClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
 
                 newClaims.Add(new Claim(ClaimTypes.Role, user.AccessType));
@@ -135,6 +134,7 @@ namespace NINETRAX.Controllers.DbManagement
 
                 var token = new JwtSecurityToken(
                   claims: newClaims,
+                  
                   expires: DateTime.Now.AddHours(1),
                   signingCredentials: credentials);
 
