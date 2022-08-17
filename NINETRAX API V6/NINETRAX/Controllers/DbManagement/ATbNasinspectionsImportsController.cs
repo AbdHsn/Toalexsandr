@@ -10,6 +10,7 @@ using NINETRAX.Globals;
 using DataLayer.Models.SPModels;
 using System.Data;
 using Newtonsoft.Json;
+using DataLayer.Models.ExcelModels;
 
 namespace NINETRAX.Controllers.DbManagement
 {
@@ -340,7 +341,7 @@ namespace NINETRAX.Controllers.DbManagement
                                 var dataTable = dataSet.Tables[0];
 
                                 var serialized = JsonConvert.SerializeObject(dataTable);
-                                var model = JsonConvert.DeserializeObject<List<ATbNasinspectionsImport>>(serialized);
+                                var model = JsonConvert.DeserializeObject<List<ImportFromMaximo>>(serialized);
                             }
                         }
                         ///
