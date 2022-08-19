@@ -297,29 +297,6 @@ namespace NINETRAX.Controllers.DbManagement
 
                         #region new excel code
 
-                        //IExcelDataReader excelReader;
-
-                        ////1. Reading Excel file
-                        //if (getExtension == ".xls")
-                        //{
-                        //    //1.1 Reading from a binary Excel file ('97-2003 format; *.xls)
-                        //    excelReader = ExcelReaderFactory.CreateBinaryReader(CommonFunctions.FileToMemoryStream(importFile));
-                        //}
-                        //else
-                        //{
-                        //    //1.2 Reading from a OpenXml Excel file (2007 format; *.xlsx)
-                        //    excelReader = ExcelReaderFactory.CreateOpenXmlReader(CommonFunctions.FileToMemoryStream(importFile));
-                        //}
-
-                        ////2. DataSet - The result of each spreadsheet will be created in the result.Tables
-                        //DataSet result = excelReader.AsDataSet();
-
-                        ////3. DataSet - Create column names from first row
-                        ////excelReader.IsFirstRowAsColumnNames = ;
-
-                        //excelReader.Close();
-
-                        /////////////////
                         using (var stream = new MemoryStream())
                         {
                             uploadedExcelFile.CopyTo(stream);
@@ -340,84 +317,41 @@ namespace NINETRAX.Controllers.DbManagement
                                 // Now you can get data from each sheet by its index or its "name"
                                 var dataTable = dataSet.Tables[0];
 
-                                var serialized = JsonConvert.SerializeObject(dataTable);
-                                var model = JsonConvert.DeserializeObject<List<ImportFromMaximo>>(serialized);
+                                foreach (var item in dataTable.AsEnumerable())
+                                {
+                                    //Duration
+                                    var inspectionData = new ATbNasinspectionsImport();
+                                    inspectionData.WorkOrder = item.Field<double>("Work Order").ToString();
+                                    inspectionData.Description = item.Field<string>("Description");
+                                    inspectionData.Long_Description = item.Field<string>("Long_Description");
+                                    inspectionData.Location = item.Field<string>("Location");
+                                    inspectionData.Asset = item.Field<double>("Asset").ToString();
+                                    inspectionData.Asset_Description = item.Field<string>("Asset_Description");
+                                    inspectionData.Status = item.Field<string>("Status");
+                                    inspectionData.Crew = item.Field<string>("Crew");
+                                    inspectionData.Lead = item.Field<string>("Lead");
+                                    inspectionData.WorkType = item.Field<string>("Work Type");
+                                    inspectionData.SubWorkType = item.Field<string>("Sub Work Type");
+                                    inspectionData.Elin = item.Field<string>("Elin");
+                                    inspectionData.OnBehalfOf = item.Field<string>("On Behalf Of");
+                                    inspectionData.Phone = item.Field<string>("Phone");
+                                    inspectionData.Duration = item.Field<TimeSpan?>("Duration").ToString();
+                                    inspectionData.TargetStart = item.Field<DateTime?>("Target Start");
+                                    inspectionData.TargetFinish = item.Field<DateTime?>("Target Finish");
+                                    inspectionData.ActualStart = item.Field<DateTime?>("Actual Start");
+                                    inspectionData.ActualFinish = item.Field<DateTime?>("Actual Finish");
+                                    inspectionData.StatusDate = item.Field<DateTime?>("Status Date");
+
+                                    excelData.Add(inspectionData);
+                                    
+                                }
                             }
                         }
                         ///
 
                         #endregion
 
-                        //using (var stream = new MemoryStream())
-                        //{
-                        //    uploadedExcelFile.CopyTo(stream);
-                        //    stream.Position = 0;
-                        //    using (var reader = ExcelReaderFactory.CreateReader(stream))
-                        //    {
-                        //        int count = 0;
-                        //        while (reader.Read()) //Each row of the file
-                        //        {
-                        //            //skipping header record.
-                        //            if (count == 0)
-                        //            {
-                        //                count++;
-                        //                continue;
-                        //            }
-
-                        //            //var t = reader.GetValue(0).ToString();
-
-                        //            var inspectImport = new ATbNasinspectionsImport();
-                        //            inspectImport.WorkOrder = reader?.GetValue(0).ToString();
-                        //            inspectImport.Description = reader?.GetValue(1).ToString();
-                        //            inspectImport.Long_Description = reader?.GetValue(2).ToString();
-                        //            inspectImport.Location = reader.GetValue(3).ToString();
-                        //            inspectImport.Asset = reader.GetValue(4).ToString();
-                        //            inspectImport.Asset_Description = reader.GetValue(5).ToString();
-                        //            inspectImport.Status = reader.GetValue(6).ToString();
-                        //            inspectImport.Crew = reader.GetValue(7).ToString();
-                        //            inspectImport.Lead = reader.GetValue(8).ToString();
-                        //            inspectImport.WorkType = reader.GetValue(9).ToString();
-                        //            inspectImport.SubWorkType = reader.GetValue(10).ToString();
-                        //            inspectImport.Elin = reader.GetValue(11).ToString();
-                        //            inspectImport.OnBehalfOf = reader.GetValue(12)?.ToString();
-                        //            inspectImport.Phone = reader.GetValue(13).ToString();
-                        //            inspectImport.Duration = reader.GetValue(14).ToString();
-                        //            inspectImport.TargetStart = reader.GetValue(15) != null ? DateTime.Parse(reader.GetValue(15).ToString()) : null;
-                        //            inspectImport.TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null;
-                        //            inspectImport.ActualStart = reader.GetValue(17) != null ? DateTime.Parse(reader.GetValue(17).ToString()) : null;
-                        //            inspectImport.ActualFinish = reader.GetValue(18) != null ? DateTime.Parse(reader.GetValue(18).ToString()) : null;
-                        //            inspectImport.StatusDate = reader.GetValue(19) != null ? DateTime.Parse(reader.GetValue(19).ToString()) : null;
-                        //            excelData.Add(inspectImport);
-                        //            //Assigning excel data into ExcelReaderVM
-                        //            //excelData.Add(new ATbNasinspectionsImport
-                        //            //{
-                        //            //    WorkOrder = reader?.GetValue(0).ToString(),
-                        //            //    Description = reader?.GetValue(1).ToString(),
-                        //            //    Long_Description = reader?.GetValue(2).ToString(),
-                        //            //    Location = reader.GetValue(3).ToString(),
-                        //            //    Asset = reader.GetValue(4).ToString(),
-                        //            //    Asset_Description = reader.GetValue(5).ToString(),
-                        //            //    Status = reader.GetValue(6).ToString(),
-                        //            //    Crew = reader.GetValue(7).ToString(),
-                        //            //    Lead = reader.GetValue(8).ToString(),
-                        //            //    WorkType = reader.GetValue(9).ToString(),
-                        //            //    SubWorkType = reader.GetValue(10).ToString(),
-                        //            //    Elin = reader.GetValue(11).ToString(),
-                        //            //    OnBehalfOf = reader.GetValue(12)?.ToString(),
-                        //            //    Phone = reader.GetValue(13).ToString(),
-                        //            //    Duration = reader.GetValue(14).ToString(),
-                        //            //    TargetStart = reader.GetValue(15) != null ? DateTime.Parse(reader.GetValue(15).ToString()) : null,
-                        //            //    TargetFinish = reader.GetValue(16) != null ? DateTime.Parse(reader.GetValue(16).ToString()) : null,
-                        //            //    ActualStart = reader.GetValue(17) != null ? DateTime.Parse(reader.GetValue(17).ToString()) : null,
-                        //            //    ActualFinish = reader.GetValue(18) != null ? DateTime.Parse(reader.GetValue(18).ToString()) : null,
-                        //            //    StatusDate = reader.GetValue(19) != null ? DateTime.Parse(reader.GetValue(19).ToString()) : null
-                        //            //});
-                        //            count++;
-                        //        }
-                        //    }
-                        //}
-
-                        //save data
+                       //save data //lead, OnBehalf cann't be null.
                         if (excelData.Count() > 0)
                         {
                             _context.ChangeTracker.AutoDetectChangesEnabled = false;
