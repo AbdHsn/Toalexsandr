@@ -14,10 +14,10 @@ import Authmiddleware from "./routes/route"
 import VerticalLayout from "./components/VerticalLayout/"
 import HorizontalLayout from "./components/HorizontalLayout/"
 import NonAuthLayout from "./components/NonAuthLayout"
+import LogoutTimer from "./pages/logout-timer/LogoutTimer"
 
 // Import scss
 import "./assets/scss/theme.scss"
-import LogoutTimer from './components/logout-timer';
 
 export const envConfigurations = {
   baseUrl: process.env.REACT_APP_BASE_URL,
@@ -62,8 +62,8 @@ const App = props => {
               isAuthProtected={true}
               exact
             />
-             <LogoutTimer />
-          ))}
+            ))}
+            {/* <LogoutTimer /> */}
         </Switch>
       </Router>
     </React.Fragment>

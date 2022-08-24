@@ -9,6 +9,14 @@ export const loginRequest = async postData => {
     })
 }
 
+export const save = async postData => {
+  return http
+    .post(appSettings.BASE_URL + "/Auth/LoginRequest", postData)
+    .catch(error => {
+      throw error.response.data
+    })
+}
+
 export const userRegistration = async postData => {
   return http
     .post(appSettings.BASE_URL + "/Auth/UserRegistration", postData)

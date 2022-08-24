@@ -52,8 +52,8 @@ builder.Services.AddDbContext<EntityContext>(options =>
 });
 
 #region DI
-builder.Services.AddScoped(typeof(IEntityRepo<>), typeof(EntityRepo<>));
-builder.Services.AddScoped(typeof(IRawQueryRepo<>), typeof(RawQueryRepo<>));
+builder.Services.AddSingleton(typeof(IEntityRepo<>), typeof(EntityRepo<>));
+builder.Services.AddTransient(typeof(IRawQueryRepo<>), typeof(RawQueryRepo<>));
 #endregion
 
 builder.Services.AddCors(options => options.AddPolicy(name: CorsPolicy,
@@ -92,7 +92,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default",
-    pattern: "{controller=APIWorking}/{action=Get}/{id?}");
+//app.MapControllerRoute(name: "default",
+//    pattern: "{controller=APIWorking}/{action=Get}/{id?}").RequireAuthorization();
+
+app.MapControllers().RequireAuthorization();
 
 app.Run();

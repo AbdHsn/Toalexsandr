@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { useIdleTimer } from "react-idle-timer"
-import { toast } from "react-toastify"
+import appSettings from "../../app-settings.json"
 
 export default function ReactTimer() {
-  const timeout = 3000
+  const timeout = appSettings.IDLE_OUT_TIME;//3000
+  
   const [remaining, setRemaining] = useState(timeout)
 
   const handleOnIdle = () => {
@@ -20,6 +21,8 @@ export default function ReactTimer() {
 
   useEffect(() => {
     setRemaining(getRemainingTime())
+
+    console.log("logout timmer is called.");
 
     setInterval(() => {
       setRemaining(getRemainingTime())

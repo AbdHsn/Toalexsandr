@@ -1,5 +1,4 @@
 import axios from "axios"
-import { envConfigurations } from "../App"
 import appSettings from "../app-settings.json"
 
 const header = {
@@ -14,7 +13,7 @@ const header = {
     "Access-Control-Allow-Origin": appSettings.BASE_URL,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
     "Access-Control-Allow-Headers":
-      "origin,X-Requested-With,content-type,accept",
+    "origin,X-Requested-With,content-type,accept",
     "Access-Control-Allow-Credentials": "true",
   },
 }

@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Route, Redirect } from "react-router-dom"
+import LogoutTimer from "../pages/logout-timer/LogoutTimer"
 
 const Authmiddleware = ({
   component: Component,
@@ -21,10 +22,14 @@ const Authmiddleware = ({
 
       return (
         <Layout>
-          <Component {...props} />
+          <div>
+            <Component {...props} />
+            <LogoutTimer />
+          </div>
         </Layout>
       )
-    }}
+    }
+  }
   />
 )
 
