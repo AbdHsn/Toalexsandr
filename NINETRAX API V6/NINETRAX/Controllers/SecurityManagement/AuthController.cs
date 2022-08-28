@@ -127,7 +127,17 @@ namespace NINETRAX.Controllers.DbManagement
                 newClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
 
                 newClaims.Add(new Claim(ClaimTypes.Role, user.AccessType));
-  
+
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "full_admin_rights"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "quality_inspectors"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "assosicate_inspectors"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "plan_estimate_inspectors"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "customer_inspectors"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "edit_rights"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "delete_rights"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "view_rights"));
+                if(user.QualityInspectors) newClaims.Add(new Claim(ClaimTypes.Role, "import_rights"));
+
 
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
