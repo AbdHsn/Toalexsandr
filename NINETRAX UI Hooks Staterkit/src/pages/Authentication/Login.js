@@ -39,7 +39,12 @@ import logo from "assets/images/logo.svg"
 import { facebook, google } from "../../config"
 import login from "store/auth/login/reducer"
 import BtnProcessing from "../../components/Common/BtnProcessing"
-import { loginRequest } from "../../services/auth-service"
+import {
+  getToken,
+  loginRequest,
+  saveToken,
+  extractToken,
+} from "../../services/auth-service"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 
@@ -53,8 +58,8 @@ const Login = props => {
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@ninetrax.com" || "",
-      password: "123456" || "",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter User Name"),
@@ -83,15 +88,13 @@ const Login = props => {
   }
 
   const login = formValues => {
-    console.log("submit values....", formValues)
     setIsProcessing(true)
     loginRequest(formValues)
       .then(res => {
-        console.log("submit model update response: ", res)
         if (res.data.id > 0) {
-          localStorage.setItem("authUser", JSON.stringify(res.data))
-          sessionStorage.setItem("token", res.data.token)
-          console.log("login response obj --->", res)
+          saveToken(res.data)
+          // getToken()
+          // extractToken()
           history.push("/dashboard")
           toastr.success("Login Successful.", "NINETRAX")
           setIsProcessing(false)
