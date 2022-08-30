@@ -66,7 +66,7 @@ namespace NINETRAX.Controllers.DbManagement
             if (getUser != null)
             {
                 var newToken = GenerateWebToken(getUser);
-                return StatusCode(200, new { Id = getUser.Id, AccessType = getUser.AccessType, Email = user.Email, Token = newToken });
+                return StatusCode(200, new { Id = getUser.Id, Name=getUser.FullName, Email = getUser.Email, Token = newToken });
                 //return Ok();
             }
             return StatusCode(403, "Credential did not matched!");
@@ -102,7 +102,7 @@ namespace NINETRAX.Controllers.DbManagement
                 {
                     var getUser = AuthenticateUser(user);
                     var newToken = GenerateWebToken(getUser);
-                    return StatusCode(200, new { Id = getUser.Id, AccessType = getUser.AccessType, Email = user.Email, Token = newToken });
+                    return StatusCode(200, new { Id = getUser.Id, Name= getUser.FullName, Email = getUser.Email, Token = newToken });
 
                 }
                 else

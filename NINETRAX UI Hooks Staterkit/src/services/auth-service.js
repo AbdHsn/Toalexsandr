@@ -1,6 +1,6 @@
 import http from "./http-handler"
 import appSettings from "../app-settings.json"
-
+import { useHistory } from "react-router-dom"
 export const loginRequest = async postData => {
   return http
     .post(appSettings.BASE_URL + "/Auth/LoginRequest", postData)
@@ -10,23 +10,33 @@ export const loginRequest = async postData => {
 }
 
 export const saveToken = async data => {
-  console.log("token saving..", data)
   localStorage.clear()
   localStorage.setItem("authUser", JSON.stringify(data))
 }
 
 export const getToken = async () => {
-  let authUser = JSON.parse(localStorage.getItem("authUser"))
-  console.log("get authUser..", authUser)
-  console.log("get token..", authUser.token)
-  return authUser ? authUser.token : null
+  return localStorage.getItem("authUser")
+    ? JSON.parse(localStorage.getItem("authUser")).token
+    : null
+}
+
+export const getAuthUser = async () => {
+  return localStorage.getItem("authUser")
+    ? JSON.parse(localStorage.getItem("authUser"))
+    : null
 }
 
 export const extractToken = async () => {
-  let getToken = getToken()
-  const decoded = jwt_decode(token)
-  console.log(decoded)
+  let getAuthUser = localStorage.getItem("authUser")
+    ? JSON.parse(localStorage.getItem("authUser"))
+    : null
+  const decoded = jwt_decode(getAuthUser.token)
+  console.log("token extracted:", decoded)
   return decoded
+}
+
+export const clearToken = async () => {
+  localStorage.clear()
 }
 
 // export const getUser = async () => {

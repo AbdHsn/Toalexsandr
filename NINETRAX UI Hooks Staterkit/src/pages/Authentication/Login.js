@@ -33,7 +33,7 @@ import { loginUser, socialLogin } from "../../store/actions"
 
 // import images
 import profile from "assets/images/profile-img.png"
-import logo from "assets/images/logo.svg"
+import logo from "assets/images/logo-light.png"
 
 //Import config
 import { facebook, google } from "../../config"
@@ -92,13 +92,12 @@ const Login = props => {
     loginRequest(formValues)
       .then(res => {
         if (res.data.id > 0) {
-          saveToken(res.data)
-          // getToken()
-          // extractToken()
-          history.push("/dashboard")
-          toastr.success("Login Successful.", "NINETRAX")
-          setIsProcessing(false)
-          validation.resetForm()
+          saveToken(res.data).then(() => {
+            toastr.success("Login Successful.", "NINETRAX")
+            setIsProcessing(false)
+            validation.resetForm()
+            history.push("/dashboard")
+          })
         } else {
           setIsProcessing(false)
           toastr.warning("Invalid Credentials.", "NINETRAX")
@@ -173,20 +172,16 @@ const Login = props => {
                   </Row>
                 </div>
                 <CardBody className="pt-0">
-                  <div>
-                    <Link to="/" className="auth-logo-light">
-                      <div className="avatar-md profile-user-wid mb-4">
-                        <span className="avatar-title rounded-circle bg-light">
-                          <img
-                            src={logo}
-                            alt=""
-                            className="rounded-circle"
-                            height="34"
-                          />
-                        </span>
-                      </div>
+                  <Row className="justify-content-md-center my-3">
+                    <Col md="auto">
+                      <img src={logo} alt="" className="" height="60" />
+                    </Col>
+                  </Row>
+                  {/* <div>
+                    <Link to="/login" className="auth-logo-light">
+                      <div className="mt-4 mx-auto"></div>
                     </Link>
-                  </div>
+                  </div> */}
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
@@ -271,7 +266,7 @@ const Login = props => {
                           </button>
                         )}{" "}
                       </div>
-
+                      {/* 
                       <div className="mt-4 text-center">
                         <h5 className="font-size-14 mb-3">Sign in with</h5>
 
@@ -292,27 +287,6 @@ const Login = props => {
                               )}
                             />
                           </li>
-                          {/*<li className="list-inline-item">*/}
-                          {/*  <TwitterLogin*/}
-                          {/*    loginUrl={*/}
-                          {/*      "http://localhost:4000/api/v1/auth/twitter"*/}
-                          {/*    }*/}
-                          {/*    onSuccess={this.twitterResponse}*/}
-                          {/*    onFailure={this.onFailure}*/}
-                          {/*    requestTokenUrl={*/}
-                          {/*      "http://localhost:4000/api/v1/auth/twitter/revers"*/}
-                          {/*    }*/}
-                          {/*    showIcon={false}*/}
-                          {/*    tag={"div"}*/}
-                          {/*  >*/}
-                          {/*    <a*/}
-                          {/*      href=""*/}
-                          {/*      className="social-list-item bg-info text-white border-info"*/}
-                          {/*    >*/}
-                          {/*      <i className="mdi mdi-twitter"/>*/}
-                          {/*    </a>*/}
-                          {/*  </TwitterLogin>*/}
-                          {/*</li>*/}
                           <li className="list-inline-item">
                             <GoogleLogin
                               clientId={google.CLIENT_ID}
@@ -330,7 +304,7 @@ const Login = props => {
                             />
                           </li>
                         </ul>
-                      </div>
+                      </div> */}
 
                       <div className="mt-4 text-center">
                         <Link to="/forgot-password" className="text-muted">
