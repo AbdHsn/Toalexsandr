@@ -1,23 +1,20 @@
 import axios from "axios"
 import appSettings from "../app-settings.json"
-import { getToken } from "../services/auth-service"
 
-const authHeader = {
-  headers: {
-    timeout: 30000,
-    "Content-Type": "application/json",
-    Accept: "*/*",
-    Authorization: `bearer ${
-      localStorage.getItem("authUser")
-        ? JSON.parse(localStorage.getItem("authUser")).token
-        : ""
-    }`,
-    "Access-Control-Allow-Origin": appSettings.BASE_URL,
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
-    "Access-Control-Allow-Headers":
-      "origin,X-Requested-With,content-type,accept",
-    "Access-Control-Allow-Credentials": "true",
+const axiosInstance = axios.create({
+  baseURL: appSettings.BASE_URL,
+})
+
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem("authUser")
+      ? JSON.parse(localStorage.getItem("authUser")).token
+      : ""
+    const auth = token ? `Bearer ${token}` : ""
+    config.headers.common["Authorization"] = auth
+    return config
   },
-}
+  error => Promise.reject(error)
+)
 
-export default axios.create({ ...authHeader })
+export default axiosInstance

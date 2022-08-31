@@ -1063,7 +1063,6 @@ const workOrderInspections = props => {
                               ></i>{" "}
                               Entered Date
                             </th>
-
                             <th></th>
                           </tr>
                           <tr>
@@ -1078,6 +1077,7 @@ const workOrderInspections = props => {
                               onKeyUp={onPressEnter}
                             />
                           </th> */}
+                            <th></th>
                             <th>
                               {" "}
                               <input
