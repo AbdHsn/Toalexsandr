@@ -143,6 +143,8 @@ namespace NINETRAX.Controllers.DbManagement
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
 
                 var token = new JwtSecurityToken(
+                  issuer: _configuration.GetSection("Jwt:Issuer").Value,
+                  audience: _configuration.GetSection("Jwt:Audience").Value,
                   claims: newClaims,
                   
                   expires: DateTime.Now.AddHours(1),

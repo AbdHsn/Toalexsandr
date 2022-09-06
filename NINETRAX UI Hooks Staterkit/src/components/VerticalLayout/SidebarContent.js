@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 import React, { useEffect, useRef, useState } from "react"
 // //Import Scrollbar
 import SimpleBar from "simplebar-react"
-
+import AddModifyWOInspection from "../../pages/add-modify-wo-inspection/add-update"
 // MetisMenu
 import MetisMenu from "metismenujs"
 import { withRouter } from "react-router-dom"
@@ -15,6 +15,8 @@ import ImportFromMaximo from "../Common/ImportFromMaximo"
 
 const SidebarContent = props => {
   const [importFromMaximoModal, setImportFromMaximoModal] = useState(false)
+  const [addModifyWOInspectionModal, setAddModifyWOInspectionModal] =
+    useState(false)
   const ref = useRef()
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -132,7 +134,11 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#" className="">
+              <Link
+                to="#"
+                className=""
+                onClick={() => setAddModifyWOInspectionModal(true)}
+              >
                 <i className="bx bx-edit"></i>
                 <span>{props.t("Add/Modify Inspections")}</span>
               </Link>
@@ -250,15 +256,25 @@ const SidebarContent = props => {
           </ul>
         </div>
       </SimpleBar>
-
       <ImportFromMaximo
         show={importFromMaximoModal}
-        onSuccessImported={item => {
-          if (item) {
+        onSuccessImported={response => {
+          if (response) {
             setImportFromMaximoModal(false)
           }
         }}
         onCloseClick={() => setImportFromMaximoModal(false)}
+      />
+      {/* onSaveClick 
+      onCancelClick */}
+      <AddModifyWOInspection
+        open={addModifyWOInspectionModal}
+        onSaveSuccess={response => {
+          if (response) {
+            setAddModifyWOInspectionModal(false)
+          }
+        }}
+        onCancelClick={() => setAddModifyWOInspectionModal(false)}
       />
     </React.Fragment>
   )
