@@ -17,6 +17,9 @@ import {
   Form,
 } from "reactstrap"
 
+onSuccessImported
+onCloseClick
+
 const ImportFromMaximo = ({ show, onCloseClick, onSuccessImported }) => {
   const [importableFile, setImportableFile] = useState(null)
   const [isImporting, setIsImporting] = useState(false)
